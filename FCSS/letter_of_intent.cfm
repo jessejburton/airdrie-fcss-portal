@@ -7,7 +7,6 @@
 				<ul class="panel_nav_top clearfix">
 					<li class="active"><a href="javascript:;" data-show="program_panel"><span>Program Information</span><span class="small-tab">1</span></a></li>
 					<li><a href="javascript:;" data-show="contact_panel"><span>Contact</span><span class="small-tab">2</span></a></li>				
-					<li><a href="javascript:;" data-show="staffing_panel"><span>Staffing</span><span class="small-tab">3</span></a></li>	
 					<li><a href="javascript:;" data-show="board_panel"><span>Board</span><span class="small-tab">4</span></a></li>
 					<li><a href="javascript:;" data-show="theory_panel"><span>Theory of Change</span><span class="small-tab">5</span></a></li>
 					<li><a href="javascript:;" data-show="alignment_panel"><span>Alignment</span><span class="small-tab">6</span></a></li>
@@ -122,36 +121,7 @@
 							<label for="considered_partnerships">Have you considered partnerships?</label><br />							
 							<textarea id="considered_partnerships" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>
 						</p>				
-					</div>					
-
-				<!--- STAFFING DETAILS --->
-					<div id="staffing_panel" class="panel">
-						<h1 class="form-group-heading">Staffing</h1>
-						
-						<div id="staff_list">
-							<div class="two-cols staff-member">
-								<p><input type="text" name="staffing_name" class="inline" placeholder="Staff members name" /></p>
-								<p><input type="text" name="staffing_title" class="inline" placeholder="Staff members job title" /></p>
-							</div>
-							<div class="two-cols staff-member">
-								<p><input type="text" name="staffing_name" class="inline" placeholder="Staff members name" /></p>
-								<p><input type="text" name="staffing_title" class="inline" placeholder="Staff members job title" /></p>
-							</div>
-							<div class="two-cols staff-member">
-								<p><input type="text" name="staffing_name" class="inline" placeholder="Staff members name" /></p>
-								<p><input type="text" name="staffing_title" class="inline" placeholder="Staff members job title" /></p>
-							</div>
-							<div class="two-cols staff-member">
-								<p><input type="text" name="staffing_name" class="inline" placeholder="Staff members name" /></p>
-								<p><input type="text" name="staffing_title" class="inline" placeholder="Staff members job title" /></p>
-							</div>
-							<div class="two-cols staff-member">
-								<p><input type="text" name="staffing_name" class="inline" placeholder="Staff members name" /></p>
-								<p><input type="text" name="staffing_title" class="inline" placeholder="Staff members job title" /></p>
-							</div>
-						</div>
-						<p><a href="javascript:;" class="add-staff"><i class="fa fa-plus"></i> add another</a></p>
-					</div>	
+					</div>						
 
 				<!--- BOARD DETAILS --->
 					<div id="board_panel" class="panel">
