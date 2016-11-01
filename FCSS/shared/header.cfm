@@ -22,8 +22,9 @@
 </head>
 <body>
 
-<cfif NOT isDefined('REQUEST.loggedin') AND 1 IS 1>
-<link href="assets/css/login.css?v=1.0" rel="stylesheet" type="text/css" />
+<cfif NOT isDefined('REQUEST.loggedin') AND 1 IS 0>
+	<link href="assets/css/login.css?v=1.1" rel="stylesheet" type="text/css" />
+	<script src="assets/js/page/login.js" type="text/javascript"></script>
 
 	<section id="header">Airdrie FCSS Portal</section>
 

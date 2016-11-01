@@ -1,4 +1,4 @@
-<cflocation url="agency_details.cfm">
+<cflocation url="agency_details.cfm" addtoken="false">
 
 <cfinclude template="shared/header.cfm">
 

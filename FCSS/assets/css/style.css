@@ -28,7 +28,6 @@
 /*** HEADER ***/
 	#header {
 		font-family: 'Open Sans Condensed', sans-serif;
-		margin-top: -25px;
 		height: 75px;
 		line-height: 75px;
 		font-size: 1.7em;
@@ -37,7 +36,6 @@
 		border-bottom: 1px solid #7C7A29;
 		width: 100%;
 		background-color: #96932A;
-		position: fixed;
 		z-index: 9999;
 	}
 		#header a {
@@ -469,6 +467,15 @@
 		display: block;
 		margin: 30px 0;
 	}
+	.hidden {
+		display: none;
+	}
+	.underlined {
+		text-decoration: underline;
+	}
+	.smaller-text {
+		font-size: .8em;
+	}
 
 /*** COLORS ***/
 	.green-background {
@@ -524,6 +531,9 @@
 
 
 /*** MISC ***/
+.coa_logo_small {
+	width: 150px;
+}
 
 
 /*** RESPONSIVE ***/
