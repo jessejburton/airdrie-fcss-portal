@@ -1,5 +1,7 @@
 "use strict"
 
+var switching = false;
+
 $(document).ready(function(){
 	var pagename = location.pathname.split("/");
 	pagename = pagename[pagename.length - 1];
@@ -7,21 +9,26 @@ $(document).ready(function(){
 	$('#sidebar_navigation a[href^="' + pagename + '"]').closest("li").addClass('active');
 
 	$(".panels ul.panel_nav_top li:not(.disabled)").find("a").on("click", function(){
-		// CLear any autoreplies
-		$(".autoreply").remove();
+		if(!switching){ // Added to stop double clicking
+			switching = true;
 
-		var panels = $(this).closest(".panels");
-		var panel = $(this).data("show");
-		
-		// hide the current panel
-		panels.find(".panel.active").stop().hide();
-		// remove the active classes
-		panels.find(".active").removeClass("active");
-		// show the selected panel and add the active classes
-		panels.find("#" + panel).stop().fadeIn("slow", function(){
-			$(this).addClass("active");
-		});
-		$(this).closest("li").addClass("active");
+			// CLear any autoreplies
+			$(".autoreply").remove();
+
+			var panels = $(this).closest(".panels");
+			var panel = $(this).data("show");
+			
+			// hide the current panel
+			panels.find(".panel.active").stop().hide();
+			// remove the active classes
+			panels.find(".active").removeClass("active");
+			// show the selected panel and add the active classes
+			panels.find("#" + panel).fadeIn("slow", function(){
+				$(this).addClass("active");
+				switching = false;
+			});
+			$(this).closest("li").addClass("active");
+		}
 	});
 
 	$(".group-error").find("input").addClass("input-error");

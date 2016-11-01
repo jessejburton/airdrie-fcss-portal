@@ -15,6 +15,23 @@ $(document).on("click", ".add-board", function(){
 	sm.find("input").first().focus();
 });
 
+// Budget Summing
+$(document).on("keyup", ".sum", function(){
+	var total = 0;
+
+	$(".sum").each(function(){
+		var val = $.trim( $(this).val() );
+
+		if ( val ) {
+	        val = parseFloat( val.replace( /^\$/, "" ) );
+
+	        total += !isNaN( val ) ? val : 0;
+	    }
+	});
+	
+	$(".sum-total").val(total.toFixed(2));
+});
+
 // Navigation Buttons
 $(document).on("click", "#next_btn", function(){
 	$(".panel_nav_top li.active").next().find("a").trigger("click");

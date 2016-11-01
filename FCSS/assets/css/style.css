@@ -308,7 +308,7 @@
 			.btn-secondary:not(:disabled):hover {
 				background-color: #CCC;
 			}	
-	input[type=text], input[type=number], textarea, select {
+	input[type=text], input[type=number], input[type=password], textarea, select {
 		margin: 5px 0;
 		padding: 10px;
 		width: 100%;
@@ -374,6 +374,40 @@
 	input.inline + button.inline {
 		margin-top: 5px;
 	}
+	/* Currency Symbol */
+		.input-currency {
+		    position: relative;
+		    color: #999;
+		}
+		.input-currency input {
+		    padding-left: 25px;
+		}
+		.input-currency:before {
+		    position: absolute;
+		    top: 0;
+		    content:"$";
+		    left: 10px;
+		}
+	/* Placeholders */
+		::-webkit-input-placeholder {
+	   		font-family: 'Open Sans', sans-serif;
+			font-size: 14px;
+		}
+
+		:-moz-placeholder { /* Firefox 18- */
+		   	font-family: 'Open Sans', sans-serif;
+			font-size: 14px;
+		}
+
+		::-moz-placeholder {  /* Firefox 19+ */
+		   	font-family: 'Open Sans', sans-serif;
+			font-size: 14px; 	 
+		}
+
+		:-ms-input-placeholder {  
+		   	font-family: 'Open Sans', sans-serif;
+			font-size: 14px; 
+		}
 
 
 /*** UTILITIES ***/
@@ -396,6 +430,9 @@
 	}
 	.clearfix:after {
 		clear: both;
+	}
+	.centered {
+		text-align: center;
 	}
 	.autoreply {
 		padding: 10px 15px;
@@ -429,6 +466,7 @@
 		transition: opacity .2s ease-in-out;
 	}
 	.spaced {
+		display: block;
 		margin: 30px 0;
 	}
 

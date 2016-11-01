@@ -15,13 +15,22 @@
  	</cfif>
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300" rel="stylesheet" type="text/css" />
-	<link href="assets/css/style.css" rel="stylesheet" type="text/css" />
+	<link href="assets/css/style.css?v=1.0" rel="stylesheet" type="text/css" />
+
+	<meta name="viewport" content="width=500">
 
 </head>
 <body>
 
-<cfif NOT isDefined('REQUEST.loggedin') AND 1 IS 0>
-	<cfinclude template="login.cfm">
+<cfif NOT isDefined('REQUEST.loggedin') AND 1 IS 1>
+<link href="assets/css/login.css?v=1.0" rel="stylesheet" type="text/css" />
+
+	<section id="header">Airdrie FCSS Portal</section>
+
+	<div id="login_form_container">
+		<cfinclude template="login.cfm">
+	</div>
+
 	<cfinclude template="footer.cfm">
 	<cfabort>
 <cfelse>

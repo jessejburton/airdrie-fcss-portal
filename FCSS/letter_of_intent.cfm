@@ -12,7 +12,7 @@
 					<li><a href="javascript:;" data-show="alignment_panel"><span>Alignment</span><span class="small-tab">6</span></a></li>
 					<li><a href="javascript:;" data-show="outcomes_panel"><span>Outcomes Plan</span><span class="small-tab">7</span></a></li>
 					<li><a href="javascript:;" data-show="budget_panel"><span>Budget</span><span class="small-tab">8</span></a></li>	
-					<li class="disabled" title="Ensure that all required information has been entered before you can save your application."><a href="javascript:;" data-show="save_panel"><span>Review and Submit</span><span class="small-tab">9</span></a></li>	
+					<li class="disabled" title="Ensure that all required information has been entered before you can save your application"><a href="javascript:;" data-show="save_panel"><span>Review and Submit</span><span class="small-tab">9</span></a></li>	
 				</ul>	
 
 				<form id="panel_display" class="panel_form">
@@ -22,11 +22,11 @@
 						
 						<p>
 							<label for="program_name">Program Name</label><br />
-							<input type="text" id="program_name" placeholder="Please enter the name of your program." />
+							<input type="text" id="program_name" placeholder="Please enter the name of your program" />
 						</p>
 						<p>
 							<label for="program_description">Program Statement</label><br />						
-							<textarea data-maxlength="1000" id="program_description" placeholder="Please enter a short summary of your program. (1-2 sentences)" class="textarea-large"></textarea>		
+							<textarea data-maxlength="1000" id="program_description" placeholder="Please enter a short summary of your program (1-2 sentences)" class="textarea-large"></textarea>		
 						</p>				
 						<p>
 							<label for="target_audience">Target Audience</label><br />						
@@ -40,26 +40,26 @@
 						
 						<p>
 							<label for="primary_name">Primary Contact Name</label><br />
-							<input type="text" id="primary_name" class="input-half" placeholder="Please enter the name of the programs primary contact person." />
+							<input type="text" id="primary_name" class="input-half" placeholder="Please enter the name of the program's primary contact person" />
 						</p>
 						<p>
 							<label for="primary_phone">Primary Contact Phone</label><br />
-							<input type="text" id="primary_phone" class="input-half" placeholder="Please enter the phone number of the primary contact person." />
+							<input type="text" id="primary_phone" class="input-half" placeholder="Please enter the phone number of the program's primary contact person" />
 						</p>
 						<p>
 							<label for="primary_email">Primary Contact Email</label><br />
-							<input type="text" id="primary_email" class="input-half" placeholder="Please enter the email of the primary contact person." />
+							<input type="text" id="primary_email" class="input-half" placeholder="Please enter the email of the program's primary contact person" />
 						</p>
 						<hr />
 						<p>
 							<label for="program_address">Program Address </label><br />
-							<span class="label-sub">if different from your agencies address</span><br />					
-							<textarea data-maxlength="1000" id="program_address" placeholder="Please enter your physical address. Please include the postal code." class="input-half"></textarea>		
+							<span class="label-sub">if different from your agency's address</span><br />					
+							<textarea data-maxlength="1000" id="program_address" placeholder="Please enter your physical address including the postal code" class="input-half"></textarea>		
 						</p>	
 						<p>
 							<label for="program_mailing_address">Program Mailing Address </label><br />
-							<span class="label-sub">if different from your agencies mailing address</span><br />					
-							<textarea data-maxlength="1000" id="program_mailing_address" placeholder="Please enter your mailing address. Please include the postal code." class="input-half"></textarea>		
+							<span class="label-sub">if different from your agency's mailing address</span><br />					
+							<textarea data-maxlength="1000" id="program_mailing_address" placeholder="Please enter your mailing address including the postal code" class="input-half"></textarea>		
 						</p>
 						
 					</div>					
@@ -71,27 +71,27 @@
 						<p>
 							<label for="need_description">Need</label><br />	
 							<span class="label-sub">The evidence that there is a need for the program in the Airdrie community.</span>					
-							<textarea id="need_description" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>		
+							<textarea id="need_description" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>		
 						</p>
 						<p>
 							<label for="goal_description">Goal</label><br />		
 							<span class="label-sub">Goal that the program aims to achieve.</span>					
-							<textarea id="goal_description" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>		
+							<textarea id="goal_description" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>		
 						</p>
 						<p>
 							<label for="strategies_description">Strategies</label><br />	
 							<span class="label-sub">The strategies or the steps/activities that will be undertaken to achieve the desired goal.</span>					
-							<textarea id="strategies_description" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>		
+							<textarea id="strategies_description" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>		
 						</p>
 						<p>
 							<label for="rationale_description">Rationale</label><br />	
 							<span class="label-sub">The rationale for the selected approach</span>						
-							<textarea id="rationale_description" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>
+							<textarea id="rationale_description" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>
 						</p>
 						<p>
 							<label for="evidence_description">Evidence</label><br />
 							<span class="label-sub">What is the evidence that the activities selected are the best or most promising practices?</span>							
-							<textarea id="evidence_description" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>
+							<textarea id="evidence_description" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>
 						</p>				
 					</div>	
 
@@ -101,25 +101,25 @@
 						
 						<p>
 							<label for="fcss_prevention_focus">How does the program meet the FCSS prevention focus?</label><br />					
-							<textarea id="fcss_prevention_focus" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>		
+							<textarea id="fcss_prevention_focus" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>		
 						</p>
 						<p>
-							<label for="alignment">How does your program align with City of Airdrie's interests in the following:</label><br />		
+							<label for="alignment">How does your program align with City of Airdrie's interest in the following:</label><br />		
 							<ul class="label-sub">
-								<li>In planning for an aging population</li>
+								<li>Planning for an aging population</li>
 								<li>Engaging youth in decision making</li>
 								<li>Creating and strengthening a sense of community</li>
-								<li>And/Or the provincial goal of poverty prevention?</li>
+								<li>The Provincial goal of poverty prevention</li>
 							</ul>					
-							<textarea id="alignment" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>		
+							<textarea id="alignment" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>		
 						</p>
 						<p>
 							<label for="agency_mission_fit">How does this program fit with your agency mission and vision?</label><br />	
-							<textarea id="agency_mission_fit" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>		
+							<textarea id="agency_mission_fit" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>		
 						</p>
 						<p>
 							<label for="considered_partnerships">Have you considered partnerships?</label><br />							
-							<textarea id="considered_partnerships" placeholder="Please provide up to a 1000 character answer." class="textarea-large"></textarea>
+							<textarea id="considered_partnerships" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>
 						</p>				
 					</div>						
 
@@ -129,24 +129,24 @@
 						
 						<div id="board_list">
 							<div class="two-cols board-member">
-								<p><input type="text" name="board_name" class="inline" placeholder="Board members name" /></p>
-								<p><input type="text" name="board_title" class="inline" placeholder="Board members job title" /></p>
+								<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+								<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
 							</div>
 							<div class="two-cols board-member">
-								<p><input type="text" name="board_name" class="inline" placeholder="Board members name" /></p>
-								<p><input type="text" name="board_title" class="inline" placeholder="Board members job title" /></p>
+								<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+								<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
 							</div>
 							<div class="two-cols board-member">
-								<p><input type="text" name="board_name" class="inline" placeholder="Board members name" /></p>
-								<p><input type="text" name="board_title" class="inline" placeholder="Board members job title" /></p>
+								<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+								<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
 							</div>
 							<div class="two-cols board-member">
-								<p><input type="text" name="board_name" class="inline" placeholder="Board members name" /></p>
-								<p><input type="text" name="board_title" class="inline" placeholder="Board members job title" /></p>
+								<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+								<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
 							</div>
 							<div class="two-cols board-member">
-								<p><input type="text" name="board_name" class="inline" placeholder="Board members name" /></p>
-								<p><input type="text" name="board_title" class="inline" placeholder="Board members job title" /></p>
+								<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+								<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
 							</div>
 						</div>
 						<p><a href="javascript:;" class="add-board"><i class="fa fa-plus"></i> add another</a></p>
@@ -158,15 +158,15 @@
 						
 						<p>
 							<label for="short_term_goals">Short Term Goals</label><br />						
-							<textarea id="short_term_goals" placeholder="Please tell us about your programs short term goals." class="textarea-large"></textarea>		
+							<textarea id="short_term_goals" placeholder="Please tell us about your program's short term goals" class="textarea-large"></textarea>		
 						</p>
 						<p>
 							<label for="mid_term_goals">Mid Term Goals</label><br />						
-							<textarea id="mid_term_goals" placeholder="Please tell us about your programs mid term goals." class="textarea-large"></textarea>		
+							<textarea id="mid_term_goals" placeholder="Please tell us about your program's mid term goals" class="textarea-large"></textarea>		
 						</p>
 						<p>
 							<label for="long_term_goals">Long Term Goals</label><br />						
-							<textarea id="long_term_goals" placeholder="Please tell us about your programs long term goals." class="textarea-large"></textarea>		
+							<textarea id="long_term_goals" placeholder="Please tell us about your program's long term goals" class="textarea-large"></textarea>		
 						</p>				
 					</div>											
 
@@ -176,15 +176,15 @@
 						
 						<p>
 							<label for="amount_from_airdrie">Amount Requested from the City of Airdrie</label><br />
-							<input type="text" id="amount_from_airdrie" class="input-half" placeholder="Amount requested from the City of Airdrie." />
+							<span class="input-currency"><input type="number" id="amount_from_airdrie" class="input-half sum" placeholder="Amount requested from the City of Airdrie" /></span>
 						</p>
 						<p>
 							<label for="amount_from_other">Amount from Other Revenue Sources</label><br />
-							<input type="text" id="amount_from_other" class="input-half" placeholder="Amount from other revenue sources." />
+							<span class="input-currency"><input type="number" id="amount_from_other" class="input-half sum" placeholder="Amount from other revenue sources" /></span>
 						</p>
 						<p>
 							<label for="budget_total">Total <cfoutput>#Year(DateAdd("yyyy", 1, Now()))#</cfoutput> budget</label><br />
-							<input type="text" id="budget_total" class="input-half" placeholder="Total budget for <cfoutput>#Year(DateAdd("yyyy", 1, Now()))#</cfoutput>." />
+							<span class="input-currency"><input type="number" id="budget_total" class="input-half sum-total" disabled /></span>
 						</p>
 					</div>
 
@@ -192,7 +192,7 @@
 					<div id="people_panel" class="panel">
 						<h1 class="form-group-heading">People</h1>
 						
-						<p>This will be where the agencies manage accounts that can access there portal.</p>
+						<p>This will be where the agency manages accounts that can access their portal.</p>
 					</div>
 
 					<div class="form_buttons clearfix">
