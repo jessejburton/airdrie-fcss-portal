@@ -42,60 +42,52 @@
 			text-decoration: none;
 			color: inherit;
 		}
-	#header_logo_text {
-		font-size: 1.2em;
-	}
 
 /*** FOOTER ***/
 	#footer {
 		text-align: center;
 		padding: 75px 0;
-		background-color: #CCC;
+		background-color: #23282d;
+		color: #666;
+		font-size: .7em;
 	}
-		#footer p {
-			font-size: .9em;
-			color: #23538a;
-		}
-	#footer_logo {
-		height: 50px;
-	}
-	#footer p a {
+	#footer a {
 		text-decoration: underline;
+		color: inherit;
 	}
 		#footer a:hover {
-			opacity: 1;
 			font-weight: bold;
 		}
 
+	#city_logo {
+		width: 150px;
+	}
+
 /*** NAVIGATION ***/
-	#sidebar_back {
-	    position: fixed;
-	    top: 75px;
-	    bottom: -120px;
-	    z-index: 0;
+	#navigation_wrapper {
+		background-color: #23282d;
+		color: #CCC;
 	}
-	#sidebar_wrapper {
-		position: fixed;
-		float: left;
-		z-index: 9990;
-		top: 75px;
+	#navigation {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		position: relative;
+		overflow: hidden;
+		max-height: 0;
+		transition: max-height 1s ease-in-out;
 	}
-	#sidebar_navigation, #sidebar_back, #sidebar_wrapper {
-	    width: 200px;
-	    background-color: #23282d;
-	    color: #CCC;
+	#navigation.open {
+		max-height: 1500px;
 	}
-	#sidebar_navigation {
-		clear: left;
-	    margin: 0;
-	    padding: 0;
-	    list-style: none;
-	}
-		#sidebar_navigation i {
+		#navigation li, #navigation_mobile_button {
+			display: block;
+		}
+		#navigation i, #navigation_mobile_button i {
 			font-size: 1.3em;
 			padding-right: 10px;
 		}
-		#sidebar_navigation a {
+		#navigation a, #navigation_mobile_button a {
 			font-size: 14px;
 		    font-weight: 400;
 		    line-height: 18px;
@@ -104,55 +96,17 @@
 		    display: block;
 		    cursor: pointer;
 		}
-			#sidebar_navigation a:hover {
+			#navigation a:hover, #navigation_mobile_button a:hover {
 				background-color: #494949;
 			}
-			#sidebar_navigation li.active a{
+			#navigation li.active a{
 				background-color: #4C9EC9;
 				color: #FFF;
 			}
-	#sidebar_navigation li.spacer {
-		height: 1px;
-		background-color: #4A4A4A;
-		margin: 15px 0;
-	}
-	#sidebar_navigation li.navigation-heading {
-		padding-left: 15px;
-		margin: 10px 0;
-		font-weight: bold;
-	}
-	.sidebar-section {
-		padding-top: 15px;
-	}
-	.sidebar-section a {
-		font-size: .8em;
-		padding-top: 15px;
-		width: 100%;
-		text-align: center;
-		display: block;
-		color: #666;
-	}
-		.sidebar-section a:hover {
-			text-decoration: underline;
-			color: #fff;
-		}
-
-	#city_logo {
-		width: 70%;
-	}
 
 /*** MAIN ***/
-	#page {
-		height: auto;
-	    min-height: 100%;
-	    width: 100%;
-	    position: relative;
-	    top: 80px;
-	}
 	#main_content {
-		margin-top: 25px;
-		position: relative;
-		padding-left: 200px;
+		padding: 25px;
 	}
 	a {
 		color: inherit;
@@ -322,10 +276,26 @@
 		width: 100%;
 		padding: 3px 0 3px 25px;
 	}
+	.heading-error {
+		color: #C42424!important;
+	}
+		.heading-error:after {
+			padding-left: 10px;
+			font-family: FontAwesome;
+			content: "\f06a";
+		}
+	.heading-success {
+		color: #1CB011!important;
+	}
+		.heading-success:after {
+			padding-left: 10px;
+			font-family: FontAwesome;
+			content: "\f058";
+		}
 	.input-error {
 		border: 1px solid #c42424;		
 	}
-	textarea.input-error, input[type=text].input-error, select.input-error {
+	textarea.input-error, input[type=text].input-error, select.input-error, input[type=password].input-error {
 		box-shadow: 0px 0px 15px rgba(196,33,33,0.5);
 	}
 
@@ -409,12 +379,8 @@
 
 
 /*** UTILITIES ***/
-	.wrapper-full {
-		margin: 25px 50px;
-	}
 	.wrapper {
-		margin: 25px 50px;
-		max-width: 1200px;
+		margin: 0;
 	}
 	.pull-right {
 	  float: right !important;
@@ -433,10 +399,13 @@
 		text-align: center;
 	}
 	.autoreply {
-		padding: 10px 15px;
-		margin: 10px 50px;	
+		padding: 10px 15px;	
 		display: none; /* It will fade in */
+		font-size: 12px;
 	}
+		.autoreply ul {
+			padding-left: 15px;
+		}
 		.autoreply-success {
 			border-left: 5px solid #53D349;
 			background-color: #EAFBE9;
@@ -445,7 +414,7 @@
 			border-left: 5px solid #C42424;
 			background-color: #FFEFEF;
 		}
-		.autoreply-warning {
+		.autoreply-info {
 			border-left: 5px solid #D5CA4F;
 			background-color: #FDFBEA;
 		}
@@ -473,8 +442,11 @@
 	.underlined {
 		text-decoration: underline;
 	}
-	.smaller-text {
+	.small-text {
 		font-size: .8em;
+	}
+	.super-small-text {
+		font-size: .7em;
 	}
 
 /*** COLORS ***/
@@ -557,6 +529,10 @@
 }
 
 @media only screen and (min-width:1366px) {
+	.wrapper {
+		margin: 0 auto;
+		max-width: 1200px;
+	}
 	.two-cols p {
 		float: left;
 		width: 50%;
@@ -567,5 +543,17 @@
 	}
 	input.inline + button.inline {
 		margin-left: 10px;
+	}
+	#navigation {
+		max-height: 75px;
+	}
+		#navigation li {
+			display: inline-block;
+		}
+	#navigation_mobile_button {
+		display: none;
+	}
+	.logout-link {
+		float: right !important;
 	}
 }

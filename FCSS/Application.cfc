@@ -20,9 +20,23 @@
 
         <!--- If they log out, kill the session vars and cookies --->
 		<cfif isDefined('URL.logout')>
-            <cfset StructDelete(SESSION, "loggedin")>
-            <cfset StructDelete(SESSION, "homelink")>
+            <cfset StructDelete(SESSION, "LOGGEDIN")>
         </cfif>        
+
+        <!--- Check if this is an ajax call or not --->
+        <cfset REQUEST.isAjax = false>        
+        <cfset LOCAL.headers = getHttpRequestData().headers /> 
+        <cfset REQUEST.isAjax = structKeyExists(LOCAL.headers, "X-Requested-With") AND (LOCAL.headers["X-Requested-With"] EQ "XMLHttpRequest")>
+        <cfif REQUEST.isAjax>
+            <cfcontent type="application/json">
+        </cfif> 
+
+        <cfset REQUEST.NEWAGENCY = false>
+        <cfif isDefined('SESSION.loggedin')>
+            <!--- TODO - check to see if the session is still valid --->
+            <cfset REQUEST.NEWAGENCY = SESSION.NEWAGENCY>
+            <cfset REQUEST.loggedin = true>
+        </cfif>
 	</cffunction>    
     
 	
@@ -35,7 +49,6 @@
 	<cffunction name="onSessionEnd" returntype="void">
 		<cfargument name = "SessionScope" required="yes" />
     	<cfargument name = "ApplicationScope" required="yes" />
-        
 	</cffunction>
 	
 	<!--- Function for the end of a request --->

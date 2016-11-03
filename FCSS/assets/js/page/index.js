@@ -1,5 +1,6 @@
 "use strict"
 
+/*
 google.charts.load('current', {'packages':['corechart','map']});
 google.charts.setOnLoadCallback(drawChart);
 
@@ -62,3 +63,5 @@ function drawChart() {
 
         chart.draw(data, options);
 }
+
+*/

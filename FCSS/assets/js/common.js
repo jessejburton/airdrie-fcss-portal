@@ -1,56 +1,21 @@
 "use strict"
 
-var switching = false;
-
 $(document).ready(function(){
 	var pagename = location.pathname.split("/");
 	pagename = pagename[pagename.length - 1];
 
-	$('#sidebar_navigation a[href^="' + pagename + '"]').closest("li").addClass('active');
+	$('#navigation a[href^="' + pagename + '"]').closest("li").addClass('active');
 
-	$(".panels ul.panel_nav_top li:not(.disabled)").find("a").on("click", function(){
-		if(!switching){ // Added to stop double clicking
-			switching = true;
-
-			// CLear any autoreplies
-			$(".autoreply").remove();
-
-			var panels = $(this).closest(".panels");
-			var panel = $(this).data("show");
-			
-			// hide the current panel
-			panels.find(".panel.active").stop().hide();
-			// remove the active classes
-			panels.find(".active").removeClass("active");
-			// show the selected panel and add the active classes
-			panels.find("#" + panel).fadeIn("slow", function(){
-				$(this).addClass("active");
-				switching = false;
-			});
-			$(this).closest("li").addClass("active");
-		}
-	});
-
-	$(".group-error").find("input").addClass("input-error");
-	$(".group-error").find("textarea").addClass("input-error");
-	$(".group-error").find("select").addClass("input-error");
+	$(".autoreply-visible").fadeIn("slow");
 });
 
-// Handle Other Specifications
-$(document).on("change", ".specify", function(){
-	var val = $(this).val();
-	if(val == "Other"){
-		$("#" + $(this).attr("id") + "_other").css("opacity", 1);
-	} else {
-		$("#" + $(this).attr("id") + "_other").css("opacity", 0);
-	}
+
+// Handle Showing Menus
+$(document).on("click", ".menu", function(){
+	var menu = $(this).data("menu");
+
+	$(menu).toggleClass("open");
 });
 
-function showMessage(response){
-	var div = document.createElement("div");
-	$(div).addClass("autoreply autoreply-" + response.TYPE);
-	$(div).html(response.MESSAGE);
 
-	$("#main_content").prepend(div);
-	$(div).fadeIn("slow");
-}
+

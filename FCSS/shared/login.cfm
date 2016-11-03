@@ -1,57 +1,39 @@
-<form id="login_form" name="login_form"><form>
-	<h1 class="form-group-heading">Login</h1>
-<!---	<p>	
-		<label for="simulate">Simulate Login For: </label><br />
-		<select id="simulate" name="simulate">
-			<option value="Agency">Test Agency</option>
-			<option value="Staff">City Staff (Social Planning)</option>
-			<option value="CSAB">CSAB Board Member</option>
-		</select>
-	</p>
+<div id="login_form_container">
+	<form id="login_form" name="login_form"><form>
+		<h1>Login</h1>
+		<div id="login_form_group" class="form-group seen">
+			<p>
+				<label for="login_email">Email</label><br />
+				<input type="text" placeholder="enter your email address" id="login_email" name="login_email" class="required" />
+			</p>
 
-	<hr />--->
+			<p>	
+				<label for="login_password">Password</label><br />
+				<input type="password" placeholder="enter your password" id="login_password" name="login_password" class="required" /><br />
+			</p>
 
-	<p>
-		<label for="login_username">Username</label><br />
-		<input type="text" placeholder="username" id="login_username" name="login_username" />
-	</p>
+			<input type="button" id="login_submit" name="login_submit" value="Login" class="btn btn-primary btn-lg btn-block" />
+		</div>
+	</form>
 
-	<p>	
-		<label for="login_username">Password</label><br />
-		<input type="password" placeholder="password" id="login_password" name="login_password" /><br />
-	</p>
+	<form id="register_form" name="register_form" class="hidden">
+		<h1>Register Your Agency</h1>
+		<div id="register_form_group" class="form-group seen">
+			<p>
+				<label for="agency_name">Agency's Name</label><br />
+				<input type="text" placeholder="enter the name of your agency" id="agency_name" name="agency_name" class="required" />
+			</p>
+			<p>
+				<label for="your_email">Your Email Address</label><br />
+				<input type="text" placeholder="enter the primary email of your agency" id="your_email" name="your_email" class="required" /><br />
+				<span class="super-small-text">* This email address will be used for your login. An email will be sent to the address with a link to continue with the registration process.</span>
+			</p>
 
-	<input type="button" id="login_submit" name="login_submit" value="Login" class="btn btn-primary btn-lg btn-block" />
+			<input type="button" id="register_submit" name="register_submit" value="Register" class="btn btn-primary btn-lg btn-block" />
+		</div>
+	</form>
+
+	<div class="centered spaced small-text">
+		<p><a href="javascript:;" id="login_register" class="spaced underlined login">Register Your Agency</a></p>
+	</div>
 </form>
-
-<form id="register_form" name="register_form" class="hidden">
-	<h1>Register Your Agency</h1>
-
-	<p>
-		<label for="agency_name">Agency's Name</label><br />
-		<input type="text" placeholder="agency" id="agency_name" name="agency_name" />
-	</p>
-	<p>
-		<label for="agency_name">Agency's Primary Email</label><br />
-		<input type="text" placeholder="email" id="agency_email" name="agency_email" />
-	</p>
-
-	<input type="button" id="register_submit" name="register_submit" value="Register" class="btn btn-secondary btn-lg btn-block" />
-
-	<p class="register_text">
-		An email will be sent to the address above to help you continue with the registration process.
-	</p>
-</form>
-
-<div class="centered spaced">
-	<p><a href="javascript:;" id="login_register" class="spaced underlined login">Register Your Agency</a></p>
-
-	<p class="spaced smaller-text">
-		<a href="javascript:;" class="underlined faded">Privacy (FOIP)</a><br />
-		<a href="javascript:;" class="underlined faded">Terms of Service</a>
-	</p>
-
-	<p>
-		<img src="assets/images/coalogo.svg" class="coa_logo_small" />
-	</p>
-</div>
