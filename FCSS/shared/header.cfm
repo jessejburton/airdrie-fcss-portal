@@ -17,7 +17,7 @@
  	</cfif>
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300" rel="stylesheet" type="text/css" />
-	<link href="assets/css/style.css?v=1.5" rel="stylesheet" type="text/css" />
+	<link href="assets/css/style.css?v=1.7" rel="stylesheet" type="text/css" />
 	<link href="assets/libs/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css" />
 
 	<meta name="viewport" content="width=500">

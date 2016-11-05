@@ -1,4 +1,4 @@
-<cfif REQUEST.NEWAGENCY>
+<cfif ArrayContains(REQUEST.SEEN, "New Agency Details") IS 0>
 	<cflocation url="new_agency_details.cfm" addtoken="no" />
 	<cfabort>
 </cfif>

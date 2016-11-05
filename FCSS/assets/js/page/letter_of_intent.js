@@ -1,13 +1,13 @@
 "use strict"
 
-// Add the functionality to add more rows
-$(document).on("click", ".add-staff", function(){
-	var sm = $(".staff-member").first().clone(false);
-	sm.find("input").val("");
-	$("#staff_list").append(sm);
-	sm.find("input").first().focus();
+$(document).ready(function(){
+	$("#letter_of_intent_submit").on("click", function(){
+		$(".form-group").addClass("seen");
+		validateForm($("#letter_of_intent_form"), reviewLOI);
+	});
 });
 
+// Add the functionality to add more rows
 $(document).on("click", ".add-board", function(){
 	var sm = $(".board-member").first().clone(false);
 	sm.find("input").val("");
@@ -32,11 +32,9 @@ $(document).on("keyup", ".sum", function(){
 	$(".sum-total").val(total.toFixed(2));
 });
 
-// Navigation Buttons
-$(document).on("click", "#next_btn", function(){
-	$(".panel_nav_top li.active").next().find("a").trigger("click");
-});
-
-$(document).on("click", "#previous_btn", function(){
-	$(".panel_nav_top li.active").prev().find("a").trigger("click");
-});
+/*** Review the Letter of Intent ***/
+function reviewLOI(){
+	// Remove disabled class
+	$(".accordion .ui-state-disabled").removeClass("ui-state-disabled");
+	$('.accordion').accordion('option', 'active', -1);
+}

@@ -20,7 +20,11 @@
 
         <!--- If they log out, kill the session vars and cookies --->
 		<cfif isDefined('URL.logout')>
+        <!--- TESTING --->
+            <cfset StructDelete(SESSION, "AGENCY")>
+        <!--- TESTING --->
             <cfset StructDelete(SESSION, "LOGGEDIN")>
+            <cfset StructDelete(SESSION, "SEEN")><!--- TODO --->
         </cfif>        
 
         <!--- Check if this is an ajax call or not --->
@@ -31,10 +35,11 @@
             <cfcontent type="application/json">
         </cfif> 
 
-        <cfset REQUEST.NEWAGENCY = false>
+        <cfset REQUEST.SEEN = ArrayNew(1)>
         <cfif isDefined('SESSION.loggedin')>
             <!--- TODO - check to see if the session is still valid --->
-            <cfset REQUEST.NEWAGENCY = SESSION.NEWAGENCY>
+            <cfset REQUEST.SEEN = SESSION.SEEN><!--- TODO should pull from DB --->
+
             <cfset REQUEST.loggedin = true>
         </cfif>
 	</cffunction>    

@@ -533,6 +533,10 @@
 		margin: 0 auto;
 		max-width: 1200px;
 	}
+	.half {
+		display: relative;
+		width: 50%;
+	}
 	.two-cols p {
 		float: left;
 		width: 50%;
@@ -549,6 +553,7 @@
 	}
 		#navigation li {
 			display: inline-block;
+			margin-left: -4px;
 		}
 	#navigation_mobile_button {
 		display: none;

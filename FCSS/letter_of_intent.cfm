@@ -120,7 +120,7 @@
 								<li>Creating and strengthening a sense of community</li>
 								<li>The Provincial goal of poverty prevention</li>
 							</ul>					
-							<textarea id="alignment" placeholder="Maximum 1,000 characters" class="textarea-large"></textarea>		
+							<textarea id="alignment" placeholder="Maximum 1,000 characters" class="textarea-large required"></textarea>		
 						</p>
 						<p>
 							<label for="agency_mission_fit">How does this program fit with your agency mission and vision?</label><br />	
@@ -208,9 +208,8 @@
 							<span class="input-currency"><input type="number" id="budget_total" class="input-half sum-total" disabled /></span>
 						</p>
 
-						<div class="form_buttons clearfix">
-							<button type="button" class="nav prev btn btn-primary pull-left">Prev</button> 
-							<button type="button" class="nav next btn btn-primary pull-right">Next</button> 
+						<div class="form_buttons clearfix"> 
+							<button type="button" id="letter_of_intent_submit" class="btn btn-primary pull-right">Done</button> 
 						</div>
 					</div>
 

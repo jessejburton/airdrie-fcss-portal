@@ -14,7 +14,7 @@
 
 			<form id="application_form">
 				<div class="accordion clearfix">				
-				<!--- PROGRAM INFORMATION --->
+<!--- PROGRAM INFORMATION --->
 					<h3>Program Information</h3>
 					<div class="form-group seen">
 						<p>
@@ -36,7 +36,7 @@
 						</div>
 					</div>
 
-				<!--- CONTACT INFORMATION --->
+<!--- CONTACT INFORMATION --->
 					<h3>Contact Information</h3>
 					<div class="form-group">
 						<p>
@@ -70,7 +70,7 @@
 						</div>
 					</div>					
 
-				<!--- THEORY OF CHANGE --->
+<!--- THEORY OF CHANGE --->
 					<h3>Theory of Change</h3>	
 					<div class="form-group">
 						<p>
@@ -105,7 +105,7 @@
 						</div>			
 					</div>	
 
-				<!--- ALIGNMENT --->
+<!--- ALIGNMENT --->
 					<h3>Alignment</h3>
 					<div class="form-group">
 						<p>
@@ -137,7 +137,7 @@
 						</div>				
 					</div>						
 
-				<!--- BOARD DETAILS --->
+<!--- BOARD DETAILS --->
 					<h3>Board Members</h3>
 					<div class="form-group">
 						<div id="board_list">
@@ -170,7 +170,7 @@
 						</div>
 					</div>						
 
-				<!--- OUTCOMES PLAN --->
+<!--- OUTCOMES PLAN --->
 					<h3>Outcomes Plan</h3>
 					<div class="form-group">
 						<p>
@@ -190,8 +190,15 @@
 							<button type="button" class="nav prev btn btn-primary pull-left">Prev</button> 
 							<button type="button" class="nav next btn btn-primary pull-right">Next</button> 
 						</div>	
-					</div>											
+					</div>	
 
+<!--- DOCUMENTS --->
+					<h3>Documents</h3>
+					<div class="form-group">
+
+					</div>															
+
+<!--- BUDGET --->
 					<h3>Budget</h3>
 					<div class="form-group">
 						<h1 class="form-group-heading">Budget Information</h1>
@@ -344,8 +351,7 @@
 							<input id="distribution_children" type="text" class="inline input-half" placeholder="Enter the dollar amount for fund distribution" />
 							<span class="inline">0%</span><br />
 						</p>
-					</div>	
-								
+					</div>									
 				</div>
 			</form>
 		</div>
