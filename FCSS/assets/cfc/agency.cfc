@@ -1,9 +1,7 @@
 <cfcomponent displayname="Agency" extends="Core">
 <!--- GET --->
-	<cffunction name="Get" returnformat="JSON" returntype="Struct">
-		<cfargument name="AgencyID" type="numeric" required="yes">
-
-		<cfset LOCAL.Agency = StructNew()>
+	<cffunction name="GetAgencyByID" returnformat="JSON" returntype="Struct">
+		<cfargument name="AgencyID" type="numeric" required="yes">		
 
 		<cfquery name="LOCAL.qAgency">
 			SELECT	Name, Vision, Mission, Phone, Email, Fax, Website, Address, MailingAddress, isApproved
@@ -11,6 +9,7 @@
 			WHERE	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="integer"> 
 		</cfquery>
 
+		<cfset LOCAL.Agency = StructNew()>
 		<cfset LOCAL.Agency.AgencyID = ARGUMENTS.AgencyID>
 		<cfset LOCAL.Agency.Name = LOCAL.qAgency.Name>
 		<cfset LOCAL.Agency.Vision = LOCAL.qAgency.Vision>
@@ -22,12 +21,13 @@
 		<cfset LOCAL.Agency.Address = LOCAL.qAgency.Address>
 		<cfset LOCAL.Agency.MailingAddress = LOCAL.qAgency.MailingAddress>
 		<cfset LOCAL.Agency.isApproved = LOCAL.qAgency.isApproved>
+		<cfinvoke component="board" method="GetBoardMembersByAgencyID" ID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BoardMembers">
 
 		<cfreturn LOCAL.Agency>
 	</cffunction>	
 
 <!--- INSERT --->
-	<cffunction name="Add" returnformat="JSON" returntype="Struct">
+	<cffunction name="Insert" returnformat="JSON" returntype="Struct">
 		<cfargument name="Name" type="string" required="yes">
 		<cfargument name="Vision" type="string" default="">
 		<cfargument name="Mission" type="string" default="">
@@ -95,13 +95,15 @@
 	</cffunction>
 
 <!--- DELETE --->
-	<cffunction name="Delete" returntype="JSON" returntype="Struct">
+	<cffunction name="Delete" returnformat="JSON" returntype="Boolean">
 		<cfargument name="AgencyID" type="numeric" required="yes">
 
-		<cfset LOCAL.Agency = Get(ARGUMENTS.AgencyID)>
-
-		<cfquery result="qAgency">
+		<cfquery>
 			UPDATE Agency_tbl
+			SET isActive = 0
+			WHERE	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">
 		</cfquery>
+
+		<cfreturn true>
 	</cffunction>
 </cfcomponent>

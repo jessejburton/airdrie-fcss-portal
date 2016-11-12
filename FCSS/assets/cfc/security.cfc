@@ -7,7 +7,7 @@
 		<!--- Log User In --->
 		<cfset SESSION.USER = StructNew()>
 		<cfset SESSION.USER.EMAIL = ARGUMENTS.email>
-		<cfset SESSION.NEWAGENCY = true>
+		<cfset SESSION.SEEN = ArrayNew(1)>
 		<cfset SESSION.LOGGEDIN = true>
 
 		<cfreturn getSuccessResponse("Success")>
