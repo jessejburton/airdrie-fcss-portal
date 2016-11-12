@@ -22,9 +22,9 @@
 		<cfif isDefined('URL.logout')>
         <!--- TESTING --->
             <cfset StructDelete(SESSION, "AGENCY")>
+            <cfset StructDelete(SESSION, "APPLICATIONS")>
         <!--- TESTING --->
             <cfset StructDelete(SESSION, "LOGGEDIN")>
-            <cfset StructDelete(SESSION, "SEEN")><!--- TODO --->
         </cfif>        
 
         <!--- Check if this is an ajax call or not --->
@@ -35,11 +35,11 @@
             <cfcontent type="application/json">
         </cfif> 
 
-        <cfset REQUEST.SEEN = ArrayNew(1)>
-        <cfif isDefined('SESSION.loggedin')>
-            <!--- TODO - check to see if the session is still valid --->
-            <cfset REQUEST.SEEN = SESSION.SEEN><!--- TODO should pull from DB --->
+        <cfif NOT isDefined('SESSION.Agency')>
+            <cfset REQUEST.isNewAgency = true>
+        </cfif>
 
+        <cfif isDefined('SESSION.loggedin')>
             <cfset REQUEST.loggedin = true>
         </cfif>
 	</cffunction>    
@@ -67,39 +67,27 @@
         <cfargument name="Except" required=true/>
         <cfargument type="String" name = "EventName" required=true/>
         <!--- Log all errors in an application-specific log file. --->
-        <cflog file="#This.Name#" type="error" text="Message is: #except.message#">
+        <cflog file="#APPLICATION.ApplicationName#" type="error" text="Message: #except#">
+        
         <!--- Throw validation errors to ColdFusion for handling. --->
         <cfif Find("coldfusion.filter.FormValidationException",
-                         Arguments.Except.StackTrace)>
-            <cfthrow object="#except#">
+            Arguments.Except.StackTrace)>
+            <cfthrow object="#ARGUMENTS.Except#">
         <cfelse>
-            <!--- You can replace this cfoutput tag with application-specific 
-                    error-handling code. --->
             <cfoutput>
-            	<p>An error has occurred. The system administrator has been notified.</p>                
+                <h1>ERROR HAPPENED</h1>
+                <cfdump var="#except#">
+                <!---<cfinvoke component="debug" method="sendDebugEmail" subject="Error" error="#except#" email="#APPLICATION.adminemail#" />--->
             </cfoutput>
         </cfif>
-
-		<cfsavecontent variable="errordetails">
-        	<cfoutput>
-            	<p>Error from - #CGI.SCRIPT_NAME#</p>
-                <p>Details - #except#</p>
-                <cfif isDefined('except.cause.detail')>
-                	<p>More Details - #except.cause.detail#</p>
-                </cfif>
-                <cfdump var="#except#">
-                <cfdump var="#FORM#">
-                <cfdump var="#CGI#">
-                <cfif isDefined('SESSION')>
-	                <cfdump var="#SESSION#">
-                </cfif>
-                <cfdump var="#REQUEST#">
-            </cfoutput>
-        </cfsavecontent>
-        <cfoutput>#errordetails#</cfoutput>
-        <!---<cfmail to="#APPLICATION.adminemail#" from="no-reply@airdrie.ca" type="html" subject="Error from #application.title#">
-        	<cfoutput>#errordetails#</cfoutput>
-        </cfmail>--->
+        
+        <cfinvoke component="cfc.core" method="getErrorResponse" message="An error has occurred. The system administrator has been notified. Please try again later." returnvariable="LOCAL.response">
+        
+        <cfif IsDefined('REQUEST.isAJAX') AND REQUEST.isAjax>
+            <cfoutput>#SERIALIZEJSON(LOCAL.response)#</cfoutput>
+        <cfelse>
+            <cfoutput>#LOCAL.response.MESSAGE#</cfoutput>
+        </cfif>
     </cffunction>
     	
 </cfcomponent>

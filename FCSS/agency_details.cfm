@@ -57,7 +57,7 @@
 					<p>
 						<label for="agency_mailing">Agency Mailing Address</label><br />
 						<span class="label-sub">if different from your physical address</span><br />	
-						<textarea data-maxlength="1000" id="agency_mailing" placeholder="Please enter your agencies mailing address. Please include the postal code." class="input-half required">#AGENCY.MailingAddress#</textarea>
+						<textarea data-maxlength="1000" id="agency_mailing" placeholder="Please enter your agencies mailing address. Please include the postal code." class="input-half">#AGENCY.MailingAddress#</textarea>
 					</p>
 					<p>
 						<label for="agency_website">Website</label><br />
@@ -89,7 +89,64 @@
 						<button type="button" class="btn btn-primary pull-right" id="save_agency_contact_btn">Save</button>
 					</div>	
 				</div>		
-			</form>			
+			</form>		
+
+<!--- BOARD DETAILS --->
+			<h3>Board Members</h3>
+			<div class="form-group">
+				<div id="board_list">
+					<div class="two-cols board-member">
+						<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+						<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
+					</div>
+					<div class="two-cols board-member">
+						<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+						<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
+					</div>
+					<div class="two-cols board-member">
+						<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+						<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
+					</div>
+					<div class="two-cols board-member">
+						<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+						<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
+					</div>
+					<div class="two-cols board-member">
+						<p><input type="text" name="board_name" class="inline" placeholder="Board member's name" /></p>
+						<p><input type="text" name="board_title" class="inline" placeholder="Board member's title" /></p>
+					</div>
+				</div>
+				<p><a href="javascript:;" class="add-board"><i class="fa fa-plus"></i> add another</a></p>
+
+				<div class="form_buttons clearfix">
+					<button type="button" class="nav prev btn btn-primary pull-left">Prev</button> 
+					<button type="button" class="nav next btn btn-primary pull-right">Next</button> 
+				</div>
+			</div>	
+
+		<!--- DOCUMENTS --->
+			<h3>Documents</h3>
+			<div class="form-group">
+				<p>Please upload the following documents.</p>
+				<ul>
+					<li>Certificate of Compliance</li>
+					<li>Insurance Certificate</li>
+					<li>Organizational Chart of Agency</li>
+					<li>Certificate of Incorporation under the Societies Act</li>
+					<li>Constitutions and Bylaws</li>
+				</ul>
+
+				<form id="upload_document_form">
+					<p><input id="upload_document" name="upload_document" type="file" /></p>
+				</form>
+
+				<div id="uploaded_documents"></div>
+
+				<div class="form_buttons clearfix">
+					<button type="button" class="nav prev btn btn-primary pull-left">Prev</button> 
+					<button type="button" class="nav next btn btn-primary pull-right">Next</button> 
+				</div>	
+			</div>	
 
 		<!--- ACCOUNTS --->
 			<h3>Accounts</h3>

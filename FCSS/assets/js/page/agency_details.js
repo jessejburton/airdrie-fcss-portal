@@ -1,12 +1,8 @@
 "use strict"
 
 $(document).ready(function(){
-	$("#save_agency_information_btn").on("click", function(){
+	$(".save_agency").on("click", function(){
 		validateForm("#agency_information_form", saveAgencyInformation);
-	});
-
-	$("#save_agency_contact_btn").on("click", function(){
-		validateForm("#agency_contact_form", saveAgencyContact);
 	});
 });
 

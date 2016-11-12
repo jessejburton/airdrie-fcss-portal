@@ -1,5 +1,12 @@
 "use strict"
 
+$(document).ready(function(){
+	$("#application_review_submit").on("click", function(){
+		$(".form-group").addClass("seen");
+		validateForm($("#application_form"), submitApplication);
+	});
+});
+
 // Add the functionality to add more rows
 $(document).on("click", ".add-row", function(){
 	var tr = $(this).closest(".table").find("tbody tr").first().clone(false);
@@ -56,3 +63,16 @@ function updateTableColumns(table){
 	total_div.html("$ " + total.toFixed(2));
 };
 
+function submitApplication(){
+	var pstr = new Object();
+	pstr.method = "allocateFunds";
+
+	$.ajax({
+		url: "assets/cfc/testing.cfc",
+		data: pstr,
+		success: function(response){
+			$("#application_form").hide();
+			$("#application_form_complete").addClass("autoreply autoreply-success").removeClass("hidden").fadeIn("slow");
+		}
+	})	
+}
