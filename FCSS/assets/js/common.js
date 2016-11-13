@@ -32,7 +32,6 @@ $(document).on("click", ".menu", function(){
 	$(menu).toggleClass("open");
 });
 
-
 // Add the functionality to add more rows
 $(document).on("click", ".add-board", function(){
 	var sm = $(".board-member").first().clone(false);

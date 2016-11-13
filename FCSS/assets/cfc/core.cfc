@@ -36,4 +36,16 @@
 		<cfreturn LOCAL.response>
 	</cffunction>	
 
+<!--- Send Error Email --->
+	<cffunction name="sendErrorEmail" access="public">
+		<cfargument name="subject" type="string" default="Error message from #APPLICATION.Name# (#APPLICATION.environment#)">
+
+		<cfmail to="#APPLICATION.adminemail#"
+				from="#APPLICATION.frommail#"
+				type="html"
+				subject="#ARGUMENTS.subject#">
+			<cfdump var="#ARGUMENTS#">
+		</cfmail>
+	</cffunction>	
+
 </cfcomponent>

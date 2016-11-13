@@ -75,13 +75,23 @@
             <cfthrow object="#ARGUMENTS.Except#">
         <cfelse>
             <cfoutput>
-                <h1>ERROR HAPPENED</h1>
-                <cfdump var="#except#">
-                <!---<cfinvoke component="debug" method="sendDebugEmail" subject="Error" error="#except#" email="#APPLICATION.adminemail#" />--->
+                <!--- TODO Change this to send mail --->
+                <cfsavecontent variable="LOCAL.output">
+                    <cfdump var="#EXCEPT#">
+                    <cfdump var="#SESSION#">
+                    <cfdump var="#REQUEST#">
+                    <cfdump var="#FORM#">                    
+                </cfsavecontent>
+                <cffile action="write" file="#ExpandPath('output/' & CreateUUID() & '.html')#" nameconflict="overwrite" output="#LOCAL.output#" />
+
+                <!--- TODO - change this to only send email for production --->
+                <cfif APPLICATION.environment IS "development">
+                    <cfinvoke component="#APPLICATION.cfcpath#core" method="sendErrorEmail" />
+                </cfif>
             </cfoutput>
         </cfif>
         
-        <cfinvoke component="cfc.core" method="getErrorResponse" message="An error has occurred. The system administrator has been notified. Please try again later." returnvariable="LOCAL.response">
+        <cfinvoke component="#APPLICATION.cfcpath#core" method="getErrorResponse" message="An error has occurred. The system administrator has been notified. Please try again later." returnvariable="LOCAL.response">
         
         <cfif IsDefined('REQUEST.isAJAX') AND REQUEST.isAjax>
             <cfoutput>#SERIALIZEJSON(LOCAL.response)#</cfoutput>

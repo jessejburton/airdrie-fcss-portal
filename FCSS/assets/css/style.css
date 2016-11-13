@@ -437,6 +437,9 @@
 					content: "\f05a";
 					color: #C42424;
 				}
+		.autoreply-visible {
+			display: block;
+		}
 	.inline {
 		display: inline;
 		vertical-align: middle;
