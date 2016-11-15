@@ -4,9 +4,9 @@
 	<section id="main_content">
 		<div class="wrapper clearfix">
 
-		<cfif isDefined('URL.newAgency')>
+		<cfif REQUEST.AGENCY.ISNEW>
 			<div class="autoreply autoreply-info autoreply-visible">
-				<p><strong>Great!</strong> We now have everything we need in order for you to get started applying for grant funding. Click on <a href="programs.cfm">programs</a> in the navigation menu to get started with your first application.</p>
+				<p><strong>Get Started!</strong> We now have everything we need in order for you to get started applying for grant funding. Click on <a href="programs.cfm">programs</a> in the navigation menu to get started with your first application.</p>
 			</div>
 		</cfif>
 

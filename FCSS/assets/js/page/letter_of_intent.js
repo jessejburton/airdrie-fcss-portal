@@ -5,7 +5,16 @@ $(document).ready(function(){
 		$(".form-group").addClass("seen");
 		validateForm($("#letter_of_intent_form"), reviewLOI);
 	});
+
+	setInterval(saveLOI, 5000);
 });
+
+function saveLOI(){
+	$("#saving").fadeIn("slow", function(){
+		// TODO - Write the save function
+		$(this).fadeOut("slow");
+	});
+}
 
 // Budget Summing
 $(document).on("keyup", ".sum", function(){

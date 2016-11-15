@@ -7,6 +7,7 @@
     <!--- Function for the start of the application --->    
     <cffunction name="onApplicationStart" returnType="void" output="false">
 		<cfinclude template="application.ini">
+        <cfset APPLICATION.BCRYPT = createObject("java", "org.mindrot.jbcrypt.BCrypt")>
 	</cffunction>
         
 	<!--- Function for every request --->
@@ -20,12 +21,14 @@
 
         <!--- If they log out, kill the session vars and cookies --->
 		<cfif isDefined('URL.logout')>
-        <!--- TESTING --->
-            <cfset StructDelete(SESSION, "AGENCY")>
-            <cfset StructDelete(SESSION, "APPLICATIONS")>
-        <!--- TESTING --->
             <cfset StructDelete(SESSION, "LOGGEDIN")>
-        </cfif>        
+            <cfset StructDelete(SESSION, "ACCOUNTID")>
+        </cfif>      
+
+        <!--- Cross Site Request Forgery TODO - implement --->
+        <cfif NOT structKeyExists(COOKIE, 'csrf')>
+            <cfcookie name="csrf" value='#HASH(CREATEUUID(), "sha-256", "utf-8")#' secure="false" httpOnly="false">
+        </cfif>  
 
         <!--- Check if this is an ajax call or not --->
         <cfset REQUEST.isAjax = false>        
@@ -35,12 +38,16 @@
             <cfcontent type="application/json">
         </cfif> 
 
-        <cfif NOT isDefined('SESSION.Agency')>
-            <cfset REQUEST.isNewAgency = true>
+        <cfif isDefined('SESSION.AccountID')>
+            <cfset REQUEST.LOGGEDIN = true>
+            <cfinvoke component="#APPLICATION.cfcpath#account" method="getAccountByID" accountID="#SESSION.AccountID#" returnvariable="REQUEST.USER" />
+            <cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#REQUEST.USER.AGENCYID#" returnvariable="REQUEST.AGENCY" />
         </cfif>
 
-        <cfif isDefined('SESSION.loggedin')>
-            <cfset REQUEST.loggedin = true>
+        <cfif APPLICATION.environment IS "development">
+            <cfset REQUEST.CacheGUID = CreateUUID()>
+        <cfelse>
+            <cfset REQUEST.CacheGUID = APPLICATION.version>
         </cfif>
 	</cffunction>    
     
@@ -61,7 +68,6 @@
 
 	</cffunction>   
     
-    
     <!--- Function for any errors that occur --->
     <cffunction name="onError" access="public" returntype="void">
         <cfargument name="Except" required=true/>
@@ -75,18 +81,13 @@
             <cfthrow object="#ARGUMENTS.Except#">
         <cfelse>
             <cfoutput>
-                <!--- TODO Change this to send mail --->
-                <cfsavecontent variable="LOCAL.output">
+                <cfif APPLICATION.environment IS "production" OR REQUEST.isAjax>                    
+                    <cfinvoke component="#APPLICATION.cfcpath#core" error="#EXCEPT#" session="#SESSION#" request="#REQUEST#" form="#FORM#" method="sendErrorEmail" />
+                <cfelseif APPLICATION.environment IS "development">
                     <cfdump var="#EXCEPT#">
-                    <cfdump var="#SESSION#">
                     <cfdump var="#REQUEST#">
-                    <cfdump var="#FORM#">                    
-                </cfsavecontent>
-                <cffile action="write" file="#ExpandPath('output/' & CreateUUID() & '.html')#" nameconflict="overwrite" output="#LOCAL.output#" />
-
-                <!--- TODO - change this to only send email for production --->
-                <cfif APPLICATION.environment IS "development">
-                    <cfinvoke component="#APPLICATION.cfcpath#core" method="sendErrorEmail" />
+                    <cfdump var="#FORM#">
+                    <cfdump var="#SESSION#">
                 </cfif>
             </cfoutput>
         </cfif>

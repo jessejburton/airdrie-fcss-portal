@@ -39,5 +39,7 @@
 		</div>
 	</div>
 
+	<div id="saving"><img src="assets/images/saving-gear.gif" /> Saving...</div>
+
 </body>
 </html>

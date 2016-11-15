@@ -4,8 +4,9 @@
 		<cfargument name="AgencyID" type="numeric" required="yes">		
 
 		<cfquery name="LOCAL.qAgency">
-			SELECT	Name, Vision, Mission, Phone, Email, Fax, Website, Address, MailingAddress, isApproved
-			FROM	Agency_tbl
+			SELECT	Name, Vision, Mission, Phone, Email, Fax, Website, Address, MailingAddress, isApproved, 
+					(SELECT COUNT(AgencyID) FROM Program_tbl WHERE AgencyID = a.AgencyID) AS Programs
+			FROM	Agency_tbl a
 			WHERE	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="integer"> 
 		</cfquery>
 
@@ -21,7 +22,9 @@
 		<cfset LOCAL.Agency.Address = LOCAL.qAgency.Address>
 		<cfset LOCAL.Agency.MailingAddress = LOCAL.qAgency.MailingAddress>
 		<cfset LOCAL.Agency.isApproved = LOCAL.qAgency.isApproved>
-		<cfinvoke component="board" method="GetBoardMembersByAgencyID" ID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BoardMembers">
+		<cfset LOCAL.Agency.Programs = LOCAL.qAgency.Programs>
+		<cfset LOCAL.Agency.isNew = LOCAL.qAgency.Programs IS 0>
+		<cfinvoke component="board" method="GetBoardMembersByAgencyID" AgencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BoardMembers">
 
 		<cfreturn LOCAL.Agency>
 	</cffunction>	
@@ -37,6 +40,7 @@
 		<cfargument name="Website" type="string" default="">
 		<cfargument name="Address" type="string" default="">
 		<cfargument name="MailingAddress" type="string" default="">
+		<cfargument name="AccountEmail" type="string" required="false" hint="Used to check to see if an email account is already registered with another agency.">
 
 		<cfset LOCAL.Agency = ARGUMENTS>
 

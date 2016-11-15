@@ -1,51 +1,61 @@
 <cfinclude template="shared/header.cfm">
 
+<cfif StructKeyExists(URL, 'ID')>
+	<cfinvoke component="#APPLICATION.cfcpath#program" method="getProgramByID" programID="#URL.ID#" returnvariable="LOI" />
+</cfif>
+
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
 			<h1>Letter of Intent</h1>
-
-			<cfif isDefined('SESSION.Applications') AND SESSION.Applications[1].Allocated GT 0>
-				<div class="autoreply autoreply-success autoreply-visible">
-					<p><strong>Approved!</strong> This Letter of Intent has been approved!. You can now fill out the full <a href="application_form.cfm">Grant Application Form</a>.</p>
-				</div>
-			</cfif>
 			
 			<form id="letter_of_intent_form">
-				<cfif APPLICATION.environment IS "development" OR APPLICATION.environment IS "testing">
-					<p><input type="button" id="fill" class="btn btn-primary" value="FILL REQUIRED FIELDS" /></p>
-				</cfif>
-
-				<!--- New Agency Message --->	
-				<cfif NOT isDefined('SESSION.APPLICATIONS')>
+				<cfif REQUEST.AGENCY.ISNEW>
 					<div class="autoreply autoreply-info autoreply-visible">
 						<p><strong>Get Started!</strong> Tell us about the program you would like to request funding for by completing this Letter of Intent.</p>
 					</div>
 				</cfif>
 
+				<!--- DEVELOPMENT FEATURE --->
+				<cfif APPLICATION.environment IS "development">
+					<p><input type="button" id="fill" class="btn btn-primary" value="FILL REQUIRED FIELDS" /></p>
+				</cfif>
+				<!--- DEVELOPMENT FEATURE --->
+
 				<p>
 					Please complete all of the following information. You can click on the heading for a section to jump directly to that section of the form
 				</p> 
-			
+				
+<cfoutput>				
 				<div class="accordion clearfix">				
 				<!--- PROGRAM INFORMATION --->
 					<h3>Program Information</h3>
 					<div class="form-group seen">
 						<p>
 							<label for="program_name">Program Name</label><br />
-							<input type="text" id="program_name" placeholder="Please enter the name of your program" class="required value" />
+							<input type="text" id="program_name" placeholder="Please enter the name of your program" class="required value" 
+								value="#iif(isDefined('LOI'), 'XMLFormat(LOI.ProgramName)', DE(''))#" />
 						</p>
 						<p>
 							<label for="program_statement">Program Statement</label><br />						
-							<textarea data-maxlength="1000" id="program_statement" placeholder="Approximately 250 words" class="textarea-large required value"></textarea>		
+							<textarea data-maxlength="1000" id="program_statement" placeholder="Approximately 250 words" class="textarea-large required value">
+								#iif(isDefined('LOI'), 'XMLFormat(LOI.ProgramStatement)', DE(''))#
+							</textarea>		
 						</p>				
 						<p>
 							<label for="target_audience">Target Audience</label><br />						
-							<textarea id="target_audience" placeholder="Please describe the target audience for your program" class="textarea-large required value"></textarea>	
+							<textarea id="target_audience" placeholder="Please describe the target audience for your program" class="textarea-large required value">
+								#iif(isDefined('LOI'), 'XMLFormat(LOI.TargetAudience)', DE(''))#
+							</textarea>	
 						</p>
 						<p>
-							<label for="percent_airdrie">What percentage of clients served through this program will be Airdrie residents.</label><br />
-							<input type="text" id="percent_airdrie" class="input-half required value" placeholder="%" />
+							<label>Are the majority of clients served through this program Airdrie residents?</label><br /><br />
+							<label for="percent_airdrie_yes">
+								<input type="radio" id="percent_airdrie_yes" name="percent_airdrie" class="required" /> Yes
+							</label>
+							<label for="percent_airdrie_no">
+								<input type="radio" id="percent_airdrie_no" name="percent_airdrie" class="required" /> No
+							</label>
 						</p>
 
 					<!--- Panel Buttons --->
@@ -60,26 +70,26 @@
 						<p>Please update any of the program contact information that is not the same as your agency's contact information</p>
 						<p>
 							<label for="primary_name">Primary Program Contact Name</label><br />
-							<input type="text" id="primary_name" class="input-half required value" placeholder="Please enter the name of the program's primary contact person" value="<cfoutput>#XMLFormat(SESSION.Agency.PrimaryContact.NameFirst & ' ' & SESSION.Agency.PrimaryContact.NameLast)#</cfoutput>" />
+							<input type="text" id="primary_name" class="input-half required value" placeholder="Please enter the name of the program's primary contact person" value="#iif(isDefined('LOI'), 'XMLFormat(LOI.PrimaryContactName)', 'XMLFormat(REQUEST.USER.NAME)')#" />
 						</p>
 						<p>
 							<label for="primary_phone">Primary Program Contact Phone</label><br />
-							<input type="text" id="primary_phone" class="input-half required value" placeholder="Please enter the phone number of the program's primary contact person" value="<cfoutput>#XMLFormat(SESSION.Agency.PrimaryContact.Phone)#</cfoutput>" />
+							<input type="text" id="primary_phone" class="input-half required value" placeholder="Please enter the phone number of the program's primary contact person" value="#iif(isDefined('LOI'), 'XMLFormat(LOI.PrimaryPhone)', 'XMLFormat(REQUEST.AGENCY.PHONE)')#" />
 						</p>
 						<p>
 							<label for="primary_email">Primary Program Contact Email</label><br />
-							<input type="text" id="primary_email" class="input-half required value" placeholder="Please enter the email of the program's primary contact person" value="<cfoutput>#XMLFormat(SESSION.Agency.PrimaryContact.Email)#</cfoutput>" />
+							<input type="text" id="primary_email" class="input-half required value" placeholder="Please enter the email of the program's primary contact person" value="#iif(isDefined('LOI'), 'XMLFormat(LOI.PrimaryEmail)', 'XMLFormat(REQUEST.AGENCY.EMAIL)')#" />
 						</p>
 						<hr />
 						<p>
 							<label for="program_address">Program Address </label><br />	
-							<span class="label-sub">If different from agency address.</span>				
-							<textarea data-maxlength="1000" id="program_address" placeholder="Please enter your physical address including the postal code" class="input-half required value"><!--- TESTING ---><cfif isDefined("SESSION.Agency.MailingAddress")><cfoutput>#XMLFormat(SESSION.Agency.Address)#</cfoutput></cfif><!--- TESTING ---></textarea>
-						</p>	
+							<span class="label-sub">If different from agency address.</span><br />			
+							<textarea data-maxlength="1000" id="program_address" placeholder="Please enter your physical address including the postal code" class="input-half required value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Address)', 'XMLFormat(REQUEST.AGENCY.ADDRESS)')#</textarea>
+						</p>		
 						<p>
 							<label for="program_mailing_address">Program Mailing Address </label><br />	
-							<span class="label-sub">If different from agency mailing address.</span>				
-							<textarea data-maxlength="1000" id="program_mailing_address" placeholder="Please enter your mailing address including the postal code" class="input-half value"><!--- TESTING ---><cfif isDefined("SESSION.Agency.MailingAddress")><cfoutput>#XMLFormat(SESSION.Agency.MailingAddress)#</cfoutput></cfif><!--- TESTING ---></textarea>		
+							<span class="label-sub">If different from agency mailing address.</span><br />				
+							<textarea data-maxlength="1000" id="program_mailing_address" placeholder="Please enter your mailing address including the postal code" class="input-half value">#iif(isDefined('LOI'), 'XMLFormat(LOI.MailingAddress)', 'XMLFormat(REQUEST.AGENCY.MAILINGADDRESS)')#</textarea>		
 						</p>
 						
 						<!--- Panel Buttons --->
@@ -99,27 +109,27 @@
 						<p>
 							<label for="need_description">Need</label><br />
 							<span class="label-sub">The evidence that there is a need for the program in the Airdrie community. You may add footnotes below to cite complete references and data sources.</span>					
-							<textarea id="need_description" placeholder="Approximately 250 words" class="textarea-large value"></textarea>		
+							<textarea id="need_description" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Need)', DE(''))#</textarea>		
 						</p>
 						<p>
 							<label for="goal_description">Goal</label><br />		
 							<span class="label-sub">The long-term outcomes that the program aims to achieve.</span>					
-							<textarea id="goal_description" placeholder="Approximately 250 words" class="textarea-large value"></textarea>		
+							<textarea id="goal_description" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Goal)', DE(''))#</textarea>		
 						</p>
 						<p>
 							<label for="strategies_description">Strategies</label><br />	
 							<span class="label-sub">The strategies or the steps/activities that will be undertaken to achieve the desired goal. Details include who the program is aimed at (target audience), what will be done (program content), where and how it will be delivered, and when. This should include information on frequency, duration, program cycle, and evaluation plan. </span>					
-							<textarea id="strategies_description" placeholder="Approximately 250 words" class="textarea-large value"></textarea>		
+							<textarea id="strategies_description" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Strategies)', DE(''))#</textarea>		
 						</p>
 						<p>
 							<label for="rationale_description">Rationale</label><br />	
 							<span class="label-sub">What is the evidence that the activities selected are the best or most promising practices? A summary of key research findings that support why the strategy that is being used is a best or promising practice for achieving the program goal. </span>
-							<textarea id="rationale_description" placeholder="Approximately 250 words" class="textarea-large value"></textarea>
+							<textarea id="rationale_description" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Rationale)', DE(''))#</textarea>
 						</p>
 						<p>
 							<label for="footnotes_description">Footnotes</label><br />
 							<span class="label-sub">Footnotes are used to provide complete references for the research that identifies the need and provides the rationale to support the program strategy. The intention is to facilitate learning among agencies that wish to explore particular program areas in more depth. </span>							
-							<textarea id="footnotes_description" placeholder="Approximately 250 words" class="textarea-large value"></textarea>
+							<textarea id="footnotes_description" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Footnotes)', DE(''))#</textarea>
 						</p>	
 
 						<div class="form_buttons clearfix">
@@ -133,7 +143,7 @@
 					<div class="form-group">
 						<p>
 							<label for="fcss_prevention_focus">How does the program meet the FCSS prevention focus?</label><br />					
-							<textarea id="fcss_prevention_focus" placeholder="Approximately 250 words" class="textarea-large value"></textarea>		
+							<textarea id="fcss_prevention_focus" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.PreventionFocus)', DE(''))#</textarea>		
 						</p>
 						<p>
 							<label for="alignment">How does your program align with City of Airdrie's interest in the following:</label><br />		
@@ -143,16 +153,16 @@
 								<li>Creating and strengthening a sense of community</li>
 								<li>The Provincial goal of poverty prevention</li>
 							</ul>					
-							<textarea id="alignment" placeholder="Approximately 250 words" class="textarea-large required value"></textarea>		
+							<textarea id="alignment" placeholder="Approximately 250 words" class="textarea-large required value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Alignment)', DE(''))#</textarea>		
 						</p>
 						<p>
 							<label for="agency_mission_fit">How does this program fit with your agency mission and vision?</label><br />	
-							<textarea id="agency_mission_fit" placeholder="Approximately 250 words" class="textarea-large value"></textarea>		
+							<textarea id="agency_mission_fit" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.MissionFit)', DE(''))#</textarea>		
 						</p>
 						<p>
 							<label for="considered_partnerships">Have you considered partnerships to enhance program efficiency and sustainability?</label><br />		
 							<span class="label-sub">Please describe your considerations for partnerships </span>						
-							<textarea id="considered_partnerships" placeholder="Approximately 250 words" class="textarea-large value"></textarea>
+							<textarea id="considered_partnerships" placeholder="Approximately 250 words" class="textarea-large value">#iif(isDefined('LOI'), 'XMLFormat(LOI.Partnerships)', DE(''))#</textarea>
 						</p>
 
 						<div class="form_buttons clearfix">
@@ -166,11 +176,11 @@
 					<div class="form-group">
 						<p>
 							<label for="amount_from_airdrie">Amount Requested from the City of Airdrie</label><br />
-							<span class="input-currency"><input type="number" id="amount_from_airdrie" class="input-half sum required value" placeholder="Amount requested from the City of Airdrie" /></span>
+							<span class="input-currency"><input type="number" id="amount_from_airdrie" class="input-half sum required value" placeholder="Amount requested from the City of Airdrie" value="#iif(isDefined('LOI'), 'XMLFormat(LOI.AmountFromAirdrie)', DE(''))#" /></span>
 						</p>
 						<p>
 							<label for="amount_from_other">Amount from Other Revenue Sources</label><br />
-							<span class="input-currency"><input type="number" id="amount_from_other" class="input-half sum required value" placeholder="Amount from other revenue sources" /></span>
+							<span class="input-currency"><input type="number" id="amount_from_other" class="input-half sum required value" placeholder="Amount from other revenue sources" value="#iif(isDefined('LOI'), 'XMLFormat(LOI.AmountFromOther)', DE(''))#" /></span>
 						</p>
 						<p>
 							<label for="budget_total">Total <cfoutput>#Year(DateAdd("yyyy", 1, Now()))#</cfoutput> budget</label><br />
@@ -230,8 +240,9 @@
 							<button type="button" id="letter_of_intent_review_submit" class="btn btn-primary pull-right">Send to City of Airdrie</button>
 							<button type="button" id="letter_of_intent_review_submit" class="btn btn-secondary pull-right">Save for Review</button>  
 						</div>
-					</div>					
+					</div>	
 				</div>
+</cfoutput>				
 			</form>
 
 			<div id="letter_of_intent_complete" class="hidden spaced">

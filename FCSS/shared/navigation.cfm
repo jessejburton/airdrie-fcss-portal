@@ -6,8 +6,8 @@
 
 		<div class="pull-right">
 			<strong>Welcome</strong> 
-			<cfif isDefined('SESSION.AGENCY.Name')>
-				<cfoutput>#XMLFormat(SESSION.AGENCY.Name)#</cfoutput>
+			<cfif isDefined('REQUEST.USER.Name')>
+				<cfoutput>#XMLFormat(REQUEST.USER.Name)#</cfoutput>
 			</cfif>
 		</div>
 	</section>
@@ -18,12 +18,10 @@
 			<div id="navigation_mobile_button">
 				<a href="javascript:;" class="menu" data-menu="#navigation"><i class="fa fa-menu"></i> menu</a>
 			</div>
-			<ul id="navigation">
-				<cfif isDefined('SESSION.Agency')>				   	
-				   	<li><a href="programs.cfm"><i class="fa fa-check-circle"></i> Programs </a></li>
-				   	<li><a href="agency_details.cfm"><i class="fa fa-user"></i> Agency Details </a></li>
-				</cfif>
-					<li class="logout-link"><a href="index.cfm?logout"><i class="fa fa-sign-out"></i> Logout</a></li>	
-					<li class="logout-link"><a href="javascript:;" onclick="showResources();"><i class="fa fa-question"></i> Resources</a></li>	
+			<ul id="navigation">				   	
+			   	<li><a href="programs.cfm"><i class="fa fa-check-circle"></i> Programs </a></li>
+			   	<li><a href="agency_details.cfm"><i class="fa fa-user"></i> Agency Details </a></li>
+				<li class="logout-link"><a href="index.cfm?logout"><i class="fa fa-sign-out"></i> Logout</a></li>	
+				<li class="logout-link"><a href="javascript:;" onclick="showResources();"><i class="fa fa-question"></i> Resources</a></li>	
 			</ul>
 		</div>
