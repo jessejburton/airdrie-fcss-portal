@@ -1,5 +1,3 @@
-"use strict"
-
 $(document).ready(function(){
 	var pagename = location.pathname.split("/");
 	pagename = pagename[pagename.length - 1];
@@ -46,4 +44,15 @@ function closeResources(){
 
 function showResources(){
 	$("#resources_container").fadeIn("slow");
+}
+
+function currentTime(){
+	var currentdate = new Date(); 
+	var datetime = currentdate.getDate() + "/"
+	    + (currentdate.getMonth()+1)  + "/" 
+	    + currentdate.getFullYear() + " @ "  
+	    + currentdate.getHours() + ":"  
+	    + currentdate.getMinutes() + ":" 
+	    + currentdate.getSeconds();
+	return datetime;
 }

@@ -1,5 +1,3 @@
-"use strict"
-
 $(document).ready(function(){
 	$("#application_review_submit").on("click", function(){
 		$(".form-group").addClass("seen");

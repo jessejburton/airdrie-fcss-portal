@@ -24,7 +24,7 @@
 		<cfset LOCAL.Agency.isApproved = LOCAL.qAgency.isApproved>
 		<cfset LOCAL.Agency.Programs = LOCAL.qAgency.Programs>
 		<cfset LOCAL.Agency.isNew = LOCAL.qAgency.Programs IS 0>
-		<cfinvoke component="board" method="GetBoardMembersByAgencyID" AgencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BoardMembers">
+		<cfinvoke component="board" method="GetBoardMembersByAgencyID" AgencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BOARDMEMBERS">
 
 		<cfreturn LOCAL.Agency>
 	</cffunction>	

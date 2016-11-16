@@ -22,6 +22,6 @@
 			   	<li><a href="programs.cfm"><i class="fa fa-check-circle"></i> Programs </a></li>
 			   	<li><a href="agency_details.cfm"><i class="fa fa-user"></i> Agency Details </a></li>
 				<li class="logout-link"><a href="index.cfm?logout"><i class="fa fa-sign-out"></i> Logout</a></li>	
-				<li class="logout-link"><a href="javascript:;" onclick="showResources();"><i class="fa fa-question"></i> Resources</a></li>	
+				<li class="logout-link"><a href="javascript:;" onclick="showResources();"><i class="fa fa-question-circle"></i> Resources</a></li>	
 			</ul>
 		</div>

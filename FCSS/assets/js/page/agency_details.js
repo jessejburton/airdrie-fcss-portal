@@ -1,5 +1,3 @@
-"use strict"
-
 $(document).ready(function(){
 	$(".save_agency").on("click", function(){
 		validateForm("#agency_information_form", saveAgencyInformation);

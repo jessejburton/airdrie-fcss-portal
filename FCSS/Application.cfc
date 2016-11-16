@@ -1,6 +1,6 @@
 <cfcomponent displayname="Application" output="true">
-	<cfset timeout = CreateTimeSpan(0,0,30,0)>
-	
+    <cfset timeout = CreateTimeSpan(0,0,30,0)>
+
 	<!--- Setup the Application --->
 	<cfinclude template="this.ini">
     
@@ -81,7 +81,7 @@
             <cfthrow object="#ARGUMENTS.Except#">
         <cfelse>
             <cfoutput>
-                <cfif APPLICATION.environment IS "production" OR REQUEST.isAjax>                    
+                <cfif APPLICATION.environment IS "production" OR (isDefined('REQUEST.isAjax') AND REQUEST.isAjax)>                    
                     <cfinvoke component="#APPLICATION.cfcpath#core" error="#EXCEPT#" session="#SESSION#" request="#REQUEST#" form="#FORM#" method="sendErrorEmail" />
                 <cfelseif APPLICATION.environment IS "development">
                     <cfdump var="#EXCEPT#">
