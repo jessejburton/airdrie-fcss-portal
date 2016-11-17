@@ -593,6 +593,10 @@
 	}
 
 /*** Programs ***/
+.application-only, .loi-only {
+	display: none!important;
+}
+
 ul.application-process {
 	list-style: none;
 	padding: 0;

@@ -19,11 +19,6 @@ $(document).ready(function(){
 		window.scrollTo(0, 0);
 	});
 
-	// If the LOI has been submitted, hide the form
-	if($("#program_status").val() == "LOI - Submitted"){
-		$("#letter_of_intent_form").hide();
-	}
-
 	// Initialize auto-save once the program name has changed.
 	_AUTOSAVE = setInterval(saveLOI, 5000);
 
