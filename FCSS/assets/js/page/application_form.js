@@ -1,10 +1,31 @@
 var _AUTOSAVE = null;
+var _AUTOSAVE_DURATION = 30000; // Autosave every 30 seconds
 var _APPLICATION_TYPE = "";
 var _PROGRAM_STATUS = "";
+var _REVIEW_STATE = false;
+var _SUBMITTED_STATE = false;
 
 $(document).ready(function(){
 	_APPLICATION_TYPE = $("#application_type").val();
 	_PROGRAM_STATUS = $("#program_status").val();
+
+	// Check for states
+	if(_PROGRAM_STATUS == "LOI - Saved for Review" || _PROGRAM_STATUS == "APPLICATION - Saved for Review"){
+		_REVIEW_STATE = true;
+	}
+	if(_PROGRAM_STATUS == "LOI - Submitted" || _PROGRAM_STATUS == "APPLICATION - Submitted"){
+		_SUBMITTED_STATE = true;
+	}
+
+	// Initialize auto-save once the program name has changed. ONLY IF NOT IN REVIEW STATE
+	if(_REVIEW_STATE){
+		reviewState();
+	} else if(_SUBMITTED_STATE) {
+		submittedState();
+	} else {
+		$('.accordion').accordion('option', 'active', 0);
+		_AUTOSAVE = setInterval(saveApplication, _AUTOSAVE_DURATION);
+	}
 
 	$("#save").on("click", function(){
 		saveApplication();
@@ -17,10 +38,7 @@ $(document).ready(function(){
 
 		window.scrollTo(0, 0);
 	});
-
-	// Initialize auto-save once the program name has changed.
-	_AUTOSAVE = setInterval(saveApplication, 5000);
-
+	
 	// Enable saving once something has been added to the Program Name
 	$("#program_name").on("keyup", function(){
 		if($(this).val().length > 0){
@@ -38,22 +56,23 @@ $(document).ready(function(){
 		};
 	});	
 
-	// If the form has been saved for review validate it and show a message.
-	if($("#is_loi_ready").val() == 1){
-		$(".form-group").addClass("seen"); // Make it so that the validator checks all of the panels.
-		validateForm($("#application_form"), reviewLOI);
-		$('.accordion').accordion('option', 'active', false);
-	}
-
-	// Submit the LOI to Airdrie
-	$("#letter_of_intent_review_submit").on("click", function(){
+	// Mark the Application ready for review
+	$("#application_save_for_review").on("click", function(){
 		$(".form-group").addClass("seen");
-		validateForm($("#application_form"), submitLOI);
+		validateForm($("#application_form"), markApplicationForReview);
 	});
+
+	// Submit the Application to Airdrie
+	$("#application_submit_to_airdrie").on("click", function(){
+		$(".form-group").addClass("seen");
+		validateForm($("#application_form"), markApplicationSubmitted);
+	});
+	
 });
 
+/*** Save the Application at whatever state it is in ***/
 function saveApplication(){
-	if($("#program_name").val().length > 0){
+	if($("#program_name").val().length > 0){ // Make sure there is atleast a program name
 		$("#save").removeClass("disabled");
 		$("#saving").fadeIn("slow", function(){
 			var pstr = updateProgram();
@@ -64,9 +83,7 @@ function saveApplication(){
 				data: pstr,
 				success: function(response){
 					if(!response.SUCCESS){
-						var msg = getFormattedAutoreply(response);
-						$("#application_form").prepend(msg);
-						$(msg).fadeIn("slow");
+						showAutoreply(response, $("#application_form"));
 						clearInterval(_AUTOSAVE);
 						_AUTOSAVE = null;
 					}
@@ -79,41 +96,25 @@ function saveApplication(){
 	};
 }
 
-// Submit the LOI for review
-function submitLOI(){
+// Submit the Application to Airdrie
+function submitApplication(){
 	saveApplication();
 	var pstr = new Object();
 	pstr.ProgramID = $("#program_id").val();
-	pstr.Method = "submitLOI";
+	pstr.Method = "submitApplication";
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",
 		data: pstr,
 		success: function(response){
 			$(".accordion").accordion({active: false});
-			$("#application_form").prepend(getFormattedAutoreply(response, true));
+			showAutoreply(response, $("#application_form"));
 			clearInterval(_AUTOSAVE);
 			_AUTOSAVE = null;
+			_SUBMITTED_STATE = true;
 		}
 	});
 }
-
-// Budget Summing
-$(document).on("keyup", ".sum", function(){
-	var total = 0;
-
-	$(".sum").each(function(){
-		var val = $.trim( $(this).val() );
-
-		if ( val ) {
-	        val = parseFloat( val.replace( /^\$/, "" ) );
-
-	        total += !isNaN( val ) ? val : 0;
-	    }
-	});
-	
-	$(".sum-total").val(total.toFixed(2));
-});
 
 /*** Review the Application ***/
 function reviewApplication(){
@@ -124,8 +125,72 @@ function reviewApplication(){
 		var val = $(this).val();
 		var id = $(this).attr("id");	
 		var cls = id.replace(/_/g, "-");
-		$("#loi_review").find("." + cls).html(val);
+		$("#application_review_display").find("." + cls).html(val);
 	});
+}
+
+/*** Mark the LOI/Application ready for review ***/
+function markApplicationForReview(){
+	var pstr = new Object();
+	pstr.Method = "markApplicationForReview";
+	pstr.ProgramID = $("#program_id").val();
+
+	$.ajax({
+		url: "assets/cfc/webservices.cfc",
+		data: pstr,
+		success: function(response){
+			$(".accordion").accordion({active: false});
+			showAutoreply(response, $("#application_form"));
+			clearInterval(_AUTOSAVE);
+			_AUTOSAVE = null;
+			reviewState();
+		}
+	});
+}
+
+/*** Submit the LOI/Application to Airdrie ***/
+function markApplicationSubmitted(){
+	var pstr = new Object();
+	pstr.Method = "markApplicationSubmitted";
+	pstr.ProgramID = $("#program_id").val();
+
+	$.ajax({
+		url: "assets/cfc/webservices.cfc",
+		data: pstr,
+		success: function(response){
+			showAutoreply(response, $("#application_form"));
+			clearInterval(_AUTOSAVE);
+			_AUTOSAVE = null;
+			submittedState();
+		}
+	});
+}
+
+function reviewState(){
+	_REVIEW_STATE = true;
+	$(".accordion .ui-state-disabled").removeClass("ui-state-disabled");
+
+	var autoreply = new Object();
+	autoreply.SUCCESS = true;
+	autoreply.TYPE = "info";
+	autoreply.MESSAGE = "<strong>Saved for Review!</strong> This " + _APPLICATION_TYPE + " has been completed and marked for agency review. Once all information has been validated please click on the 'Send to City of Airdrie' button in the Review and Submit section.";
+
+	showAutoreply(autoreply, $("#application_form"));	
+}
+
+function submittedState(){
+	_SUBMITTED_STATE = true; 
+	$("#save").remove();
+	$(".submit-button").attr("disabled", "disabled");
+	$(".accordion").accordion({active: false});
+	$(".accordion").accordion({disabled: true});
+
+	var autoreply = new Object();
+	autoreply.SUCCESS = true;
+	autoreply.TYPE = "info";
+	autoreply.MESSAGE = "<strong>Submitted!</strong> This " + _APPLICATION_TYPE + " has been submitted to the City of Airdrie, no changes can be made until it has been reviewed. You will be notified via e-mail of any updates to the status of this program.";
+
+	showAutoreply(autoreply, $("#application_form"));
 }
 
 function updateProgram(){
@@ -163,7 +228,6 @@ function updateProgram(){
 	program.MidTermGoals = (typeof $("#mid_term_goals").val() === 'undefined') ? "" : $("#mid_term_goals").val();
 	program.LongTermGoals = (typeof $("#long_term_goals").val() === 'undefined') ? "" : $("#long_term_goals").val();
 
-	console.log(JSON.stringify(program));
 	return program;
 }
 
@@ -194,6 +258,22 @@ function updateBoardMembers(){
 		}
 	});
 }
+
+/* BUDGET ESTIMATE SUMMING */
+$(document).on("keyup", ".sum", function(){
+	var total = 0;
+
+	$(".sum").each(function(){
+		var val = $.trim( $(this).val() );
+
+		if ( val ) {
+	        val = parseFloat( val.replace( /^\$/, "" ) );
+	        total += !isNaN( val ) ? val : 0;
+	    }
+	});
+	
+	$(".sum-total").val(total.toFixed(2));
+});
 
 // DEVELOPMENT FEATURE 
 $(document).on("click", "#fill", function(){
