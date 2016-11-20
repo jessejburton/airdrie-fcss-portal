@@ -4,9 +4,8 @@
 		<cfargument name="AgencyID" type="numeric" required="yes">		
 
 		<cfquery name="LOCAL.qAgency">
-			SELECT	Name, Vision, Mission, Phone, Email, Fax, Website, Address, MailingAddress, isApproved, 
-					(SELECT COUNT(AgencyID) FROM Program_tbl WHERE AgencyID = a.AgencyID) AS Programs
-			FROM	Agency_tbl a
+			SELECT	Name, Vision, Mission, Phone, Email, Fax, Website, Address, MailingAddress, isApproved, hasDocuments, Programs
+			FROM	Agency_vw a
 			WHERE	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="integer"> 
 		</cfquery>
 
@@ -24,6 +23,7 @@
 		<cfset LOCAL.Agency.isApproved = LOCAL.qAgency.isApproved>
 		<cfset LOCAL.Agency.Programs = LOCAL.qAgency.Programs>
 		<cfset LOCAL.Agency.isNew = LOCAL.qAgency.Programs IS 0>
+		<cfset LOCAL.Agency.hasDocuments = LOCAL.qAgency.hasDocuments>
 		<cfinvoke component="board" method="GetBoardMembersByAgencyID" AgencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BOARDMEMBERS">
 
 		<cfreturn LOCAL.Agency>

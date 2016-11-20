@@ -12,6 +12,7 @@
 				<p>	
 					<label for="login_password">Password</label><br />
 					<input type="password" placeholder="enter your password" id="login_password" name="login_password" /><br />
+					<a href="javascript:;" id="forgot_btn" class="underlined small-text">Forgot Your Password?</a>
 				</p>
 
 				<input type="submit" id="login_submit" name="login_submit" value="Login" class="btn btn-primary btn-lg btn-block" />
@@ -19,7 +20,7 @@
 		</form>
 
 		<div class="centered spaced small-text">
-			<p><a href="javascript:;" id="register_btn" class="spaced underlined login">Register Your Agency</a></p>
+			<p class="spaced"><a href="javascript:;" id="register_btn" class="underlined login">Register Your Agency</a></p>
 		</div>
 	</div>	
 

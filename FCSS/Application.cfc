@@ -1,12 +1,18 @@
 <cfcomponent displayname="Application" output="true">
     <cfset timeout = CreateTimeSpan(0,0,30,0)>
 
+    <!--- create mapping to javaloder --->
+    <cfscript>        
+        THIS.mappings["/javaloader"] = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "assets/libs/javaloader";
+    </cfscript>
+
 	<!--- Setup the Application --->
 	<cfinclude template="this.ini">
     
     <!--- Function for the start of the application --->    
     <cffunction name="onApplicationStart" returnType="void" output="false">
 		<cfinclude template="application.ini">
+        
         <cfset APPLICATION.BCRYPT = createObject("java", "org.mindrot.jbcrypt.BCrypt")>
 	</cffunction>
         
@@ -42,6 +48,9 @@
             <cfset REQUEST.LOGGEDIN = true>
             <cfinvoke component="#APPLICATION.cfcpath#account" method="getAccountByID" accountID="#SESSION.AccountID#" returnvariable="REQUEST.USER" />
             <cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#REQUEST.USER.AGENCYID#" returnvariable="REQUEST.AGENCY" />
+            <cfif SESSION.GUID NEQ REQUEST.USER.GUID>
+                <cflocation url="index.cfm?logout" addtoken="false"> <!--- This user account has been disabled --->
+            </cfif>
         </cfif>
 
         <cfif APPLICATION.environment IS "development">
@@ -49,6 +58,8 @@
         <cfelse>
             <cfset REQUEST.CacheGUID = APPLICATION.version>
         </cfif>
+
+        <cfset REQUEST.SETTINGS = getSettings()>
 	</cffunction>    
     
 	
@@ -104,6 +115,20 @@
         <cfelse>
             <cfoutput>#LOCAL.response.MESSAGE#</cfoutput>
         </cfif>
+    </cffunction>
+
+    <cffunction name="getSettings" access="private" returntype="struct" returnformat="JSON">
+        <cfquery name="LOCAL.qSettings">
+            SELECT  *
+            FROM    Settings_tbl
+        </cfquery>
+
+        <cfset LOCAL.SETTINGS = StructNew()>
+        <cfloop list="#LOCAL.qSettings.columnList#" index="col">
+            <cfset LOCAL.SETTINGS[col] = LOCAL.qSettings[col][1]>
+        </cfloop>
+
+        <cfreturn LOCAL.SETTINGS>
     </cffunction>
     	
 </cfcomponent>

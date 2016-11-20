@@ -11,6 +11,7 @@
 
 	<script src="assets/libs/jquery-3.1.1.min.js" type="text/javascript"></script>
 	<script src="assets/libs/jquery-ui/jquery-ui.js" type="text/javascript"></script>
+	<script src="assets/libs/jquery.form.min.js" type="text/javascript"></script>
 	<script src="assets/js/common.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
 	<script src="assets/js/form.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
 	<script src="https://use.fontawesome.com/40939fccf0.js"></script>

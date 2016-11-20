@@ -20,6 +20,21 @@ $(document).ready(function(){
 		},
 		animate: true
 	});
+
+	// Board Member Autocomplete
+	var commonBoardTitles = [
+      "President",
+      "Vice President",
+      "Chairman of the Board",
+      "Vice Chair",
+      "Secretary",
+      "Treasurer",
+      "Member",
+      "Board Member"
+    ];
+    $( "input[name=board_title]" ).autocomplete({
+      source: commonBoardTitles
+    });	
 });
 
 
@@ -55,4 +70,45 @@ function currentTime(){
 	    + currentdate.getMinutes() + ":" 
 	    + currentdate.getSeconds();
 	return datetime;
+}
+
+function updateBoardMembers(){
+	var boardMembers = [];
+
+	$(".board-member").each(function(){
+		var member = new Object();
+		member.NAME = $(this).find("input[name=board_name]").val();
+		member.TITLE = $(this).find("input[name=board_title]").val();
+
+		if(member.NAME.length > 0 && member.TITLE.length > 0){
+			boardMembers.push(member);
+		}
+	});
+
+	var pstr = new Object();
+	pstr.BoardMembers = JSON.stringify(boardMembers);
+	pstr.method = "updateBoardMembers";
+
+	$.ajax({
+		url: "assets/cfc/webservices.cfc",
+		data: pstr,
+		success: function(response){
+			if(!response.SUCCESS){
+				showAutoreply(response, "#application_form");
+			} else {
+				showAutoreply(response, $("#board_members_panel"));
+			}
+		}
+	});
+}
+
+function isScrolledIntoView(elem)
+{
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+
+    var elemTop = $(elem).offset().top;
+    var elemBottom = elemTop + $(elem).height();
+
+    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 }

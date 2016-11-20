@@ -93,6 +93,9 @@ function saveApplication(){
 				}
 			});
 		});
+		if(_APPLICATION_TYPE == "Application Form") {
+			updateBoardMembers();
+		}
 	};
 }
 
@@ -229,34 +232,6 @@ function updateProgram(){
 	program.LongTermGoals = (typeof $("#long_term_goals").val() === 'undefined') ? "" : $("#long_term_goals").val();
 
 	return program;
-}
-
-function updateBoardMembers(){
-	var boardMembers = [];
-
-	$(".board-member").each(function(){
-		var member = new Object();
-		member.NAME = $(this).find("input[name=board_name]").val();
-		member.TITLE = $(this).find("input[name=board_title]").val();
-
-		if(member.NAME.length > 0 && member.TITLE.length > 0){
-			boardMembers.push(member);
-		}
-	});
-
-	var pstr = new Object();
-	pstr.BoardMembers = JSON.stringify(boardMembers);
-	pstr.method = "updateBoardMembers";
-
-	$.ajax({
-		url: "assets/cfc/webservices.cfc",
-		data: pstr,
-		success: function(response){
-			if(!response.SUCCESS){
-				showAutoreply(response, "#application_form")
-			}
-		}
-	});
 }
 
 /* BUDGET ESTIMATE SUMMING */
