@@ -39,7 +39,42 @@
 		</div>
 	</div>
 
+	<div id="logout_message_container">
+		<div id="logout_message_text">
+			<p>Your session will expire in <span id="time_display">60</span> seconds.</p>
+			<p><button class="btn btn-primary" id="logout_refresh">Stay Logged In</button></p>
+		</div>
+	</div>
+
 	<div id="saving"><img src="assets/images/saving-gear.gif" /> Saving...</div>
+
+	<!--- Session Timeout --->
+	<cfif isDefined('REQUEST.loggedin')>
+		<script>
+			var timer = 10;
+			var session_timeout = 11100000 // 18.5 minutes - gives a 30 second buffer in case of discrepencies with the Coldfusion Session
+
+			setTimeout(logoutRedirect, session_timeout); 
+
+			function logoutRedirect(){
+				$("#logout_message_container").fadeIn("slow");
+				$("#logout_message #time_display").html(timer);
+				setInterval(updateTimer, 1000);
+			}
+
+			function updateTimer(){
+				timer --;
+				$("#time_display").html(timer.toString());
+				if(timer == 0){
+					window.location = "index.cfm?logout";
+				}
+			}
+
+			$("#logout_refresh").on("click", function(){
+				window.location = window.location;
+			});
+		</script>
+	</cfif>
 
 </body>
 </html>

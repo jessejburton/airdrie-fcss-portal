@@ -72,7 +72,7 @@ function currentTime(){
 	return datetime;
 }
 
-function updateBoardMembers(){
+function updateBoardMembers(silent){
 	var boardMembers = [];
 
 	$(".board-member").each(function(){
@@ -96,7 +96,9 @@ function updateBoardMembers(){
 			if(!response.SUCCESS){
 				showAutoreply(response, "#application_form");
 			} else {
-				showAutoreply(response, $("#board_members_panel"));
+				if(typeof silent == 'undefined' || !silent){
+					showAutoreply(response, $("#board_members_panel"));
+				}
 			}
 		}
 	});
@@ -104,11 +106,13 @@ function updateBoardMembers(){
 
 function isScrolledIntoView(elem)
 {
-    var docViewTop = $(window).scrollTop();
-    var docViewBottom = docViewTop + $(window).height();
+	if(typeof elem != 'undefined'){
+	    var docViewTop = $(window).scrollTop();
+	    var docViewBottom = docViewTop + $(window).height();
 
-    var elemTop = $(elem).offset().top;
-    var elemBottom = elemTop + $(elem).height();
+	    var elemTop = $(elem).offset().top;
+	    var elemBottom = elemTop + $(elem).height();
 
-    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	}
 }

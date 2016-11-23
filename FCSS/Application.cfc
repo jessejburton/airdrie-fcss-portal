@@ -1,11 +1,6 @@
 <cfcomponent displayname="Application" output="true">
     <cfset timeout = CreateTimeSpan(0,0,30,0)>
 
-    <!--- create mapping to javaloder --->
-    <cfscript>        
-        THIS.mappings["/javaloader"] = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "assets/libs/javaloader";
-    </cfscript>
-
 	<!--- Setup the Application --->
 	<cfinclude template="this.ini">
     
@@ -13,7 +8,13 @@
     <cffunction name="onApplicationStart" returnType="void" output="false">
 		<cfinclude template="application.ini">
         
-        <cfset APPLICATION.BCRYPT = createObject("java", "org.mindrot.jbcrypt.BCrypt")>
+        <cftry>
+            <cfset APPLICATION.BCRYPT = createObject("java", "sorg.mindrot.jbcrypt.BCrypt")>
+        <cfcatch>
+        <cfset APPLICATION.BCRYPT = createObject("component", "#APPLICATION.cfcpath#BCryptAlt")>
+        </cfcatch>
+        </cftry>
+
 	</cffunction>
         
 	<!--- Function for every request --->

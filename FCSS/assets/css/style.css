@@ -66,6 +66,23 @@
 		#resources a:hover {
 			text-decoration: underline;
 		}
+/*** LOGOUT MESSAGE ***/
+	#logout_message_container {
+		display: none;
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		top: 0;
+		left: 0;
+		background-color: rgba(0,0,0,.5);
+	}
+	#logout_message_text {
+		text-align: center;
+		background-color: #FFF;
+		padding: 25px;
+		height: auto;
+		width: auto;
+	}
 
 /*** DOCUMENTS ***/
 	#current_documents {
@@ -208,6 +225,9 @@
 		border: none;
 		border-collapse: collapse;
 	}
+	.table td {
+		position: relative;
+	}
 		.table th {
 			border-bottom: 1px solid #000;
 		}
@@ -322,6 +342,9 @@
 		}
 	.input-error {
 		border: 1px solid #c42424;		
+	}
+	tr.error {
+		background-color: #c42424!important;
 	}
 
 	span.error-details {
@@ -556,6 +579,9 @@
 	.strong {
 		font-weight: bold;
 	}
+	.center-align {
+		text-align: center;
+	}
 
 /*** COLORS ***/
 	.green-background {
@@ -608,6 +634,19 @@
 .budget-bottom span.percent {
     text-align: center;
     display: block;
+}
+.remove-item {
+    position: absolute;
+    top: 30px;
+    left: -20px;
+    cursor: pointer;
+    transition: color .2s ease-in-out;
+}
+	.remove-item:hover {
+		color: #c42424;
+	}
+.row-template .remove-item {
+	display: none;
 }
 #saving {
 	font-size: 1.3em;
@@ -720,7 +759,7 @@ ul.application-process a.complete i {
 	.budget-bottom span.percent {
 	    width: 50%;
 	}	
-	#resources_container {
+	#resources_container, #logout_message_container {
 		padding: 100px;
 	}
 }

@@ -94,7 +94,7 @@ function saveApplication(){
 			});
 		});
 		if(_APPLICATION_TYPE == "Application Form") {
-			updateBoardMembers();
+			updateBoardMembers(true);
 		}
 	};
 }
