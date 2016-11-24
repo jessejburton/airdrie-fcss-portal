@@ -1,0 +1,58 @@
+/**** Styles for the login page - used only on this page ****/
+#login_form_container, #login_text {
+	width: 100%
+	padding: 25px;
+}
+.splash-page-image {
+	float: right;
+	margin: 0 25px 25px 25px;
+	width: 300px;
+}
+
+h1 {
+	font-size: 1.5em;
+	padding-bottom: 15px;
+}
+h2 {
+	font-size: 1.25em;
+	color: #96932A;
+}
+
+label {
+	font-weight: bold;
+}
+
+#login_register {
+	font-size: 1.2em;
+}
+
+.splash ol {
+	font-size: .9em;
+	padding-top: 15px;
+}
+	.splash ol li {
+		padding-bottom: 15px;
+	}
+	.splash ul li {
+		padding-bottom: 0;
+	}
+
+#register {
+	display: none;
+}
+
+@media only screen and (min-width:1366px) {
+	#login_form_container {
+		width: 400px;
+		float: right;
+		padding-right: 25px;
+	}
+	.splash {
+		margin-right: 450px;
+	    margin-left: 50px;
+	}
+	.splash ol {
+		max-width: 85%;
+		margin: 0 auto;
+	}
+}
