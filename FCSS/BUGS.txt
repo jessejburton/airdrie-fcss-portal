@@ -1,0 +1,3 @@
+- When registering the validation on the Contact accordion doesn't seem to be working unless you open the accordion first.
+
+TESTING GIT
