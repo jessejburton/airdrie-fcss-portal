@@ -322,16 +322,36 @@
 		<cfargument name="BudgetID" type="numeric" required="true">
 		<cfargument name="Revenues" type="string" required="true">
 		<cfargument name="Expenses" type="string" required="true">
+		<cfargument name="Staff" type="string" required="true">
 		<cfargument name="PreviousYearBudget" type="numeric" default="0">
 		<cfargument name="RequestedFromAirdrie" type="numeric" default="0">
+		<cfargument name="RevenuesExplanation" type="string" required="true">
+		<cfargument name="ExpendituresExplanation" type="string" required="true">
+		<cfargument name="DistributionTotals" type="string" required="true">
 
 		<cfset LOCAL.ARGS = StructNew()>
 
+		<cfset LOCAL.ARGS.BUDGETID = ARGUMENTS.BudgetID>
 		<cfset LOCAL.ARGS.AccountID = REQUEST.USER.AccountID>
 		<cfset LOCAL.ARGS.Revenues = deserializeJSON(ARGUMENTS.Revenues)>
 		<cfset LOCAL.ARGS.Expenses = deserializeJSON(ARGUMENTS.Expenses)>
+		<cfset LOCAL.ARGS.Staff = deserializeJSON(ARGUMENTS.Staff)>
 		<cfset LOCAL.ARGS.PreviousYearBudget = ARGUMENTS.PreviousYearBudget>
 		<cfset LOCAL.ARGS.RequestedFromAirdrie = ARGUMENTS.RequestedFromAirdrie>
+		<cfset LOCAL.ARGS.RevenuesExplanation = ARGUMENTS.RevenuesExplanation>
+		<cfset LOCAL.ARGS.ExpendituresExplanation = ARGUMENTS.ExpendituresExplanation>
+		<cfset LOCAL.ARGS.DistributionTotals = deserializeJSON(ARGUMENTS.DistributionTotals)>
 
+		<cfinvoke component="#APPLICATION.cfcpath#budget" method="saveBudget" argumentcollection="#LOCAL.ARGS#" returnvariable="LOCAL.budget" />
+
+		<cfif LOCAL.budget IS true>
+			<cfset LOCAL.response = getSuccessResponse("Budget has been updated.")>
+		<cfelse>
+			<cfset LOCAL.response = getErrorResponse("There was a problem saving this budget.")>
+		</cfif>
+		<cfset LOCAL.response.BUDGETID = ARGUMENTS.BUDGETID>
+		<cfset LOCAL.response.SAVED = LOCAL.budget>
+
+		<cfreturn LOCAL.response>
 	</cffunction>	
 </cfcomponent>

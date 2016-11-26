@@ -27,7 +27,7 @@ $(document).ready(function(){
 		_AUTOSAVE = setInterval(saveApplication, _AUTOSAVE_DURATION);
 	}
 
-	$("#save").on("click", function(){
+	$(".save").on("click", function(){
 		saveApplication();
 
 		var msg = new Object();
@@ -72,6 +72,7 @@ $(document).ready(function(){
 
 /*** Save the Application at whatever state it is in ***/
 function saveApplication(){
+	reviewApplication(); // Update the review tab to make sure it has all of the most recent information 
 	if($("#program_name").val().length > 0){ // Make sure there is atleast a program name
 		$("#save").removeClass("disabled");
 		$("#saving").fadeIn("slow", function(){
@@ -95,6 +96,7 @@ function saveApplication(){
 		});
 		if(_APPLICATION_TYPE == "Application Form") {
 			updateBoardMembers(true);
+			saveBudget();
 		}
 	};
 }
@@ -124,9 +126,10 @@ function reviewApplication(){
 	// Remove any disabled class
 	$(".accordion .ui-state-disabled").removeClass("ui-state-disabled");
 
-	$(".value").each(function(){
+	$("input.value, textarea.value").each(function(){
 		var val = $(this).val();
-		var id = $(this).attr("id");	
+		var id = $(this).attr("id");
+		console.log(id + ' - ' + val);	
 		var cls = id.replace(/_/g, "-");
 		$("#application_review_display").find("." + cls).html(val);
 	});

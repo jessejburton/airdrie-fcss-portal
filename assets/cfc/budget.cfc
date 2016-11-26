@@ -10,7 +10,8 @@
 
 		<!--- Get the budget details --->
 		<cfquery name="LOCAL.qBudget">
-			SELECT 	BudgetID, [PreviousYearBudget],[RequestedFromAirdrie] 
+			SELECT 	BudgetID, [PreviousYearBudget],[RequestedFromAirdrie], [RevenuesExplanation], [ExpendituresExplanation], 
+					[PercentChild], [PercentFamily], [PercentAdult], [PercentSeniors], [PercentVolunteers]
 			FROM 	Budget_tbl 
 			WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
 			AND		BudgetTypeID = (SELECT BudgetTypeID FROM BudgetType_tbl WHERE BudgetType = <cfqueryparam value="#ARGUMENTS.BudgetType#" cfsqltype="cf_sql_varchar">)
@@ -20,6 +21,13 @@
 			<cfset LOCAL.BUDGET.BudgetID = LOCAL.qBudget.BudgetID>
 			<cfset LOCAL.BUDGET.PreviousYearBudget = LOCAL.qBudget.PreviousYearBudget>
 			<cfset LOCAL.BUDGET.RequestedFromAirdrie = LOCAL.qBudget.RequestedFromAirdrie> 
+			<cfset LOCAL.BUDGET.REVENUESEXPLANATION = LOCAL.qBudget.REVENUESEXPLANATION>
+			<cfset LOCAL.BUDGET.EXPENDITURESEXPLANATION = LOCAL.qBudget.ExpendituresExplanation>
+			<cfset LOCAL.BUDGET.PERCENTCHILD = LOCAL.qBudget.PercentChild>
+			<cfset LOCAL.BUDGET.PERCENTFAMILY = LOCAL.qBudget.PercentFamily>
+			<cfset LOCAL.BUDGET.PERCENTADULT = LOCAL.qBudget.PercentAdult>
+			<cfset LOCAL.BUDGET.PERCENTSENIORS = LOCAL.qBudget.PercentSeniors>
+			<cfset LOCAL.BUDGET.PERCENTVOLUNTEERS = LOCAL.qBudget.PercentVolunteers>
 		<cfelse>
 			<cfquery result="LOCAL.qBudget">
 				INSERT INTO Budget_tbl
@@ -35,10 +43,18 @@
 			<cfset LOCAL.BUDGET.BudgetID = LOCAL.qBudget.GeneratedKey>
 			<cfset LOCAL.PreviousYearBudget = 0>
 			<cfset LOCAL.RequestedFromAirdrie = 0>
+			<cfset LOCAL.REVENUESEXPLANATION = "">
+			<cfset LOCAL.EXPENDITURESEXPLANATION = "">
+			<cfset LOCAL.BUDGET.PERCENTCHILD = 0>
+			<cfset LOCAL.BUDGET.PERCENTFAMILY = 0>
+			<cfset LOCAL.BUDGET.PERCENTADULT = 0>
+			<cfset LOCAL.BUDGET.PERCENTSENIORS = 0>
+			<cfset LOCAL.BUDGET.PERCENTVOLUNTEERS = 0>
 		</cfif>
 
 		<cfset LOCAL.BUDGET.REVENUES = getRevenuesByBudgetID(LOCAL.BUDGET.BudgetID)>
 		<cfset LOCAL.BUDGET.EXPENSES = getExpensesByBudgetID(LOCAL.BUDGET.BudgetID)>
+		<cfset LOCAL.BUDGET.STAFF = getStaffByBudgetID(LOCAL.BUDGET.BudgetID)>
 
 		<cfreturn LOCAL.BUDGET>
 	</cffunction>
@@ -69,21 +85,31 @@
 		<cfreturn LOCAL.response>
 	</cffunction>
 
-	<cffunction name="updateBudget" access="public" returntype="boolean" returnformat="JSON"
+	<cffunction name="saveBudget" access="public" returntype="boolean" returnformat="JSON"
 		hint="Updates a budget.">
 		<cfargument name="BudgetID" type="numeric" required="true">
 		<cfargument name="Revenues" type="array" required="true">
 		<cfargument name="Expenses" type="array" required="true">
+		<cfargument name="Staff" type="array" required="true">
 		<cfargument name="PreviousYearBudget" type="numeric" default="0">
 		<cfargument name="RequestedFromAirdrie" type="numeric" default="0">
+		<cfargument name="RevenuesExplanation" type="string" required="true">
+		<cfargument name="ExpendituresExplanation" type="string" required="true">
+		<cfargument name="DistributionTotals" type="array" required="true">
 
 		<cftransaction>
 			<cfset updateRevenueItems(ARGUMENTS.BudgetID, ARGUMENTS.Revenues)>
 			<cfset updateExpenseItems(ARGUMENTS.BudgetID, ARGUMENTS.Expenses)>
+			<cfset updateStaff(ARGUMENTS.BudgetID, ARGUMENTS.Staff)>
 			<cfquery>
 				UPDATE 	Budget_tbl
 				SET 	PreviousYearBudget = <cfqueryparam value="#ARGUMENTS.PreviousYearBudget#" cfsqltype="cf_sql_float">,
-						RequestedFromAirdrie = <cfqueryparam value="#ARGUMENTS.RequestedFromAirdrie#" cfsqltype="cf_sql_float">
+						RequestedFromAirdrie = <cfqueryparam value="#ARGUMENTS.RequestedFromAirdrie#" cfsqltype="cf_sql_float">,
+						<cfloop array="#ARGUMENTS.DistributionTotals#" index="LOCAL.i">
+							#LOCAL.i.TYPE# = <cfqueryparam value="#LOCAL.i.VALUE#" cfsqltype="cf_sql_integer">,
+						</cfloop>
+						RevenuesExplanation = <cfqueryparam value="#ARGUMENTS.RevenuesExplanation#" cfsqltype="cf_sql_varchar">,
+						ExpendituresExplanation = <cfqueryparam value="#ARGUMENTS.ExpendituresExplanation#" cfsqltype="cf_sql_varchar">
 				WHERE	BudgetID = <cfqueryparam value="#ARGUMENTS.BudgetID#" cfsqltype="cf_sql_integer">
 			</cfquery>
 		</cftransaction>
@@ -157,10 +183,11 @@
 		<cfset LOCAL.EXPENSES = ArrayNew(1)>
 
 		<cfquery name="LOCAL.qExpenses">
-			SELECT 	[SourceID], [PreviousYearBudget], [FundedOther], [FundedAirdrie]
-			FROM 	BudgetExpense_tbl
+			SELECT 	be.SourceID, [PreviousYearBudget], [FundedOther], [FundedAirdrie], s.Source
+			FROM 	BudgetExpense_tbl be 
+			INNER JOIN BudgetSource_tbl s on s.SourceID = be.SourceID
 			WHERE	BudgetID = <cfqueryparam value="#ARGUMENTS.BudgetID#" cfsqltype="cf_sql_integer">
-			ORDER BY isOrder
+			ORDER BY be.isOrder
 		</cfquery>
 
 		<cfoutput query="LOCAL.qExpenses">
@@ -169,6 +196,7 @@
 			<cfset LOCAL.line.PREVYEAR = LOCAL.qExpenses.PreviousYearBudget> 
 			<cfset LOCAL.line.FUNDEDOTHER = LOCAL.qExpenses.FundedOther> 
 			<cfset LOCAL.line.FUNDEDAIRDRIE = LOCAL.qExpenses.FundedAirdrie> 
+			<cfset LOCAL.line.SOURCE = LOCAL.qExpenses.Source>
 
 			<cfset ArrayAppend(LOCAL.EXPENSES, LOCAL.line)>
 		</cfoutput>
@@ -200,6 +228,62 @@
 						<cfqueryparam value="#line.PreviousYearBudget#" cfsqltype="cf_sql_float">,
 						<cfqueryparam value="#line.FundedOther#" cfsqltype="cf_sql_float">,
 						<cfqueryparam value="#line.FundedAirdrie#" cfsqltype="cf_sql_float">,
+						<cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">
+					)
+				</cfquery>	
+			</cfloop>
+		</cftransaction>
+
+		<cfreturn true>
+	</cffunction>	
+
+<!--- STAFF --->
+	<cffunction name="getStaffByBudgetID" access="public" returnformat="JSON" returntype="Array"
+		hint="Gets an array of staff titles and amounts for a budget">
+		<cfargument name="BudgetID" type="numeric" required="true">
+
+		<cfset LOCAL.STAFF = ArrayNew(1)>
+
+		<cfquery name="LOCAL.qStaff">
+			SELECT 	Title, Amount
+			FROM 	BudgetStaff_tbl 
+			WHERE	BudgetID = <cfqueryparam value="#ARGUMENTS.BudgetID#" cfsqltype="cf_sql_integer">
+			ORDER BY Title
+		</cfquery>
+
+		<cfoutput query="LOCAL.qStaff">
+			<cfset LOCAL.line = StructNew()>
+			<cfset LOCAL.line.TITLE = LOCAL.qStaff.Title> 
+			<cfset LOCAL.line.AMOUNT = LOCAL.qStaff.Amount> 
+
+			<cfset ArrayAppend(LOCAL.STAFF, LOCAL.line)>
+		</cfoutput>
+
+		<cfreturn LOCAL.STAFF>
+	</cffunction>	
+
+	<cffunction name="updateStaff" access="public" returntype="boolean" returnformat="JSON"
+		hint="Removes existing expense items and adds the ones passed in.">
+		<cfargument name="BudgetID" type="numeric" required="true">
+		<cfargument name="Staff" type="array" required="true">
+		<cfargument name="AccountID" type="numeric" default="#REQUEST.USER.AccountID#">
+
+		<cftransaction>
+			<!--- remove existing items --->
+			<cfquery>
+				DELETE FROM BudgetStaff_tbl WHERE BudgetID = <cfqueryparam value="#ARGUMENTS.BUDGETID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+
+			<!--- Add the new items --->
+			<cfloop array="#ARGUMENTS.Staff#" index="line">
+				<cfquery result="LOCAL.qAddStaff">
+					INSERT INTO BudgetStaff_tbl 
+					(
+						BudgetID, Title, Amount, AccountID
+					) VALUES (
+						<cfqueryparam value="#ARGUMENTS.BudgetID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#line.Title#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#line.Amount#" cfsqltype="cf_sql_float">,
 						<cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">
 					)
 				</cfquery>	

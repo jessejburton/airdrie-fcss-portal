@@ -28,6 +28,11 @@
 			<!--- DEVELOPMENT FEATURE --->	
 <!--- END MESSAGES --->		
 
+<!--- Decide whether or not to show the form --->
+<cfif PROGRAM.Status IS "APPLICATION - Submitted to Airdrie" OR PROGRAM.Status IS "LOI - Submitted to Airdrie">
+	<cfset showForm = false>
+</cfif>
+
 <!--- BEGIN FORM --->	
 		<cfif showForm>
 			<form id="application_form">
@@ -38,7 +43,7 @@
 
 				<p>Please complete all of the following information. You can click on the heading for a section to jump directly to that section of the form</p> 
 				<p>
-					<a href="javascript:;" id="save" class="btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
+					<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
 					<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
 					<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #XMLFormat(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 				</p>
@@ -170,7 +175,7 @@
 							<textarea id="alignment" placeholder="Approximately 250 words" class="textarea-large required value">#XMLFormat(PROGRAM.Alignment)#</textarea>		
 						</p>
 						<p>
-							<label for="agency_mission_fit">How does this program fit with your agency mission and vision?</label><br />	
+							<label for="mission_fit">How does this program fit with your agency mission and vision?</label><br />	
 							<textarea id="mission_fit" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.MissionFit)#</textarea>		
 						</p>
 						<p>
@@ -180,7 +185,7 @@
 						</p>
 
 						<div class="form_buttons clearfix">
-							<button type="button" class="nav prev btn btn-primary pull-left">Prev</button> 
+							<button type="button" class="nav prev btn btn-primary pull-left">Prev</button> 							
 							<button type="button" class="nav next btn btn-primary pull-right">Next</button> 
 						</div>				
 					</div>		
@@ -223,20 +228,19 @@
 					</div>	
 
 				<!--- OUTCOMES PLAN --->
-				<cfif PROGRAM.TYPE IS "Application Form">
 					<h3>Outcomes Plan</h3>
 					<div class="form-group">
 						<p>
 							<label for="short_term_goals">Short Term Goals</label><br />						
-							<textarea id="short_term_goals" placeholder="Please tell us about your program's short term goals" class="textarea-large required value"><cfoutput>#XMLFormat(PROGRAM.ShortTermGoals)#</cfoutput></textarea>		
+							<textarea id="short_term_goals" placeholder="Please tell us about your program's short term goals" class="textarea-large required value">#XMLFormat(PROGRAM.ShortTermGoals)#</textarea>		
 						</p>
 						<p>
 							<label for="mid_term_goals">Mid Term Goals</label><br />						
-							<textarea id="mid_term_goals" placeholder="Please tell us about your program's mid term goals" class="textarea-large required value"><cfoutput>#XMLFormat(PROGRAM.MidTermGoals)#</cfoutput></textarea>		
+							<textarea id="mid_term_goals" placeholder="Please tell us about your program's mid term goals" class="textarea-large required value">#XMLFormat(PROGRAM.MidTermGoals)#</textarea>		
 						</p>
 						<p>
 							<label for="long_term_goals">Long Term Goals</label><br />						
-							<textarea id="long_term_goals" placeholder="Please tell us about your program's long term goals" class="textarea-large required value"><cfoutput>#XMLFormat(PROGRAM.LongTermGoals)#</cfoutput></textarea>		
+							<textarea id="long_term_goals" placeholder="Please tell us about your program's long term goals" class="textarea-large required value">#XMLFormat(PROGRAM.LongTermGoals)#</textarea>		
 						</p>			
 
 						<div class="form_buttons clearfix">
@@ -251,11 +255,11 @@
 					<h3>Program Budget Summary</h3>
 					<div class="form-group">
 						<p>
-							<label for="amount_from_airdrie">Amount Requested from the City of Airdrie</label><br />
+							<label for="estimated_from_airdrie">Amount Requested from the City of Airdrie</label><br />
 							<span class="input-currency"><input type="number" id="estimated_from_airdrie" class="input-half sum required value" placeholder="Amount requested from the City of Airdrie" value="#XMLFormat(PROGRAM.EstimatedFromAirdrie)#" /></span>
 						</p>
 						<p>
-							<label for="amount_from_other">Amount from Other Revenue Sources</label><br />
+							<label for="estimated_from_other">Amount from Other Revenue Sources</label><br />
 							<span class="input-currency"><input type="number" id="estimated_from_other" class="input-half sum required value" placeholder="Amount from other revenue sources" value="#XMLFormat(PROGRAM.EstimatedFromOther)#" /></span>
 						</p>
 						<p>
@@ -281,8 +285,7 @@
 								<button type="button" class="nav prev btn btn-primary pull-left">Prev</button> 
 								<button type="button" class="nav next btn btn-primary pull-right">Next</button> 
 							</div>	
-						</div>						
-					</cfif>					
+						</div>										
 
 					<h3>Program Budget</h3>
 					<div class="form-group">
@@ -304,7 +307,7 @@
 								<h3>Target Audience</h3><p class="target-audience"></p>
 
 							<h2>Contact Information</h2>
-								<h3>Primary Contact Name</h3><p class="primary-name"></p>
+								<h3>Primary Contact Name</h3><p class="primary-contact-name"></p>
 								<h3>Primary Phone</h3><p class="primary-phone"></p>
 								<h3>Primary Email</h3><p class="primary-email"></p>
 								<h3>Address</h3><p class="program-address"></p>
@@ -318,22 +321,36 @@
 								<h3>Footnotes</h3><p class="footnotes"></p>
 							
 							<h2>Alignment</h2>
-								<h3>How does the program meet the FCSS prevention focus?</h3><p class="fcss-prevention-focus"></p>
+								<h3>How does the program meet the FCSS prevention focus?</h3><p class="prevention-focus"></p>
 								<h3>How does your program align with City of Airdrie's interests</h3><p class="alignment"></p>
-								<h3>How does this program fit with your agency mission and vision?</h3><p class="agency-mission-fit"></p>
+								<h3>How does this program fit with your agency mission and vision?</h3><p class="mission-fit"></p>
 								<h3>Have you considered partnerships?</h3><p class="considered-partnerships"></p>
+
+						<cfif PROGRAM.TYPE IS "Letter of Intent">
+							<h2>Budget Summary</h2>
+								<h3>Amount Requested from Airdrie</h3><p class="estimated-from-airdrie"></p>
+								<h3>Amount from Other Sources</h3><p class="estimated-from-other"></p>
+								<h3>Budget Total</h3><p class="budget-total"></p>
+						</cfif>								
+
+						<cfif PROGRAM.TYPE IS "Application Form">
+							<h2>Board Members</h2>
+							<div class="board-summary"></div>
 
 							<h2>Outcomes Plan</h2>
 								<h3>Short Term Goals</h3><p class="short-term-goals"></p>
 								<h3>Mid Term Goals</h3><p class="mid-term-goals"></p>
 								<h3>Long Term Goals</h3><p class="long-term-goals"></p>
-				
-							<h2>Budget Summary</h2>
-								<h3>Amount Requested from Airdrie</h3><p class="estimated-from-airdrie"></p>
-								<h3>Amount from Other Sources</h3><p class="estimated-from-other"></p>
-								<h3>Budget Total</h3><p class="budget-total"></p>
-						</div>
 
+							<h2>Documents</h2>
+							<div class="document-summary"></div>
+
+							<h2>Budget Summary</h2>
+							<div class="budget-summary"></div>							
+						</cfif>		
+
+						</div>
+						
 						<div class="form-buttons clearfix"> 
 							<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
 							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
@@ -344,11 +361,10 @@
 			</cfoutput>				
 
 			<p>
-				<a href="javascript:;" id="save" class="btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
+				<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
 				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
 				<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #XMLFormat(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 			</p>
-
 		</cfif>
 <!--- END FORM --->
 		</div>

@@ -13,14 +13,6 @@ $(document).ready(function(){
 		return false;
 	});
 
-	// Handler sliders
-	$(".slider").slider({
-		slide: function( event, ui ) {
-			$(this).next().html(ui.value + "%");
-		},
-		animate: true
-	});
-
 	// Board Member Autocomplete
 	var commonBoardTitles = [
       "President",

@@ -344,7 +344,7 @@
 		border: 1px solid #c42424;		
 	}
 	tr.error {
-		background-color: #c42424!important;
+		background-color: #F4A7A7!important;
 	}
 
 	span.error-details {
@@ -582,6 +582,13 @@
 	.center-align {
 		text-align: center;
 	}
+	.list-no-style {
+		list-style: none;
+	}
+		.list-no-style li {
+			padding-left: 0;
+			margin-bottom: 25px;
+		}
 
 /*** COLORS ***/
 	.green-background {
@@ -628,10 +635,7 @@
 .coa_logo_small {
 	width: 150px;
 }
-.budget-bottom p .inline {
-	display: block;
-}
-.budget-bottom span.percent {
+.budget-bottom span.value {
     text-align: center;
     display: block;
 }
@@ -756,7 +760,7 @@ ul.application-process a.complete i {
 		.dashboard-panel-large {
 			width: 100%;
 		}	
-	.budget-bottom span.percent {
+	.budget-bottom span.value {
 	    width: 50%;
 	}	
 	#resources_container, #logout_message_container {
