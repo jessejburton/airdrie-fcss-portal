@@ -21,23 +21,37 @@
 					<cfloop array="#PROGRAMS#" index="program">
 						<div class="program">
 							<h3 class="spaced">#program.ProgramName#</h3>
-							<cfif ListFind(PROGRAM.StatusList, 'LOI - Approved') IS 0>
-								<cfset ButtonText = "Letter of Intent">
+
+							<cfif ListFind(program.StatusList, "PROGRAM - Funded") IS 0>
+								<div>	
+									<cfif ListFind(PROGRAM.StatusList, 'LOI - Approved') IS 0>
+										<cfset ButtonText = "Letter of Intent">
+									<cfelse>
+										<cfset ButtonText = "Application Form">
+									</cfif>
+
+									<a href="application_form.cfm?ID=#program.ProgramID#" class="btn btn-primary">
+										<i class="fa fa-check-circle"></i> <span>#ButtonText#</span>
+									</a>							
+								</div>
 							<cfelse>
-								<cfset ButtonText = "Application Form">
+								<div>
+									<p>
+										<a href="surveys.cfm?ProgramID=#URLEncodedFormat(program.ProgramID)#" class="btn btn-primary">
+											<i class="fa fa-check-circle"></i> Surveys
+										</a>
+										<a href="mid_year.cfm?ID=#program.ProgramID#" class="btn btn-primary">
+											<i class="fa fa-check-circle"></i> Mid-Year Report
+										</a>
+										<a href="year_end.cfm?ID=#program.ProgramID#" class="btn btn-primary">
+											<i class="fa fa-check-circle"></i> Year-End Report
+										</a>
+									</p>
+									<p>
+										<a href="javascript:;" class="link" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> print application form</a>
+									</p>
+								</div>
 							</cfif>
-
-							<a href="application_form.cfm?ID=#program.ProgramID#" class="btn btn-primary">
-								<i class="fa fa-check-circle"></i> <span>#ButtonText#</span>
-							</a>							
-
-							<!--- TODO - Clean this up <ul class="application-process">
-								<li><a href="application_form.cfm?ID=#program.ProgramID#" class="#IIF(ListFind(PROGRAM.StatusList, 'LOI - Approved') GT 0, DE('complete'), DE(''))#"><i class="fa fa-check-circle"></i><span>Letter of Intent</span></a></li>
-								<li><a href="application_form.cfm?ID=#program.ProgramID#" class="#IIF(ListFind(PROGRAM.StatusList, 'LOI - Approved') GT 0, DE(''), DE('not-available'))# #IIF(ListFind(PROGRAM.StatusList, 'APPLICATION - Approved') GT 0, DE('complete'), DE(''))#"><i class="fa fa-check-circle"></i><span>Application Form</span></a></li>
-								<li><a href="mid_year.cfm?ID=#program.ProgramID#" class="#IIF(ListFind(PROGRAM.StatusList, 'APPLICATION - Approved') GT 0, DE(''), DE('not-available'))#"><i class="fa fa-check-circle"></i><span>Mid-Year Report</span></a></li>
-								<li><a href="year_end.cfm?ID=#program.ProgramID#" class="#IIF(ListFind(PROGRAM.StatusList, 'APPLICATION - Approved') GT 0, DE(''), DE('not-available'))#"><i class="fa fa-check-circle"></i><span>Final Report</span></a></li>
-							</ul>--->
-
 							<p class="spaced"><strong>Current Status: </strong> #PROGRAM.CurrentStatus#</p>
 						</div>		
 					</cfloop>

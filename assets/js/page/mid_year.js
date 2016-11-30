@@ -1,20 +1,27 @@
+/*********************************************************/
+/* 			MID-YEAR Budget								 */
+/*********************************************************/
+
+/*****************************************  VARIABLES  ***********************************************/
+
+var _AUTOSAVE = null;
+var _AUTOSAVE_DURATION = 30000; // Autosave every 30 seconds
+
+/*****************************************  HANDLERS  ***********************************************/
+
 $(document).ready(function(){
-	$("#midyear_review_submit").on("click", function(){
-		$(".form-group").addClass("seen");
-		validateForm($("#mid_year_form"), submitMidYear);
-	});
+	$('.accordion').accordion('option', 'active', 0);
+	_AUTOSAVE = setInterval(saveBudget, _AUTOSAVE_DURATION);
 });
 
-function submitMidYear(){
-	var pstr = new Object();
-	pstr.method = "midYear";
+$(document).on("click", ".save", function(){
+	saveBudget();
 
-	$.ajax({
-		url: "assets/cfc/testing.cfc",
-		data: pstr,
-		success: function(response){
-			$("#mid_year_form").hide();
-			$("#midyear_form_complete").addClass("autoreply autoreply-success").removeClass("hidden").fadeIn("slow");
-		}
-	})	
-}
+	var msg = new Object();
+	msg.SUCCESS = true;
+	msg.TYPE = "success";
+	msg.MESSAGE = "<strong>Success!</strong> your work has been saved.";
+	showAutoreply(msg, $("#mid_year_form"));
+
+	window.scrollTo(0, 0);
+});

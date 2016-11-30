@@ -108,3 +108,8 @@ function isScrolledIntoView(elem)
 	    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 	}
 }
+
+/*** UTILITY FUNCTIONS ***/
+String.prototype.inList = function(list){
+   return ( list.indexOf(this.toString()) != -1)
+}

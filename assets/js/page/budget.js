@@ -20,10 +20,10 @@ $(document).ready(function(){
 	    $(this).empty().slider({
 	        value: parseInt($(this).parent().data("value")),
 	        // Check - is this the adult slider? 
-	        min: (this.id === 'percent_child') ? 1 : smin,
+	        min: (this.id === 'percent_child') ? 0 : smin,
 	        max: smax,
 	        range: 'min',
-	        step: 1,
+	        step: 5,
 	        create: function(event, ui){
 	        	$(this).siblings().text(parseInt($(this).parent().data("value")) + ' %');
 	        },
@@ -86,13 +86,17 @@ $(document).on("click", ".add-row", function(){
 // Total the expenditures
 $(document).on("keyup", ".expenditure-add-value", function(){
 	var total = 0;
+	var row = $(this).closest("tr");
+
 	$(".expenditure-add-value").each(function(){
 		if($(this).val().length > 0 && !isNaN($(this).val())){
 			total = total + parseFloat($(this).val());
 		}
 	});
-	$("#expenditure_total").html("$ " + total.toFixed(2));
 
+	$("#expenditure_total").html("$ " + total.toFixed(2));
+	row.find(".row-total").val(total);
+	
 	updateTableColumns($(this).closest(".table"));
 });
 
@@ -111,7 +115,6 @@ $(document).on("keyup", ".revenue-add-value", function(){
 	    }
 	});
 
-	row.find(".row-total").val(total);
 	updateTableColumns($(this).closest(".table"));
 });
 
@@ -295,12 +298,19 @@ function saveBudget(){
 	pstr.EXPENDITURESEXPLANATION = $("#expenditures_explanation").val();
 	pstr.DISTRIBUTIONTOTALS = JSON.stringify(getDistributionTotals());
 
-	$.ajax({
-		url: "assets/cfc/webservices.cfc",
-		data: pstr,
-		success: function(response){
-			console.log(response);
-		}
+	if(pstr.PREVIOUSYEARBUDGET.length == 0) pstr.PREVIOUSYEARBUDGET = 0;
+	if(pstr.REQUESTEDFROMAIRDRIE.length == 0) pstr.REQUESTEDFROMAIRDRIE = 0;	
+	
+	$("#saving").fadeIn("slow", function(){
+		$.ajax({
+			url: "assets/cfc/webservices.cfc",
+			data: pstr,
+			success: function(response){
+				console.log(response);
+				$("#last_saved").html("Last Saved: " + currentTime());
+				$("#saving").fadeOut("slow");
+			}
+		});		
 	});
 }
 

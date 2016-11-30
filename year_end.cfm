@@ -1,193 +1,79 @@
 <cfinclude template="shared/header.cfm">
 
-<cfset APPLICATIONDETAILS = SESSION.Applications[1]>
+<cfset showForm = true>
+
+<!--- Make sure there is a program selected and that it has been approved --->
+<cfif StructKeyExists(URL, 'ID')>
+	<cfinvoke component="#APPLICATION.cfcpath#program" method="getProgramByID" programID="#URL.ID#" returnvariable="PROGRAM" />
+<cfelse>
+	<cflocation url="index.cfm" addtoken="false">
+</cfif>
+<cfif ListFindNoCase(PROGRAM.StatusList, 'LOI - Approved') IS 0>
+	<cflocation url="index.cfm" addtoken="false">
+</cfif>
 
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<form id="end_year_form">
-				<h1>Year End Report</h1>
-	
+			<h1>Year-End Report</h1>
+
+<!--- Decide whether or not to show the form --->
+<cfif ListFindNoCase(PROGRAM.StatusList, 'Year-End Submitted') IS 1>
+	<cfset showForm = false>
+	<div class="autoreply autoreply-info autoreply-visible">
+		<p><strong>Submitted!</strong> You have already completed and sent in your year-end report for this program.
+	</div>
+</cfif>
+
+<!--- BEGIN FORM --->	
+		<cfif showForm>
+			<form id="mid_year_form">
+				<!--- Hidden Form Fields --->
+				<input type="hidden" id="program_id" value="<cfoutput>#XMLFormat(PROGRAM.ProgramID)#</cfoutput>" />
+				<input type="hidden" id="program_status" value="<cfoutput>#XMLFormat(PROGRAM.Status)#</cfoutput>" />
+
 				<p>
-					Please complete the following Year-End report to submit your current program status to the City of Airdrie.
-				</p> 		
-
-				<div class="accordion clearfix">				
-					<h3>Program Budget</h3>
-					<div class="form-group seen">
-						<h1 class="form-group-heading">Program Budget Information <a href="assets/documents/Budget-Guide.pdf" target="_blank" class="pull-right link small-text"><i class="fa fa-question-circle"></i> Budget Guide</a></h1>
-						
-						<h2>Revenues</h2>
-						<table class="table">
-							<thead>
-								<tr>
-									<th width="25%">Source</th>
-									<th width="25%">2016 Funded by Other Source</th>
-									<th width="25%">2016 Funded by Airdrie FCSS</th>
-									<th width="25%">Total</th>								
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="expenditure_item">
-									<td>
-										<select>
-											<option value="">-- Select a revenue item --</option>
-											<option value="">Other FCSS</option>
-											<option value="">Provincial Grant</option>
-											<option value="">Federal Grant</option>
-											<option value="">Corporate Donations</option>
-											<option value="">Individual Donations</option>
-											<option value="">Membership Fees</option>
-											<option value="">Fundraising</option>
-											<option value="">Foundations / Charity Trusts</option>
-											<option value="">Sale of Goods and Services</option>
-											<option value="">Other Revenues</option>
-										</select>
-									</td>
-									<td>
-										<input type="number" class="inline add-value" placeholder="Amount" />
-									</td>
-									<td>
-										<input type="number" class="inline add-value tab-add-row" placeholder="Amount" />
-									</td>
-									<td>
-										<input type="number" class="row-total" readonly placeholder="Total" /><br />										
-									</td>
-								</tr>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td colspan="2">
-										<a href="javascript:;" class="add-row"><i class="fa fa-plus"></i> add another</a>
-									</td>
-									<td>
-										<strong class="pull-right">Total Revenues</strong>
-									</td>
-									<td>
-										<span class="col-total pull-right faded">$ 0.00</span>
-									</td>
-								</tr>
-							</tfoot>
-						</table>
-
-						<hr />
-
-						<h2>Expenditures</h2>
-						<table class="table">
-							<thead>
-								<tr>
-									<th width="25%">Source</th>
-									<th width="25%">2016 Funded by Other Source</th>
-									<th width="25%">2016 Funded by Airdrie FCSS</th>
-									<th width="25%">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="expenditure_item">
-									<td>
-										<select>
-											<option value="">-- Select an expense --</option>
-											<option value="">Staffing Costs</option>
-											<option value="">General Travel</option>
-											<option value="">Training & Travel</option>
-											<option value="">Professional Memberships</option>
-											<option value="">Administration, Accounting & Legal</option>
-											<option value="">Goods & Supplies</option>
-											<option value="">Rent</option>
-											<option value="">Insurance</option>
-											<option value="">Repair & Maintenance</option>
-											<option value="">Advertising & Printing</option>
-											<option value="">Technology</option>
-											<option value="">Program Supplies</option>
-											<option value="">Volunteer Development</option>
-											<option value="">Volunteer Recognition</option>
-											<option value="">Community Development</option>
-											<option value="">Program Evaluation</option>
-											<option value="">Other</option>
-										</select>
-									</td>
-									<td>
-										<input type="number" class="inline add-value" placeholder="Amount" />
-									</td>
-									<td>
-										<input type="number" class="inline add-value tab-add-row" placeholder="Amount" />
-									</td>
-									<td>
-										<input type="number" class="row-total" readonly placeholder="Total" /><br />										
-									</td>
-								</tr>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td colspan="2">
-										<a href="javascript:;" class="add-row"><i class="fa fa-plus"></i> add another</a>
-									</td>
-									<td>
-										<strong class="pull-right">Total Expenditures</strong>
-									</td>
-									<td>
-										<span class="col-total pull-right faded">$ 0.00</span>
-									</td>
-								</tr>
-							</tfoot>
-						</table>
-
-						<hr />
-
-						<div class="budget-bottom">
-							<p>
-								<label for="revenues_description">Revenues Explanation</label><br />						
-								<textarea id="revenues_description" placeholder="Please explain your revenues" class="textarea-large"></textarea>		
-							</p>
-							<p>
-								<label for="expenditures_description">Expenditures Explanation</label><br />						
-								<textarea id="expenditures_description" placeholder="Please explain your expenditures" class="textarea-large"></textarea>		
-							</p>
-
-							<p>Please provide the percentage of funds that will be applied to each target group below</p>
-							<p>
-								<label for="distribution_children">Children / Youth</label>
-								<div class="slider input-half" id="distribution_children_slider"></div>
-								<span class="percent">0%</span>
-								<input id="distribution_children" type="hidden" />
-							</p>
-							<p>
-								<label for="distribution_youth">Family</label>
-								<div class="slider input-half" id="distribution_youth_slider"></div>
-								<span class="percent">0%</span>
-								<input id="distribution_youth" type="hidden" />
-							</p>
-							<p>
-								<label for="distribution_adult">Adult</label>
-								<div class="slider input-half" id="distribution_adult_slider"></div>
-								<span class="percent">0%</span>
-								<input id="distribution_adult" type="hidden" />								
-							</p>
-							<p>
-								<label for="distribution_seniors">Seniors</label>
-								<div class="slider input-half" id="distribution_seniors_slider"></div>
-								<span class="percent">0%</span>
-								<input id="distribution_seniors" type="hidden" />
-							</p>
-							<p>
-								<label for="distribution_volunteers">Volunteers</label>
-								<div class="slider input-half" id="distribution_volunteers_slider"></div>
-								<span class="percent">0%</span>
-								<input id="distribution_volunteers" type="hidden" />							
-							</p>
-						</div>
+					<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
+					<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
+					<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#XMLFormat(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
+				</p>
+				
+			<cfoutput>				
+				<div class="accordion clearfix">	
+					<cfset BUDGETTYPE = "Year-End Budget">			
+					<h3>Year End Financials</h3>
+					<div class="form-group">
+						<cfinclude template="shared/budget.cfm">
 
 						<div class="form_buttons clearfix">
-							<button type="button" id="endyear_review_submit" class="btn btn-primary pull-right">Submit</button> 
+							<button type="button" id="application_review" class="btn btn-primary pull-right">Review</button> 
 						</div>
-					</div>										
-				</div>
-			</form>
+					</div>											
 
-<!--- Autoreply message when complete --->
-			<div id="endyear_form_complete" class="hidden spaced">
-				<p><strong>Success!</strong> you have completed and submitted your Year-End report. return to the <a href="programs.cfm">programs</a> page.</p>
-			</div>
+				<!--- REVIEW --->
+					<h3 class="ui-state-disabled">Review and Submit</h3>
+					<div>
+						<div id="application_review_display">	
+							<h2>Budget Summary</h2>
+							<div class="budget-summary"></div>								
+						</div>
+						
+						<div class="form-buttons clearfix"> 
+							<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
+							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
+							<a href="javascript:;" class="pull-right small-text link inline" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
+						</div>
+					</div>	
+				</div>
+			</cfoutput>				
+
+			<p>
+				<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
+				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
+				<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#XMLFormat(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
+			</p>
+		</cfif>
+<!--- END FORM --->
 		</div>
 	</section>	
 

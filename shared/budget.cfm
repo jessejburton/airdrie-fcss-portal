@@ -30,7 +30,7 @@
 				<span class="input-currency"><input type="number" id="previous_year_budget" class="prev-year" placeholder="Amount" value="<cfoutput>#IIF(BUDGET.PreviousYearBudget GT 0, 'XMLFormat(BUDGET.PreviousYearBudget)', DE(''))#</cfoutput>" /></span>
 			</td>
 			<td>
-				<span class="input-currency"><input type="number" id="requested_from_airdrie" class="revenue-amount revenue-add-value row-total" placeholder="Amount" value="<cfoutput>#IIF(isNumeric(BUDGET.RequestedFromAirdrie) AND BUDGET.RequestedFromAirdrie GT 0, 'XMLFormat(BUDGET.RequestedFromAirdrie)', DE(''))#</cfoutput>" /></span>
+				<span class="input-currency"><input type="number" id="requested_from_airdrie" class="revenue-amount revenue-add-value row-total" placeholder="Amount Requested" value="<cfoutput>#IIF(isNumeric(BUDGET.RequestedFromAirdrie) AND BUDGET.RequestedFromAirdrie GT 0, 'XMLFormat(BUDGET.RequestedFromAirdrie)', DE(''))#</cfoutput>" /></span>
 			</td>
 		</tr>
 		<cfoutput>
@@ -132,10 +132,10 @@
 						<span class="input-currency"><input type="number" class="prev-year" placeholder="Amount" value="#XMLFormat(line.PREVYEAR)#" /></span>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="funded-other revenue-add-value" placeholder="Amount" value="#XMLFormat(line.FundedOther)#" /></span>
+						<span class="input-currency"><input type="number" class="funded-other expenditure-add-value" placeholder="Amount" value="#XMLFormat(line.FundedOther)#" /></span>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="funded-airdrie revenue-add-value tab-add-row" placeholder="Amount" value="#XMLFormat(line.FundedAirdrie)#" /></span>
+						<span class="input-currency"><input type="number" class="funded-airdrie expenditure-add-value tab-add-row" placeholder="Amount" value="#XMLFormat(line.FundedAirdrie)#" /></span>
 					</td>
 					<td>
 						<span class="input-currency"><input type="number" class="row-total" disabled placeholder="Total" value="#XMLFormat(line.FundedOther + line.FundedAirdrie)#" /></span>								
@@ -159,10 +159,10 @@
 				<span class="input-currency"><input type="number" class="prev-year" placeholder="Amount" /></span>
 			</td>
 			<td>
-				<span class="input-currency"><input type="number" class="funded-other revenue-add-value" placeholder="Amount" /></span>
+				<span class="input-currency"><input type="number" class="funded-other expenditure-add-value" placeholder="Amount" /></span>
 			</td>
 			<td>
-				<span class="input-currency"><input type="number" class="funded-airdrie revenue-add-value tab-add-row" placeholder="Amount" /></span>
+				<span class="input-currency"><input type="number" class="funded-airdrie expenditure-add-value tab-add-row" placeholder="Amount" /></span>
 			</td>
 			<td>
 				<span class="input-currency"><input type="number" class="row-total" disabled placeholder="Total" /></span>								

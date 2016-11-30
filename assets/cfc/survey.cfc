@@ -47,17 +47,18 @@
 
 <!--- HANDLE GETTING THE ANSWERS WITH THE QUESTION --->		
 				<cfquery name="LOCAL.qAnswers">
-					SELECT	AnswerID, Answer, isOrder, isActive
+					SELECT	AnswerID, Answer, isOrder, isActive, isDefault
 					FROM	SurveyAnswer_tbl
 					WHERE QuestionID = <cfqueryparam value="#LOCAL.qQuestions.QuestionID#" cfsqltype="cf_sql_integer">
-					ORDER BY isOrder
+					ORDER BY isOrder, isDefault
 				</cfquery>
 
 				<cfset LOCAL.Question.ANSWERS = ArrayNew(1)>
 				<cfloop query="LOCAL.qAnswers">
 					<cfset LOCAL.Answer = StructNew()>
 					<cfset LOCAL.Answer.Answer = LOCAL.qAnswers.Answer>
-					<cfset LOCAL.Answer.AnswerID = LOCAL.qAnswers.Answer>
+					<cfset LOCAL.Answer.AnswerID = LOCAL.qAnswers.AnswerID>
+					<cfset LOCAL.Answer.isDefault = LOCAL.qAnswers.isDefault>
 					<cfset ArrayAppend(LOCAL.Question.ANSWERS, LOCAL.Answer)>
 				</cfloop>
 
@@ -66,4 +67,26 @@
 
 		<cfreturn LOCAL.response>
 	</cffunction>
+
+<!--- Check if a client exists or not --->
+	<cffunction name="checkSurveyClientNameExists" access="public" returntype="boolean" returnformat="JSON"
+		hint="Checks to see if a name is already used for a specific client by program and survey ID's. If you pass a clientID that isn't 0 it will disregard the client with that ID for checking to update the record.">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="SurveyID" type="numeric" required="true">
+		<cfargument name="Name" type="string" required="true">
+		<cfargument name="ClientID" type="numeric" default="0">
+
+		<cfquery name="LOCAL.qCheck">
+			SELECT 	ClientID
+			FROM	SurveyClient_tbl
+			WHERE	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+			AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+			AND 	Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">
+			<cfif ARGUMENTS.ClientID NEQ 0>
+				AND ClientID <> <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+			</cfif>
+		</cfquery>
+
+		<cfreturn LOCAL.qCheck.recordcount IS 1>
+	</cffunction>	
 </cfcomponent>

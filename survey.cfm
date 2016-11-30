@@ -3,9 +3,52 @@
 	<cflocation url="index.cfm" addtoken="false">
 <cfelse>
 	<!--- Get the approrpriate survey data --->
-	<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getSurveyByID" SurveyID="#URLEncodedFormat(URL.SurveyID)#" returnvariable="response" />
+	<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getSurveyByID" SurveyID="#URL.SurveyID#" returnvariable="response" />
 	<cfset REQUEST.SURVEY = response.DATA>
 </cfif>
+
+<!--- Get lookup values (TODO - It might be a good idea to switch these to lookup tables but because I am not sure if they are going to be changing the questions I wanted to wait until I get more information before putting in the time) --->
+<cfset GENDER = ArrayNew(1)>
+	<cfset ArrayAppend(GENDER, "Male")>
+	<cfset ArrayAppend(GENDER, "Female")>
+<cfset AGE = ArrayNew(1)>
+	<cfset ArrayAppend(AGE, "0-4")>
+	<cfset ArrayAppend(AGE, "5-9")>
+	<cfset ArrayAppend(AGE, "10-14")>
+	<cfset ArrayAppend(AGE, "15-19")>
+	<cfset ArrayAppend(AGE, "20-24")>
+	<cfset ArrayAppend(AGE, "25-29")>
+	<cfset ArrayAppend(AGE, "30-34")>
+	<cfset ArrayAppend(AGE, "35-39")>
+	<cfset ArrayAppend(AGE, "40-44")>
+	<cfset ArrayAppend(AGE, "45-49")>
+	<cfset ArrayAppend(AGE, "50-54")>
+	<cfset ArrayAppend(AGE, "55-59")>
+	<cfset ArrayAppend(AGE, "60-64")>
+	<cfset ArrayAppend(AGE, "65-69")>
+	<cfset ArrayAppend(AGE, "70-74")>
+	<cfset ArrayAppend(AGE, "75+")>
+<cfset RESIDENCE = ArrayNew(1)>
+	<cfset ArrayAppend(RESIDENCE, "Airdrie")>
+	<cfset ArrayAppend(RESIDENCE, "Rocky View & County Area")>
+	<cfset ArrayAppend(RESIDENCE, "Another Province/Country")>
+	<cfset ArrayAppend(RESIDENCE, "Other (specify)")>
+<cfset LANGUAGE = ArrayNew(1)>
+	<cfset ArrayAppend(LANGUAGE, "English")>
+	<cfset ArrayAppend(LANGUAGE, "German")>
+	<cfset ArrayAppend(LANGUAGE, "Spanish")>
+	<cfset ArrayAppend(LANGUAGE, "Punjabi")>
+	<cfset ArrayAppend(LANGUAGE, "Tagalog (Pilipino)")>
+	<cfset ArrayAppend(LANGUAGE, "Vietnamese")>
+	<cfset ArrayAppend(LANGUAGE, "Other (specify)")>
+<cfset INCOME = ArrayNew(1)>
+	<cfset ArrayAppend(INCOME, "Under $39,999")>
+	<cfset ArrayAppend(INCOME, "$40,000 - $79,999")>
+	<cfset ArrayAppend(INCOME, "$80,000 - $119,999")>
+	<cfset ArrayAppend(INCOME, "$120,000 - $159,999")>
+	<cfset ArrayAppend(INCOME, "$160,000 - $199,999")>
+	<cfset ArrayAppend(INCOME, "$200,000 +")>
+	<cfset ArrayAppend(INCOME, "I don't want to say")>
 
 <cfinclude template="shared/header.cfm">
 
@@ -18,139 +61,135 @@
 			<h1><cfoutput>#XMLFormat(REQUEST.SURVEY.Name)#</cfoutput></h1>
 			<p><cfoutput>#XMLFormat(REQUEST.SURVEY.Description)#</cfoutput></p>
 
-			<cfif isDefined('URL.SurveyComplete')>
-				<div class="autoreply autoreply-success autoreply-visible">
-					<p><strong>Success!</strong> Survey data has been collected for this participant, you can begin collecting another survey now.</p>
-				</div>
-			</cfif>
-
-			<p><a href="surveys.cfm" class="link"><i class="fa fa-arrow-circle-o-left"></i> Back to Surveys</a></p>
+			<p><a href="surveys.cfm?ProgramID=<cfoutput>#URLEncodedFormat(URL.ProgramID)#</cfoutput>" class="link"><i class="fa fa-arrow-circle-o-left"></i> Back to Surveys</a></p>
 
 			<form id="survey">
-				<div class="accordion clearfix">			
+			<!--- HIDDEN FIELDS --->
+				<cfoutput>
+					<input type="hidden" id="SurveyID" value="#XMLFormat(URL.SurveyID)#" />
+					<input type="hidden" id="ProgramID" value="#XMLFormat(URL.ProgramID)#" />
+					<input type="hidden" id="client_id" value="" />
+				</cfoutput>
+
+				<div class="accordion clearfix">	
 <!--- PARTICIPANT INFORMATION --->
 					<h3>Participant Details</h3>
-					<div class="form-group">
-						<p>
-							<label for="client_id">Client ID</label><br />
-							<input type="text" class="input-half" id="client_id" disabled value="12345" />
-						</p>
+					<div class="form-group" id="participant">
 						<p>
 							<label for="participant_name">Name</label><br />
 							<input type="text" class="input-half" id="participant_name" placeholder="Enter the participants name." />
+							<a class="link smaller-text" id="generate" href="javascript:;">&nbsp; <i class="fa fa-check"></i> Generate Unique ID</a>
+							<a class="link smaller-text hidden" id="new" href="javascript:;">&nbsp; <i class="fa fa-plus"></i> New Client</a>
 						</p>
-						<p>
-							<label for="gender">Gender</label><br />
-							<select id="gender" class="input-half">
-								<option value="" hidden>--- Select ---</option>
-								<option value="1">Male</option>
-								<option value="2">Female</option>
-							</select>
-						</p>
-						<p>
-							<label for="age">Age</label><br />
-							<select id="age" class="input-half">
-								<option value="" hidden>--- Select ---</option>
-								<option value="1">0-4</option>
-								<option value="2">5-9</option>
-								<option value="3">10-14</option>
-								<option value="4">15-19</option>
-								<option value="5">20-24</option>
-								<option value="6">25-29</option>
-								<option value="3">30-34</option>
-								<option value="4">35-39</option>
-								<option value="5">40-44</option>
-								<option value="6">45-49</option>
-								<option value="5">50-54</option>
-								<option value="6">55-59</option>
-								<option value="3">60-64</option>
-								<option value="4">65-69</option>
-								<option value="5">70-74</option>
-								<option value="6">75+</option>
-							</select>
-						</p>					
-						<p>
-							<label for="numpeople">Number of People in Family</label><br />
-							<select id="numpeople" class="input-half">
-								<option value="" hidden>--- Select ---</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6+</option>
-							</select>
-						</p>
-						<div class="two-cols">
+
+						<div class="form_buttons clearfix" id="begin_buttons">
+							<button type="button" class="begin next btn btn-primary pull-right">Continue</button> 
+						</div>
+
+						<div id="client_data" class="hidden">
 							<p>
-								<label for="residence">Residence</label><br />
-								<select id="residence" class="specify">
-									<option value="1">Airdrie</option>
-									<option value="2">Rocky View County & Area</option>
-									<option value="3">Calgary</option>
-									<option value="4">Another Province/Country</option>
-									<option value="Other">Other (specify)</option>
+								<label for="gender">Gender</label><br />
+								<select id="gender" class="input-half">
+									<option value="">--- Select ---</option>
+									<cfoutput>
+										<cfloop array="#GENDER#" index="i">
+											<option value="#i#">#i#</option>
+										</cfloop>
+									</cfoutput>
 								</select>
 							</p>
-							<p id="residence_other" class="other">
-								<label for="residence_specify">Other Residence Specify</label><br />
-								<input type="text" id="residence_specify" placeholder="Please specify your residence" />
-							</p>
-						</div>
-						<div class="two-cols">
 							<p>
-								<label for="language">Language</label><br />
-								<select id="language" class="specify">
-									<option value="1">English</option>
-									<option value="2">French</option>
-									<option value="3">German</option>
-									<option value="4">Spanish</option>
-									<option value="5">Punjabi</option>
-									<option value="6">Tagalog (Pilipino)</option>
-									<option value="7">Vietnamese</option>
-									<option value="Other">Other (specify)</option>
+								<label for="age">Age</label><br />
+								<select id="age" class="input-half">
+									<option value="">--- Select ---</option>
+									<cfoutput>
+										<cfloop array="#AGE#" index="i">
+											<option value="#i#">#i#</option>
+										</cfloop>
+									</cfoutput>
+								</select>
+							</p>					
+							<p>
+								<label for="numpeople">Number of People in Family</label><br />
+								<select id="numpeople" class="input-half">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6+</option>
 								</select>
 							</p>
-							<p id="language_other" class="other">
-								<label for="language_specify">Other Language Specify</label><br />
-								<input type="text" id="language_specify" placeholder="Please specify what language" />
+							<div class="two-cols">
+								<p>
+									<label for="residence">Residence</label><br />
+									<select id="residence" class="specify">
+										<cfoutput>
+											<cfloop array="#RESIDENCE#" index="i">
+												<option value="#i#">#i#</option>
+											</cfloop>
+										</cfoutput>
+									</select>
+								</p>
+								<p id="residence_other" class="other">
+									<label for="residence_specify">Other Residence Specify</label><br />
+									<input type="text" id="residence_specify" placeholder="Please specify your residence" />
+								</p>
+							</div>
+							<div class="two-cols">
+								<p>
+									<label for="language">Language</label><br />
+									<select id="language" class="specify">
+										<cfoutput>
+											<cfloop array="#LANGUAGE#" index="i">
+												<option value="#i#">#i#</option>
+											</cfloop>
+										</cfoutput>
+									</select>
+								</p>
+								<p id="language_other" class="other">
+									<label for="language_specify">Other Language Specify</label><br />
+									<input type="text" id="language_specify" placeholder="Please specify what language" />
+								</p>
+							</div>
+							<p>
+								<label for="income">Income</label><br />
+								<select id="income" class="input-half">
+									<option value="">--- Select ---</option>
+									<cfoutput>
+										<cfloop array="#INCOME#" index="i">
+											<option value="#i#">#i#</option>
+										</cfloop>
+									</cfoutput>
+								</select>
 							</p>
+
+							<div class="form_buttons clearfix">
+								<button type="button" class="save-participant next btn btn-primary pull-right"><i class="fa fa-save"></i> Save and Continue</button> 
+							</div>							
 						</div>
-						<p>
-							<label for="income">Income</label><br />
-							<select id="income" class="input-half">
-								<option value="" hidden>--- Select ---</option>
-								<option value="1">Under $39,999</option>
-								<option value="2">$40,000-$79,000</option>
-								<option value="3">$80,000-$119,000</option>
-								<option value="4">$120,000-$159,999</option>
-								<option value="5">$160,000-$199,000</option>
-								<option value="6">$200,000+</option>
-								<option value="6">I don't want to say</option>
-							</select>
-						</p>
 					</div>
 
 <!--- SURVEY QUESTIONS --->
-					<h3>Survey</h3>
+					<h3 id="survey_data" class="ui-state-disabled">Survey</h3>
 					<div class="form-group">
 					<!--- TODO - ADD A PLACE HERE FOR SPECIAL INSTRUCTIONS MAYBE? --->
 						<cfoutput>
 							<cfloop array="#REQUEST.SURVEY.Questions#" index="question"> 
-								<div class="radio-group">
+								<div class="radio-group question" data-questionid="#question.QUESTIONID#">
 									<span class="label question">#question.QUESTION#</span><br />
 									<div class="pre radio-column">
 									<span>Pre Survey</span>
 										<cfloop array="#question.ANSWERS#" index="answer">
 											<label class="radio" for="pre_#question.QuestionID#_#answer.AnswerID#">
-											<input type="radio" id="pre_#question.QuestionID#_#answer.AnswerID#" name="pre_question_#question.QuestionID#" value="#answer.AnswerID#" /> #answer.Answer#</label>
+											<input type="radio" class="#iif(answer.isDefault, DE('default'), DE(''))# answer" id="pre_#question.QuestionID#_#answer.AnswerID#" name="pre_question_#question.QuestionID#" value="#answer.AnswerID#" #iif(answer.isDefault, DE('checked'), DE(''))# /> #answer.Answer#</label>
 										</cfloop>
 									</div>							
 									<div class="post radio-column">
 										<span>Post Survey</span>
 										<cfloop array="#question.ANSWERS#" index="answer">
 											<label class="radio" for="post_#question.QuestionID#_#answer.AnswerID#">
-											<input type="radio" id="post_#question.QuestionID#_#answer.AnswerID#" name="post_question_#question.QuestionID#" value="#answer.AnswerID#" /> #answer.Answer#</label>
+											<input type="radio" class="#iif(answer.isDefault, DE('default'), DE(''))# answer" id="post_#question.QuestionID#_#answer.AnswerID#" name="post_question_#question.QuestionID#" value="#answer.AnswerID#" #iif(answer.isDefault, DE('checked'), DE(''))# /> #answer.Answer#</label>
 										</cfloop>
 									</div>
 								</div>
@@ -158,7 +197,7 @@
 						</cfoutput>
 
 						<div class="form_buttons clearfix">
-							<button type="button" class="btn btn-primary pull-right" id="complete_survey_btn">Complete Survey</button> 
+							<button type="button" class="btn btn-primary pull-right" id="complete_survey_btn"><i class="fa fa-save"></i> Save</button> 
 						</div>																									
 					</div>								
 				</form>

@@ -205,8 +205,11 @@
 	a.link {
 		color: #418ACE!important;
 	}
-	a.link:hover {
-		text-decoration: underline;
+		a.link:hover {
+			text-decoration: underline;
+		}
+	.accordion {
+		margin-top: 10px!important;
 	}
 
 /*** PROGRAMS ***/

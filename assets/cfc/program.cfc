@@ -258,9 +258,11 @@
 			<cfif ListFindNoCase(LOCAL.StatusList, "LOI - Submitted to Airdrie") IS 0>
 				<!--- This is a Letter of Intent --->
 				<cfset LOCAL.Status = "LOI - Submitted to Airdrie">
+				<cfset LOCAL.Type = "Letter of Intent">
 			<cfelseif ListFindNoCase(LOCAL.StatusList, "APPLICATION - Submitted to Airdrie") IS 0 AND ListFindNoCase(LOCAL.StatusList, "LOI - Approved") GT 0>
 				<!--- This is an Application --->
 				<cfset LOCAL.Status = "APPLICATION - Submitted to Airdrie">
+				<cfset LOCAL.Type = "Application">
 			<cfelse>
 				<!--- This Program has already been submitted --->
 				<cfreturn true>
@@ -277,6 +279,21 @@
 					<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_integer">
 				)
 			</cfquery>
+
+			<cfif isDefined('LOCAL.Type') IS true AND APPLICATION.environment IS "development">
+				<cfif LOCAL.Type IS "Application">
+					<cfset LOCAL.Link = "#APPLICATION.url#helpers/testApprove.cfm?ProgramID=#ARGUMENTS.ProgramID#&Type=A">
+				<cfelse>
+					<cfset LOCAL.Link = "#APPLICATION.url#helpers/testApprove.cfm?ProgramID=#ARGUMENTS.ProgramID#&Type=L">
+				</cfif>
+
+				<cfmail to="#REQUEST.USER.Email#"
+						from="#APPLICATION.fromemail#"
+						subject="#APPLICATION.NAME# - Test approve submitted #LOCAL.Type#"
+						type="html">
+					<p>Your submitted #LOCAL.Type# is ready to be <a href="#LOCAL.Link#">approved</a></p>
+				</cfmail>
+			</cfif>
 
 		<cfreturn true>
 	</cffunction>	

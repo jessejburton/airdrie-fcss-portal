@@ -152,13 +152,13 @@
 	</cffunction>
 
 <!--- WEB FUNCTIONS RELATED TO SURVEYS --->
-	<cffunction name="getSurveysByApplicationID" access="remote" returntype="struct" returnformat="JSON"
+	<cffunction name="getSurveysByProgramID" access="remote" returntype="struct" returnformat="JSON"
 			hint="Gets all of the surveys available for an application.">
-		<cfargument name="ApplicationID" type="numeric" required="true">
+		<cfargument name="ProgramID" type="numeric" required="true">
 
 		<cfquery name="LOCAL.qSurveys">
 			SELECT	SurveyID, Name, Description, Citation
-			FROM Survey_tbl
+			FROM 	Survey_tbl
 			WHERE isActive = 1
 			ORDER BY isOrder
 		</cfquery>
@@ -187,6 +187,220 @@
 
 		<cfset LOCAL.response = getSuccessResponse("")>
 		<cfset LOCAL.response.DATA = LOCAL.SURVEY>
+
+		<cfreturn LOCAL.response>
+	</cffunction>
+
+	<cffunction name="getParticipantSuggestBySurveyID" access="remote" returntype="string" returnformat="JSON"
+		hint="Used to find participants that have already started a survey. (primarily to collect post-data)">
+		<cfargument name="SurveyID" type="numeric" required="true">
+		<cfargument name="Term" type="string" required="true">
+		<!--- TODO Need to add CSRF trapping as well as maybe additional security to ensure this is protected --->
+		<cfset LOCAL.response = ArrayNew(1)>
+
+		<cfquery name="LOCAL.qClients">
+			SELECT 	Name, ClientID, DateAdded
+			FROM 	SurveyClient_tbl
+			WHERE	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+			AND 	Name LIKE <cfqueryparam value="#ARGUMENTS.Term#%" cfsqltype="cf_sql_varchar">
+		</cfquery>
+
+		<cfoutput query="LOCAL.qClients">
+			<cfset LOCAL.person = StructNew()>
+			<cfset LOCAL.person['label'] = LOCAL.qClients.Name & ' (collected: ' & DateFormat(LOCAL.qClients.DateAdded, "MM/DD/YYYY") & ')' >
+			<cfset LOCAL.person['id'] = LOCAL.qClients.ClientID>
+			<cfset LOCAL.person['value'] = LOCAL.qClients.Name>
+
+			<cfset ArrayAppend(LOCAL.response, LOCAL.person)>
+		</cfoutput>
+
+		<cfreturn serializeJSON(LOCAL.response)>
+	</cffunction>
+
+	<cffunction name="savePersonData" access="remote" returntype="struct" returnformat="JSON"
+		hint="Saves data about a client when conducting a survey. If new client (no ID is passed in) it creates them. The client is returned as the DATA attrivute of the response">
+		<cfargument name="ClientID" type="numeric" default="0">
+		<cfargument name="SurveyID" type="numeric" required="true">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="Name" type="string" required="true">
+		<cfargument name="Gender" type="string" required="true">
+		<cfargument name="Age" type="string" required="true">
+		<cfargument name="NumPeople" type="numeric" required="true">
+		<cfargument name="Residence" type="string" required="true">
+		<cfargument name="Language" type="string" required="true">
+		<cfargument name="Income" type="string" required="true">
+
+		<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
+
+		<!--- Check if the user exists --->
+		<cfinvoke component="#APPLICATION.cfcpath#survey" method="checkSurveyClientNameExists" SurveyID="#ARGUMENTS.SurveyID#" ProgramID="#ARGUMENTS.ProgramID#" Name="#ARGUMENTS.Name#" ClientID="#ARGUMENTS.ClientID#" returnvariable="LOCAL.qCheck" />
+		<cfif LOCAL.qCheck IS true>
+			<cfreturn getErrorResponse("A client with this name already exists, please select a new name.")>
+		</cfif>		
+
+		<!--- If adding a new client --->
+		<cfif NOT isDefined('ARGUMENTS.ClientID') OR ARGUMENTS.ClientID IS 0>
+			<cfquery result="LOCAL.qClient">
+				INSERT INTO SurveyClient_tbl
+				(
+					ProgramID, SurveyID, Name, Gender, Age, NumPeople, Residence, Language, Income, AccountID
+				) VALUES (
+					<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+					<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+					<cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#ARGUMENTS.Gender#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#ARGUMENTS.Age#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#ARGUMENTS.NumPeople#" cfsqltype="cf_sql_integer">,
+					<cfqueryparam value="#ARGUMENTS.Residence#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#ARGUMENTS.Language#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#ARGUMENTS.Income#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#REQUEST.USER.AccountID#" cfsqltype="cf_sql_integer">
+				)
+			</cfquery>
+
+			<cfset ARGUMENTS.CLIENTID = LOCAL.qClient.GeneratedKey>
+		<cfelse>
+			<!--- You can't update the program or survey id for a client. I was also going to make it so that you can't update the name once the survey has been started but I feel like there may be cases where it would be cleaner if you can update the name. Especially since it is just a UI anyways --->
+			<cfquery>
+				UPDATE SurveyClient_tbl
+				SET
+					Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
+					Gender = <cfqueryparam value="#ARGUMENTS.Gender#" cfsqltype="cf_sql_varchar">,
+					Age = <cfqueryparam value="#ARGUMENTS.Age#" cfsqltype="cf_sql_varchar">,
+					NumPeople = <cfqueryparam value="#ARGUMENTS.NumPeople#" cfsqltype="cf_sql_integer">,
+					Residence = <cfqueryparam value="#ARGUMENTS.Residence#" cfsqltype="cf_sql_varchar">,
+					Language = <cfqueryparam value="#ARGUMENTS.Language#" cfsqltype="cf_sql_varchar">,
+					Income = <cfqueryparam value="#ARGUMENTS.Income#" cfsqltype="cf_sql_varchar">,
+					AccountID = <cfqueryparam value="#REQUEST.USER.AccountID#" cfsqltype="cf_sql_integer">
+				WHERE ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+			</cfquery>			
+		</cfif>
+
+		<cfset LOCAL.response = getSuccessResponse("Client has been saved.")>
+		<cfset LOCAL.response.DATA = ARGUMENTS>
+		<cfreturn LOCAL.response>
+	</cffunction>
+
+	<cffunction name="getClientSurveyData" access="remote" returnformat="JSON" returntype="struct" 
+		hint="Gets all of the survey data collected be a client">
+		<cfargument name="SurveyID" type="numeric" required="true">
+		<cfargument name="ClientID" type="numeric" required="true">
+
+		<!--- TODO - check to make sure this account has access to this survey --->
+		<!--- Get the Client Data --->
+		<cfquery name="LOCAL.qData">
+			SELECT 	[Name],[Gender],[Age],[NumPeople],[Residence],[Language],[Income]
+			FROM SurveyClient_tbl
+			WHERE ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+			<!--- TODO - Should only the person who collected the data be able to see this? Maybe a setting --->
+		</cfquery>
+
+		<cfset LOCAL.person = StructNew()>
+		<cfset LOCAL.person.NAME 		= LOCAL.qData.Name>
+		<cfset LOCAL.person.GENDER 		= LOCAL.qData.Gender> 
+		<cfset LOCAL.person.AGE 		= LOCAL.qData.Age> 
+		<cfset LOCAL.person.NUMPEOPLE 	= LOCAL.qData.NumPeople> 
+		<cfset LOCAL.person.RESIDENCE 	= LOCAL.qData.Residence> 
+		<cfset LOCAL.person.LANGUAGE 	= LOCAL.qData.Language> 
+		<cfset LOCAL.person.INCOME 		= LOCAL.qData.Income>
+
+		<!--- Get the Survey data --->
+		<cfquery name="LOCAL.qSurveyData">
+			SELECT 	PrePost, sr.AnswerID, sa.QuestionID FROM SurveyResponse_tbl sr
+			INNER JOIN SurveyAnswer_tbl sa ON sa.AnswerID = sr.AnswerID
+			WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+			AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfset LOCAL.response = getSuccessResponse("Client-survey data retrieved.")>
+		<cfset LOCAL.response.DATA.PERSON = LOCAL.person>
+		
+		<cfset LOCAL.response.DATA.PREDATA = StructNew()>
+		<cfset LOCAL.response.DATA.POSTDATA = StructNew()>
+		<cfoutput query="LOCAL.qSurveyData">
+			<cfif LOCAL.qSurveyData.PrePost IS "Pre">
+				<cfset LOCAL.response.DATA.PREDATA[LOCAL.qSurveyData.QuestionID] = LOCAL.qSurveyData.AnswerID>
+			<cfelse>
+				<cfset LOCAL.response.DATA.POSTDATA[LOCAL.qSurveyData.QuestionID] = LOCAL.qSurveyData.AnswerID>
+			</cfif>
+		</cfoutput>
+
+		<cfreturn LOCAL.response>
+	</cffunction>
+
+	<cffunction name="saveSurvey" access="remote" returntype="struct" returnformat="JSON"
+		hint="Saves the Pre and Post Survey data.">
+		<cfargument name="SurveyID" type="numeric" required="true">
+		<cfargument name="ClientID" type="numeric" required="true">
+		<cfargument name="PreData" type="string" required="true">
+		<cfargument name="PostData" type="string" required="true">
+
+		<!--- check to make sure that this client has access to this survey --->
+		<cfquery name="LOCAL.qCheck">
+			SELECT 	ClientID, SurveyID
+			FROM 	SurveyClient_tbl
+			WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+			AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfif LOCAL.qCheck.recordcount IS 0>
+			<cfreturn getErrorResponse("This client is not a part of this survey.")>
+		</cfif>
+
+		<cftransaction>
+			<!--- Clear existing data for this client --->
+			<cfquery>
+				DELETE 	FROM SurveyResponse_tbl
+				WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+				AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+
+			<cfloop list="#ARGUMENTS.PREDATA#" index="p">
+				<cfquery>
+					INSERT INTO SurveyResponse_tbl
+					( 
+						ClientID, SurveyID, AnswerID, PrePost 
+					) VALUES (
+						<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
+						'Pre'
+					)
+				</cfquery>
+			</cfloop>
+
+			<cfloop list="#ARGUMENTS.POSTDATA#" index="p">
+				<cfquery>
+					INSERT INTO SurveyResponse_tbl
+					( 
+						ClientID, SurveyID, AnswerID, PrePost 
+					) VALUES (
+						<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
+						'Post'
+					)
+				</cfquery>
+			</cfloop>
+		</cftransaction>
+
+		<cfreturn getSuccessResponse("Survey Data has been collected, you can now collect for a new client.")>
+	</cffunction>
+
+	<cffunction name="getNextClientID" access="remote" returntype="Struct" returnformat="JSON"
+		hint="Gets the next available client ID for a specific program and survey and returns 'Client X' where X is the next available ID number.">
+		<cfargument name="ProgramID" type="string" required="true">
+		<cfargument name="SurveyID" type="string" required="true">
+
+		<cfquery name="LOCAL.qNextID">
+			SELECT 	MAX(ClientID) + 1 AS ID
+			FROM 	SurveyClient_tbl
+			WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+			AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfset LOCAL.response = getSuccessResponse("Client ID retrieved.")>
+		<cfset LOCAL.response.DATA = "Client " & LOCAL.qNextID.ID>
 
 		<cfreturn LOCAL.response>
 	</cffunction>
