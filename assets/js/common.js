@@ -4,6 +4,8 @@ $(document).ready(function(){
 
 	if(pagename != "index.cfm"){
 		$('#navigation a[href^="' + pagename + '"]').closest("li").addClass('active');
+	} else {
+		$('#navigation a[href^="index.cfm"]').closest("li").addClass('active');
 	}
 
 	$(".autoreply-visible").fadeIn("slow");

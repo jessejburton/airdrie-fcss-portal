@@ -3,28 +3,34 @@
 	<cffunction name="GetAgencyByID" returnformat="JSON" returntype="Struct">
 		<cfargument name="AgencyID" type="numeric" required="yes">		
 
-		<cfquery name="LOCAL.qAgency">
-			SELECT	Name, Vision, Mission, Phone, Email, Fax, Website, Address, MailingAddress, isApproved, hasDocuments, Programs
-			FROM	Agency_vw a
-			WHERE	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="integer"> 
-		</cfquery>
+		<cfif AgencyID GT 0>
+			<cfquery name="LOCAL.qAgency">
+				SELECT	Name, Vision, Mission, Phone, Email, Fax, Website, Address, MailingAddress, isApproved, hasDocuments, Programs
+				FROM	Agency_vw a
+				WHERE	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="integer"> 
+			</cfquery>
 
-		<cfset LOCAL.Agency = StructNew()>
-		<cfset LOCAL.Agency.AgencyID = ARGUMENTS.AgencyID>
-		<cfset LOCAL.Agency.Name = LOCAL.qAgency.Name>
-		<cfset LOCAL.Agency.Vision = LOCAL.qAgency.Vision>
-		<cfset LOCAL.Agency.Mission = LOCAL.qAgency.Mission>
-		<cfset LOCAL.Agency.Phone = LOCAL.qAgency.Phone>
-		<cfset LOCAL.Agency.Email = LOCAL.qAgency.Email>
-		<cfset LOCAL.Agency.Fax = LOCAL.qAgency.Fax>
-		<cfset LOCAL.Agency.Website = LOCAL.qAgency.Website>
-		<cfset LOCAL.Agency.Address = LOCAL.qAgency.Address>
-		<cfset LOCAL.Agency.MailingAddress = LOCAL.qAgency.MailingAddress>
-		<cfset LOCAL.Agency.isApproved = LOCAL.qAgency.isApproved>
-		<cfset LOCAL.Agency.Programs = LOCAL.qAgency.Programs>
-		<cfset LOCAL.Agency.isNew = LOCAL.qAgency.Programs IS 0>
-		<cfset LOCAL.Agency.hasDocuments = LOCAL.qAgency.hasDocuments>
-		<cfinvoke component="board" method="GetBoardMembersByAgencyID" AgencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BOARDMEMBERS">
+			<cfset LOCAL.Agency = StructNew()>
+			<cfset LOCAL.Agency.AgencyID = ARGUMENTS.AgencyID>
+			<cfset LOCAL.Agency.Name = LOCAL.qAgency.Name>
+			<cfset LOCAL.Agency.Vision = LOCAL.qAgency.Vision>
+			<cfset LOCAL.Agency.Mission = LOCAL.qAgency.Mission>
+			<cfset LOCAL.Agency.Phone = LOCAL.qAgency.Phone>
+			<cfset LOCAL.Agency.Email = LOCAL.qAgency.Email>
+			<cfset LOCAL.Agency.Fax = LOCAL.qAgency.Fax>
+			<cfset LOCAL.Agency.Website = LOCAL.qAgency.Website>
+			<cfset LOCAL.Agency.Address = LOCAL.qAgency.Address>
+			<cfset LOCAL.Agency.MailingAddress = LOCAL.qAgency.MailingAddress>
+			<cfset LOCAL.Agency.isApproved = LOCAL.qAgency.isApproved>
+			<cfset LOCAL.Agency.Programs = LOCAL.qAgency.Programs>
+			<cfset LOCAL.Agency.isNew = LOCAL.qAgency.Programs IS 0>
+			<cfset LOCAL.Agency.hasDocuments = LOCAL.qAgency.hasDocuments>
+			<cfinvoke component="board" method="GetBoardMembersByAgencyID" AgencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency.BOARDMEMBERS" />
+		<cfelse>
+			<cfset LOCAL.Agency = StructNew()>
+			<cfset LOCAL.Agency.ADMIN = true>
+			<cfset LOCAL.Agency.isNew = false>
+		</cfif>
 
 		<cfreturn LOCAL.Agency>
 	</cffunction>	

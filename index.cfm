@@ -10,6 +10,41 @@
 			</div>
 		</cfif>
 
+		<cfif isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS true>
+			<h1>City of Airdrie Dashboard</h1>
+			<div class="dashboard-panel dashboard-panel-small">
+				<div class="dashboard-shadow">
+					<h1 class="green-background">Active Programs</h1>
+					<div class="dashboard-panel-body">
+						<span class="dashboard-number">0</span>
+					</div>
+				</div>
+			</div>
+			<div class="dashboard-panel dashboard-panel-small">
+				<div class="dashboard-shadow">
+					<h1 class="blue-background">Approved Programs</h1>
+					<div class="dashboard-panel-body">
+						<span class="dashboard-number">0</span>
+					</div>
+				</div>
+			</div>
+			<div class="dashboard-panel dashboard-panel-small">
+				<div class="dashboard-shadow">
+					<h1 class="green-background">Surveys Completed</h1>
+					<div class="dashboard-panel-body">
+						<span class="dashboard-number">0</span>
+					</div>
+				</div>
+			</div>
+			<div class="dashboard-panel dashboard-panel-small">
+				<div class="dashboard-shadow">
+					<h1 class="blue-background">Reports Due</h1>
+					<div class="dashboard-panel-body">
+						<span class="dashboard-number">0</span>
+					</div>
+				</div>
+			</div>
+		<cfelse>
 			<h1>Agency Dashboard</h1>
 			<div class="dashboard-panel dashboard-panel-small">
 				<div class="dashboard-shadow">
@@ -43,6 +78,8 @@
 					</div>
 				</div>
 			</div>
+		</cfif>
+		
 		</div>
 	</section>	
 

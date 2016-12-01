@@ -1,3 +1,8 @@
+<cfif APPLICATION.environment NEQ "development">
+	<cflocation url="#APPLICATION.URL#" addtoken="false">
+	<cfabort>
+</cfif>
+
 <cfquery name="qStatus">
 	SELECT	StatusID
 	FROM	Status_tbl

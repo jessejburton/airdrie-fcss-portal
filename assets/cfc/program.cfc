@@ -291,7 +291,7 @@
 						from="#APPLICATION.fromemail#"
 						subject="#APPLICATION.NAME# - Test approve submitted #LOCAL.Type#"
 						type="html">
-					<p>Your submitted #LOCAL.Type# is ready to be <a href="#LOCAL.Link#">approved</a></p>
+					<p>Your submitted #LOCAL.Type# is ready to be <a href="#LOCAL.Link#">approved</a><
 				</cfmail>
 			</cfif>
 

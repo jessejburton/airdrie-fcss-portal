@@ -34,9 +34,9 @@
 		font-size: 1.7em;
 		color: #FFF;
 		padding: 0 25px;
-		border-bottom: 1px solid #7C7A29;
+		border-bottom: 1px solid #204A6B;
 		width: 100%;
-		background-color: #96932A;
+		background-color: #295F89; /* OLD BACKGROUND COLOR - #96932A;*/
 		z-index: 9999;
 	}
 		#header a {
@@ -175,6 +175,9 @@
 			#navigation li.active a{
 				background-color: #4C9EC9;
 				color: #FFF;
+				-webkit-box-shadow: inset 0px 3px 5px 0px rgba(0,0,0,0.2);
+				-moz-box-shadow: inset 0px 3px 5px 0px rgba(0,0,0,0.2);
+				box-shadow: inset 0px 3px 5px 0px rgba(0,0,0,0.2);
 			}
 		#navigation i {
 			position: relative;
@@ -595,8 +598,8 @@
 
 /*** COLORS ***/
 	.green-background {
-		background-color: #96932A;
-		border-color: #96932A!important;
+		background-color: #295F89;
+		border-color: #295F89!important;
 	}
 	.blue-background {
 		background-color: #4C9EC9;
