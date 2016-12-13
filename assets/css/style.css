@@ -480,6 +480,11 @@
 		padding: 10px 15px;	
 		display: none; /* It will fade in */
 	}
+		.autoreply span {
+			font-style: italic;
+			color: #494949;
+			text-align: center;
+		}
 		.autoreply a {
 			color: #345BAA;
 		}

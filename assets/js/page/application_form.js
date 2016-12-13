@@ -179,7 +179,8 @@ function reviewState(){
 	var autoreply = new Object();
 	autoreply.SUCCESS = true;
 	autoreply.TYPE = "info";
-	autoreply.MESSAGE = "<strong>Saved for Review!</strong> This " + _APPLICATION_TYPE + " has been completed and marked for agency review. Once all information has been validated please click on the 'Send to City of Airdrie' button in the Review and Submit section.";
+	autoreply.MESSAGE = "<strong>Saved for Review!</strong> This " + _APPLICATION_TYPE + " is ready for submission. You can click on any section to make final changes, or click 'Review and Submit' to do a final check before submitting your " + _APPLICATION_TYPE + " to City of Airdrie.";
+		autoreply.MESSAGE = autoreply.MESSAGE + "<br /><br /><span><i class='fa fa-question-circle'></i> Having difficulties? Contact City of Airdrie Social Planning at 403.948.8800 or social.planning@airdrie.ca.</span>";
 
 	showAutoreply(autoreply, $("#application_form"));	
 }

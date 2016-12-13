@@ -1,5 +1,8 @@
 <cfinclude template="shared/header.cfm">
 
+<!--- Get existing programs --->
+<cfinvoke component="#APPLICATION.cfcpath#program" method="getAllPrograms" returnvariable="Programs" />
+
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
@@ -9,7 +12,16 @@
 
 			<h1>Programs</h1>
 
-			<div id="current_programs"></div>
+			<div id="current_programs">
+				<cfoutput>
+					<cfloop array="#Programs#" index="program">
+						<div class="program">
+							<cfdump var="#program#">
+						</div>
+					</cfloop>
+				</cfoutput>
+			</div>
+
 		</div>
 	</section>	
 

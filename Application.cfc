@@ -107,7 +107,7 @@
         <cfinvoke component="#APPLICATION.cfcpath#core" method="getErrorResponse" message="An error has occurred. The system administrator has been notified. Please try again later." returnvariable="LOCAL.response">
 
         <cfif APPLICATION.environment IS "development">
-            <cfset LOCAL.response.MESSAGE = EXCEPT.MESSAGE>
+            <cfset LOCAL.response.MESSAGE = EXCEPT.MESSAGE & ' ' & EXCEPT.DETAIL>
             <cfset LOCAL.response.DETAIL = EXCEPT.DETAIL>
         </cfif>
         

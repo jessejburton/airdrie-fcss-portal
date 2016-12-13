@@ -141,10 +141,31 @@
 
 				<h1>Thank You for Registering!</h1>
 				
-				<p>You are receiving this email as a verification process for registering <strong>#LOCAL.Agency.Name#</strong> as a new agency with the #APPLICATION.Name#.</p>
-				<p>In order to complete the registration and activate your account please <a href="#APPLICATION.url#?accountverify=#LOCAL.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#">click here</a>.</p>
-				<p>If you did not register, please disregard this email.</p>
-				<!--- TODO - get verification email text from Jessie --->
+				<p>Please confirm your #APPLICATION.Name# account. </p>
+				<!--- This code should be supported in all major e-mail clients at the time this was written --->
+				<div>
+					<!--[if mso]>
+					<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.EXAMPLE.com/" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="10%" stroke="f" fillcolor="##005596">
+					<w:anchorlock/>
+					<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
+					  Verify Account
+					</center>
+					</v:roundrect>
+					<![endif]-->
+					<![if !mso]>
+					<table cellspacing="0" cellpadding="0"> <tr> 
+					<td align="center" width="150" height="40" bgcolor="##005596" style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color: ##ffffff; display: block;">
+						<a href="#APPLICATION.url#?accountverify=#LOCAL.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
+					<span style="color: ##ffffff;">
+					  Verify Account
+					</span>
+					</a>
+					</td> 
+					</tr> </table> 
+					<![endif]>
+				</div>				
+				<p style="color: ##474747">If you did not register, please disregard this email.</p>
+				<p style="color: ##474747; font-style: italic;">Having trouble with the link? Please contact City of Airdrie Social Planning at 403.948.8800 or <a href="mailto:social.planning@airdrie.ca">social.planning@airdrie.ca</a></p>
 			</cfmail>
 
 			<cfreturn LOCAL.Account>

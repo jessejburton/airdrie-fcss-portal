@@ -75,4 +75,12 @@
 		<!--- Can increase the salt value (currently 12) to increase the complexity of the passwords over time --->
 		<cfreturn APPLICATION.BCrypt.checkpw(ARGUMENTS.plainPW, ARGUMENTS.hashedPW)>
 	</cffunction>
+
+<!--- Check if this is an admin account --->
+	<cffunction name="isAdminAccount" returntype="boolean" returnformat="JSON" access="public"
+		hint="Returns whether the current logged in user is an administrator or not. Admin accounts have an AgencyID of 0.">
+
+		<cfreturn isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS True>
+	</cffunction>
+
 </cfcomponent>

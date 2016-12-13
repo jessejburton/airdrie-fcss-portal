@@ -88,10 +88,30 @@
 					type="html"
 					subject="#APPLICATION.Name# - Account Verification">
 
-				<h1>Password Reset Initiated!</h1>
+				<h1>Password Reset</h1>
 				
-				<p>You are receiving this email because someone has requested a password reset on your #APPLICATION.Name# account.</p>
-				<p>In order to change your password please <a href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#">click here</a>.</p>
+				<p>You recently requested to reset your password on your #APPLICATION.Name# account.</p>
+				<div>
+					<!--[if mso]>
+					<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.EXAMPLE.com/" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
+					<w:anchorlock/>
+					<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
+					  Reset Your Password
+					</center>
+					</v:roundrect>
+					<![endif]-->
+					<![if !mso]>
+					<table cellspacing="0" cellpadding="0"> <tr> 
+					<td align="center" width="200" height="40" bgcolor="##005596" style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color: ##ffffff; display: block;">
+						<a href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
+					<span style="color: ##ffffff;">
+					  Reset Your Password
+					</span>
+					</a>
+					</td> 
+					</tr> </table> 
+					<![endif]>
+				</div>
 				<p>If you did not request this reset, please disregard this email.</p>
 			</cfmail>
 		</cfif>
@@ -119,7 +139,7 @@
 		<cfinvoke component="#APPLICATION.cfcpath#agency" method="insert" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
 		<cfinvoke component="#APPLICATION.cfcpath#account" method="insert" AgencyID="#LOCAL.Agency.AgencyID#" AccountName="#ARGUMENTS.AccountName#" AccountEmail="#ARGUMENTS.AccountEmail#" returnvariable="LOCAL.Account" />
 
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> your agency has now been registered. Please check your e-mail to verify your account and get login information.")>
+		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your agency has now been registered. Please check your e-mail to verify your account and receive your login information. <br /><br /><span><i class='fa fa-question-circle'></i> Having difficulties? Contact City of Airdrie Social Planning at 403.948.8800 or social.planning@airdrie.ca.</span>")>
 		<cfset LOCAL.response.DATA = LOCAL.Agency>
 
 		<cfreturn LOCAL.response>
@@ -146,6 +166,18 @@
 		<cfinvoke component="#APPLICATION.cfcpath#agency" method="update" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
 
 		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> your agency has been updated.")>
+		<cfset LOCAL.response.DATA = LOCAL.Agency>
+
+		<cfreturn LOCAL.response>
+	</cffunction>
+
+	<cffunction name="getAgencyByID" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Get the details about an agency by its ID.">
+		<cfargument name="AgencyID" type="numeric" required="true">
+
+		<cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency" />
+
+		<cfset LOCAL.response = getSuccessResponse("Agency details retrieved.")>
 		<cfset LOCAL.response.DATA = LOCAL.Agency>
 
 		<cfreturn LOCAL.response>
@@ -566,6 +598,42 @@
 		<cfset LOCAL.response.BUDGETID = ARGUMENTS.BUDGETID>
 		<cfset LOCAL.response.SAVED = LOCAL.budget>
 
+		<cfreturn LOCAL.response>
+	</cffunction>	
+
+<!--- WEB FUNCTIONS RELATED TO SYSTEM ADMINISTRATION --->
+	<cffunction name="saveSettings" access="remote" returntype="Struct" returnformat="JSON"
+		hint="Saves the system settings.">
+		<cfargument name="MaxCharacterLength" type="numeric" required="false">
+		<cfargument name="isEnabledApplications" type="boolean" required="false">
+		<cfargument name="isEnabledLetterOfIntent" type="boolean" required="false">
+		<cfargument name="SupportNumber" type="string" required="false">
+
+		<cfif NOT isAdminAccount()>
+			<cfreturn getErrorResponse("<strong>Sorry!</strong> This account does not have permission to save the settings.")>
+		</cfif>
+
+		<!--- In this query I set MaxCharacterLength equal to itself so that all parameters can be optional --->
+		<cfquery>
+			UPDATE Settings_tbl
+			SET DateUpdated = GetDate(),
+				AccountID = <cfqueryparam value="#REQUEST.User.AccountID#" cfsqltype="cf_sql_integer">
+				<cfif isDefined('ARGUMENTS.MaxCharacterLength')>
+					,MaxCharacterLength = <cfqueryparam value="#ARGUMENTS.MaxCharacterLength#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined('ARGUMENTS.isEnabledLetterOfIntent')>
+					,isEnabledLetterOfIntent = <cfqueryparam value="#ARGUMENTS.isEnabledLetterOfIntent#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined('ARGUMENTS.isEnabledApplications')>
+					,isEnabledApplications = <cfqueryparam value="#ARGUMENTS.isEnabledApplications#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined('ARGUMENTS.SupportNumber')>
+					,SupportNumber = <cfqueryparam value="#ARGUMENTS.SupportNumber#" cfsqltype="cf_sql_varchar">
+				</cfif>
+		</cfquery>
+
+		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Settings have been saved.")>
+		<cfset LOCAL.response.DATA = ARGUMENTS>
 		<cfreturn LOCAL.response>
 	</cffunction>	
 </cfcomponent>

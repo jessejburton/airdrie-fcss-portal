@@ -201,6 +201,48 @@
 		<cfreturn LOCAL.PROGRAMS>
 	</cffunction>	
 
+<!--- Get All Program Details --->
+	<cffunction name="getAllPrograms" access="public" returntype="array" returnformat="JSON"
+		hint="Returns an array of program objects by year (defaults to current year). Ones that require attention show up first.">
+		<cfargument name="Year" type="numeric" default="#YEAR(NOW())#">
+
+		<!--- Get the program data but make sure the user has access to it --->
+		<cfquery name="LOCAL.qPrograms">
+			SELECT 	ProgramID, ProgramName, ProgramStatement, PrimaryContactName, PrimaryPhone, PrimaryEmail, ProgramAddress, ProgramMailingAddress, Status, a.Name
+			FROM 	Program_vw p 
+			INNER JOIN Agency_tbl a on p.AgencyID = a.AgencyID
+			WHERE	Year(p.DateAdded) = <cfqueryparam value="#ARGUMENTS.Year#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfset LOCAL.PROGRAMS = ArrayNew(1)>
+		<cfoutput query="LOCAL.qPrograms">
+			<cfset program = StructNew()>
+			<cfset program.ProgramID = LOCAL.qPrograms.ProgramID>
+			<cfset program.ProgramName = LOCAL.qPrograms.ProgramName>
+			<cfset program.ProgramStatement = LOCAL.qPrograms.ProgramStatement>
+			<cfset program.PrimaryContactName = LOCAL.qPrograms.PrimaryContactName>
+			<cfset program.PrimaryPhone = LOCAL.qPrograms.PrimaryPhone>
+			<cfset program.PrimaryEmail = LOCAL.qPrograms.PrimaryEmail>
+			<cfset program.ProgramAddress = LOCAL.qPrograms.ProgramAddress>
+			<cfset program.ProgramMailingAddress = LOCAL.qPrograms.ProgramMailingAddress>
+			<cfset program.Agency = LOCAL.qPrograms.Name>
+			<cfset program.CurrentStatus = LOCAL.qPrograms.Status>
+
+			<cfquery name="LOCAL.qProgramStatus">
+				SELECT 	s.Status
+				FROM 	ProgramStatus_tbl ps
+				INNER JOIN Status_tbl s ON ps.StatusID = s.StatusID
+				WHERE 	ProgramID = <cfqueryparam value="#LOCAL.qPrograms.ProgramID#" cfsqltype="cf_sql_integer">
+				ORDER BY DateAdded DESC
+			</cfquery>
+			<cfset program.StatusList = ValueList(LOCAL.qProgramStatus.Status)>
+
+			<cfset ArrayAppend(LOCAL.PROGRAMS, program)>
+		</cfoutput>
+
+		<cfreturn LOCAL.PROGRAMS>
+	</cffunction>		
+
 <!--- Marks an LOI or Application ready for review (NOT SUBMITTED TO AIRDRIE) --->
 	<cffunction name="markApplicationForReview" access="public" returnformat="JSON" returntype="boolean"
 		hint="Marks an LOI or Application ready for review (NOT SUBMITTED TO AIRDRIE)">

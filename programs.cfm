@@ -5,7 +5,7 @@
 		<div class="wrapper clearfix">
 			<cfif REQUEST.AGENCY.ISNEW>
 				<div class="autoreply autoreply-info autoreply-visible">
-					<p><strong>Get Started!</strong> You are now ready to begin the application process. The first step to every application is the <a href="application_form.cfm">Letter of Intent</a>.</p>
+					<p><strong>Get Started!</strong> You are now ready to begin the application process. The first step to every application is the <a href="application_form.cfm">Letter of Intent</a> (LOI). The LOI allows you to sketch out your application and determine your basic eligibility before creating the full application. Your LOI will be reviewed by Social Planning staff before you can complete the full application. 
 				</div>
 			</cfif>
 				
