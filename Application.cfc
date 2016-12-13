@@ -8,12 +8,13 @@
     <cffunction name="onApplicationStart" returnType="void" output="false">
 		<cfinclude template="application.ini">
         
+        <!--- THIS CODE CAN BE USED TO WORK ON A SYSTEM WITHOUT THE BCRYPT LIBRARY 
         <cftry>
             <cfset APPLICATION.BCRYPT = createObject("java", "sorg.mindrot.jbcrypt.BCrypt")>
         <cfcatch>
         <cfset APPLICATION.BCRYPT = createObject("component", "#APPLICATION.cfcpath#BCryptAlt")>
         </cfcatch>
-        </cftry>
+        </cftry>--->
 
 	</cffunction>
         
