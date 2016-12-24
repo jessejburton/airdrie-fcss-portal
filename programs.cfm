@@ -37,14 +37,14 @@
 							<cfelse>
 								<div>
 									<p>
-										<a href="surveys.cfm?ProgramID=#URLEncodedFormat(program.ProgramID)#" class="btn btn-primary">
-											<i class="fa fa-check-circle"></i> Surveys
+										<a href="outcome_measures.cfm?ProgramID=#URLEncodedFormat(program.ProgramID)#" class="btn btn-primary">
+											<i class="fa fa-pie-chart"></i> Outcome Measures
 										</a>
 										<a href="mid_year.cfm?ID=#program.ProgramID#" class="btn btn-primary">
-											<i class="fa fa-check-circle"></i> Mid-Year Report
+											<i class="fa fa-file-o"></i> Mid-Year Report
 										</a>
 										<a href="year_end.cfm?ID=#program.ProgramID#" class="btn btn-primary">
-											<i class="fa fa-check-circle"></i> Year-End Report
+											<i class="fa fa-file-o"></i> Year-End Report
 										</a>
 									</p>
 									<p>

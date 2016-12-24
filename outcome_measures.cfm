@@ -1,7 +1,17 @@
-<cfinclude template="shared/header.cfm">
+<cfinclude template="shared/header.cfm"> 
 
+<!--- Make sure there is a specific program to work with --->
 <cfif NOT isDefined('URL.ProgramID') OR NOT isNumeric(URL.ProgramID)>
 	<cflocation url="index.cfm" addtoken="false">
+	<cfabort>
+</cfif>
+
+<!--- Check Permission --->
+<cfinvoke component="#APPLICATION.cfcpath#core" method="checkProgramAccessByAccountID" ProgramID="#URL.ProgramID#" returnvariable="Check" />
+<cfif NOT Check>
+	<!--- The user does not have permission --->
+	<cflocation url="index.cfm" addtoken="false">
+	<cfabort>
 </cfif>
 
 <cfquery name="qProgram">

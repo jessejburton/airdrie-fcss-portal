@@ -83,4 +83,19 @@
 		<cfreturn isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS True>
 	</cffunction>
 
+<!--- Check if a specific account has access to a program --->
+	<cffunction name="checkProgramAccessByAccountID" returntype="boolean" returnformat="JSON" access="public"
+		hint="Checks to see if the current user has access to a program.">
+		<cfargument name="ProgramID" type="numeric" required="true">
+
+		<cfquery name="LOCAL.qCheck">
+			SELECT 	AgencyID 
+			FROM 	Program_tbl 
+			WHERE   ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+			AND 	AgencyID = <cfqueryparam value="#REQUEST.USER.AgencyID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfreturn LOCAL.qCheck.recordcount IS 1>
+	</cffunction>
+
 </cfcomponent>
