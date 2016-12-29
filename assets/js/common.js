@@ -31,6 +31,76 @@ $(document).ready(function(){
     });	
 });
 
+// function to slide down the next sibling of a DOM element with a class of "show-next"
+$(document).on("click", ".show-next", function(){
+	$(this).next().slideDown("slow");
+	$(this).hide();
+});
+
+/* Resources
+***************************************************************************************/ 
+
+// Adding Resources
+$(document).on("click", ".add-resource", function(){
+	var pstr = new Object(),
+		frm = $(this).closest("form");
+	pstr.Title = frm.find(".resource-title").val();
+	pstr.URL = frm.find(".resource-url").val();
+	pstr.ResourceType = frm.find(".resource-type").val();
+	pstr.method = "addResource";
+	pstr.CSRF = $.cookie("CSRF");
+
+	$.ajax({
+		url: "assets/cfc/webservices.cfc",
+		data: pstr,
+		success: function(response){
+			if(response.SUCCESS){
+				var resource = $(".resource-link.template").clone(false);
+				resource.find("a").attr("href", response.DATA.URL).html(response.DATA.TITLE);
+				resource.removeClass("template");
+				resource.data("id", response.DATA.RESOURCEID);
+
+				// Add it to the appropriate list	
+				if(response.DATA.RESOURCETYPE == "A"){
+					console.log("Agency");
+					 $("#agency_resource_list").append(resource);
+				} else {
+					console.log("Internal");
+					$("#internal_resource_list").append(resource);
+				}
+
+				$("#resources input[type=text]").val("");
+			} else {
+				showAutoreply(response, frm);
+			}
+		}
+	});
+});
+
+// Removing Resources
+$(document).on("click", ".remove-resource", function(){
+	if(confirm("Are you sure you would like to remove this resource?")){
+		var resource = $(this).closest(".resource-link"),
+			ul = $(this).closest("ul"),
+			pstr = new Object();
+		
+		pstr.ResourceID = resource.data("id");
+		pstr.method = "removeResource";
+		pstr.CSRF = $.cookie("CSRF");
+
+		$.ajax({
+			url: "assets/cfc/webservices.cfc",
+			data: pstr,
+			success: function(response){
+				if(response.SUCCESS){
+					resource.remove();
+				} else {
+					showAutoreply(response, ul);
+				}
+			}
+		});
+	}
+});
 
 // Handle Showing Menus
 $(document).on("click", ".menu", function(){
@@ -48,11 +118,13 @@ $(document).on("click", ".add-board", function(){
 });
 
 function closeResources(){
-	$("#resources_container").fadeOut("slow");
+	$("#resources_container").fadeOut("slow");	
+	$("html, body").css({ overflow: 'auto', height: 'auto' });			// Enable Scrolling
 }
 
 function showResources(){
-	$("#resources_container").fadeIn("slow");
+	$("#resources_container").fadeIn("slow");	
+	$("html, body").css({ overflow: 'hidden', height: '100%' });			// Disable Scrolling
 }
 
 function currentTime(){
@@ -82,6 +154,7 @@ function updateBoardMembers(silent){
 	var pstr = new Object();
 	pstr.BoardMembers = JSON.stringify(boardMembers);
 	pstr.method = "updateBoardMembers";
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",

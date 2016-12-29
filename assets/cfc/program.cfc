@@ -212,36 +212,73 @@
 			FROM 	Program_vw p 
 			INNER JOIN Agency_tbl a on p.AgencyID = a.AgencyID
 			WHERE	Year(p.DateAdded) = <cfqueryparam value="#ARGUMENTS.Year#" cfsqltype="cf_sql_integer">
+			ORDER BY p.AgencyID, p.ProgramName
 		</cfquery>
 
 		<cfset LOCAL.PROGRAMS = ArrayNew(1)>
 		<cfoutput query="LOCAL.qPrograms">
-			<cfset program = StructNew()>
-			<cfset program.ProgramID = LOCAL.qPrograms.ProgramID>
-			<cfset program.ProgramName = LOCAL.qPrograms.ProgramName>
-			<cfset program.ProgramStatement = LOCAL.qPrograms.ProgramStatement>
-			<cfset program.PrimaryContactName = LOCAL.qPrograms.PrimaryContactName>
-			<cfset program.PrimaryPhone = LOCAL.qPrograms.PrimaryPhone>
-			<cfset program.PrimaryEmail = LOCAL.qPrograms.PrimaryEmail>
-			<cfset program.ProgramAddress = LOCAL.qPrograms.ProgramAddress>
-			<cfset program.ProgramMailingAddress = LOCAL.qPrograms.ProgramMailingAddress>
-			<cfset program.Agency = LOCAL.qPrograms.Name>
-			<cfset program.CurrentStatus = LOCAL.qPrograms.Status>
+			<cfset LOCAL.program = StructNew()>
+			<cfset LOCAL.program.ProgramID = LOCAL.qPrograms.ProgramID>
+			<cfset LOCAL.program.ProgramName = LOCAL.qPrograms.ProgramName>
+			<cfset LOCAL.program.ProgramStatement = LOCAL.qPrograms.ProgramStatement>
+			<cfset LOCAL.program.PrimaryContactName = LOCAL.qPrograms.PrimaryContactName>
+			<cfset LOCAL.program.PrimaryPhone = LOCAL.qPrograms.PrimaryPhone>
+			<cfset LOCAL.program.PrimaryEmail = LOCAL.qPrograms.PrimaryEmail>
+			<cfset LOCAL.program.ProgramAddress = LOCAL.qPrograms.ProgramAddress>
+			<cfset LOCAL.program.ProgramMailingAddress = LOCAL.qPrograms.ProgramMailingAddress>
+			<cfset LOCAL.program.Agency = LOCAL.qPrograms.Name>
+			<cfset LOCAL.program.CurrentStatus = LOCAL.qPrograms.Status>			
 
 			<cfquery name="LOCAL.qProgramStatus">
-				SELECT 	s.Status
+				SELECT 	s.Status, ps.DateAdded, ps.AccountID, a.Name
 				FROM 	ProgramStatus_tbl ps
 				INNER JOIN Status_tbl s ON ps.StatusID = s.StatusID
+				INNER JOIN Account_tbl a ON a.AccountID = ps.AccountID
 				WHERE 	ProgramID = <cfqueryparam value="#LOCAL.qPrograms.ProgramID#" cfsqltype="cf_sql_integer">
 				ORDER BY DateAdded DESC
 			</cfquery>
-			<cfset program.StatusList = ValueList(LOCAL.qProgramStatus.Status)>
+			<cfset LOCAL.program.StatusList = ArrayNew(1)>
 
-			<cfset ArrayAppend(LOCAL.PROGRAMS, program)>
+			<cfloop query="LOCAL.qProgramStatus">
+				<cfset LOCAL.status = StructNew()>
+				<cfset LOCAL.status.Status = LOCAL.qProgramStatus.Status>
+				<cfset LOCAL.status.DateAdded = LOCAL.qProgramStatus.DateAdded> 
+				<cfset LOCAL.status.AccountID = LOCAL.qProgramStatus.AccountID> 
+				<cfset LOCAL.status.Name = LOCAL.qProgramStatus.Name>
+
+				<cfset ArrayAppend(LOCAL.program.StatusList, LOCAL.status)>
+			</cfloop>
+
+			<cfset ArrayAppend(LOCAL.PROGRAMS, LOCAL.program)>
 		</cfoutput>
 
 		<cfreturn LOCAL.PROGRAMS>
-	</cffunction>		
+	</cffunction>	
+
+<!--- Get any programs that need to be approved --->
+	<cffunction name="getProgramAlerts" access="public" returntype="Array" returnformat="JSON"
+		hint="Gets any programs that need to be reviewed for approval">
+
+		<cfset LOCAL.response = ArrayNew(1)>
+
+		<cfquery name="LOCAL.qPrograms">
+			SELECT 	ProgramID, ProgramName, Status 
+			FROM 	Program_vw
+			WHERE 	Status IN ('LOI - Submitted to Airdrie', 'APPLICATION - Submitted to Airdrie')
+			ORDER BY DateUpdated DESC
+		</cfquery>
+
+		<cfoutput query="LOCAL.qPrograms">
+			<cfset LOCAL.program = StructNew()>
+			<cfset LOCAL.program.ProgramID = LOCAL.qPrograms.ProgramID> 
+			<cfset LOCAL.program.ProgramName = LOCAL.qPrograms.ProgramName>
+			<cfset LOCAL.program.Status = LOCAL.qPrograms.Status>
+
+			<cfset ArrayAppend(LOCAL.response, LOCAL.program)>
+		</cfoutput>
+
+		<cfreturn LOCAL.response>
+	</cffunction>	
 
 <!--- Marks an LOI or Application ready for review (NOT SUBMITTED TO AIRDRIE) --->
 	<cffunction name="markApplicationForReview" access="public" returnformat="JSON" returntype="boolean"
@@ -322,6 +359,7 @@
 				)
 			</cfquery>
 
+			<!--- TODO - update this to send the email to internal staff, administration email and update the program on the program page--->
 			<cfif isDefined('LOCAL.Type') IS true AND APPLICATION.environment IS "development">
 				<cfif LOCAL.Type IS "Application">
 					<cfset LOCAL.Link = "#APPLICATION.url#helpers/testApprove.cfm?ProgramID=#ARGUMENTS.ProgramID#&Type=A">

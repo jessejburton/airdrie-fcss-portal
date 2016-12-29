@@ -85,6 +85,7 @@ $(document).on("click", "#generate", function(){
 	pstr.method = "getNextClientID",
 	pstr.ProgramID = $("#ProgramID").val();
 	pstr.SurveyID = $("#SurveyID").val();
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",
@@ -126,6 +127,7 @@ function saveSurvey(){
 	pstr.ClientID = $("#client_id").val();	
 	pstr.preData = preData.toString();
 	pstr.postData = postData.toString();
+	pstr.CSRF = $.cookie("CSRF");
 
 	if(pstr.ClientID.length == 0 || $("#participant_name").val().length == 0){
 		var msg = new Object();
@@ -162,6 +164,7 @@ function savePersonData(silent){
 	pstr.RESIDENCE = $("#residence").val();
 	pstr.LANGUAGE = $("#language").val();
 	pstr.INCOME = $("#income").val();
+	pstr.CSRF = $.cookie("CSRF");
 
 	// Set the default to silent, do not switch accordion tabs and show the success message
 	if(typeof silent == "undefined"){
@@ -232,6 +235,7 @@ function loadClientSurveyData(surveyID, clientID){
 	pstr.method = "getClientSurveyData";
 	pstr.SurveyID = surveyID;
 	pstr.ClientID = clientID;
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",

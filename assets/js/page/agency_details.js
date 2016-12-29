@@ -14,6 +14,7 @@ $(document).ready(function(){
 		pstr.method = "addAccount";
 		pstr.Name = $("#new_account_name").val();
 		pstr.Email = $("#new_account_email").val();
+		pstr.CSRF = $.cookie("CSRF");
 
 		// Validation TODO - validate email
 		if(pstr.Name.length == 0 || pstr.Email.length == 0){
@@ -59,6 +60,7 @@ $(document).ready(function(){
 		pstr.Name = $(row).find(".account-name").val();
 		pstr.Email = $(row).find(".account-email").val();
 		pstr.isActive = $(row).find(".account-active").is(":checked");
+		pstr.CSRF = $.cookie("CSRF");
 
 		// Validation TODO - validate email
 		if(pstr.Name.length == 0 || pstr.Email.length == 0){
@@ -95,6 +97,7 @@ $(document).ready(function(){
 		var pstr = new Object();
 		pstr.method = "resetPassword";
 		pstr.AccountEmail = $(row).find(".account-email").val();
+		pstr.CSRF = $.cookie("CSRF");
 
 		// Validation TODO - validate email
 		if(pstr.AccountEmail.length == 0){
@@ -137,6 +140,7 @@ function saveAgencyInformation(){
 	pstr.Address = $("#agency_address").val();
 	pstr.MailingAddress = $("#agency_mailing").val();
 	pstr.Website = $("#agency_website").val();	
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",

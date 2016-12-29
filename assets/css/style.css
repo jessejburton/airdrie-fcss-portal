@@ -59,6 +59,7 @@
 	padding: 25px;
 	height: 100%;
 	width: 100%;
+	overflow-y: scroll;
 }
 	#resources a {
 		color: #418ACE!important;
@@ -246,13 +247,16 @@
 
 /*** PROGRAMS ***/
 	.program {
-		text-align: center;
+		font-size: .9em;
 		padding: 10px;
 		background-color: #F7F7F7;
 		border: 1px solid #E4E4E4;
 		border-radius: 4px;
 		margin-bottom: 15px;
 	}
+		.program table th, .program table tfoot {
+			border: none!important;
+		}
 
 /*** TABLES ***/
 	.table {
@@ -487,6 +491,10 @@
 		padding: 15px;
 		color: #B7B7B7;
 		border: 1px dashed #B7B7B7;
+	}
+	.padded-sides {
+		padding-left: 30px;
+		padding-right: 30px;
 	}
 	.wrapper {
 		margin: 0;
@@ -819,6 +827,12 @@ ul.application-process a.complete i {
 	#resources_container, #logout_message_container {
 		padding: 100px;
 	}
+}
+
+/*** Resources ***/
+.remove-resource:hover {
+	cursor: pointer; 
+	transform: scale(1.1);
 }
 
 

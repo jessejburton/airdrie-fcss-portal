@@ -33,7 +33,7 @@
             <cfset StructDelete(SESSION, "ACCOUNTID")>
         </cfif>      
 
-        <!--- Cross Site Request Forgery TODO - implement --->
+        <!--- Cross Site Request Forgery --->
         <cfif NOT structKeyExists(COOKIE, 'csrf')>
             <cfcookie name="csrf" value='#HASH(CREATEUUID(), "sha-256", "utf-8")#' secure="false" httpOnly="false">
         </cfif>  

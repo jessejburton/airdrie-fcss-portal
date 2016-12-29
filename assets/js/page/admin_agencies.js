@@ -6,6 +6,7 @@ function getAgencyDetails(agencyID){
 	var pstr = new Object();
 	pstr.method = "getAgencyByID";
 	pstr.AgencyID = agencyID;
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",

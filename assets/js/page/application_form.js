@@ -78,6 +78,7 @@ function saveApplication(){
 		$("#saving").fadeIn("slow", function(){
 			var pstr = updateProgram();
 			pstr.method = "saveProgram";
+			pstr.CSRF = $.cookie("CSRF");
 
 			$.ajax({
 				url: "assets/cfc/webservices.cfc",
@@ -107,6 +108,7 @@ function submitApplication(){
 	var pstr = new Object();
 	pstr.ProgramID = $("#program_id").val();
 	pstr.Method = "submitApplication";
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",
@@ -140,6 +142,7 @@ function markApplicationForReview(){
 	var pstr = new Object();
 	pstr.Method = "markApplicationForReview";
 	pstr.ProgramID = $("#program_id").val();
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",
@@ -159,6 +162,7 @@ function markApplicationSubmitted(){
 	var pstr = new Object();
 	pstr.Method = "markApplicationSubmitted";
 	pstr.ProgramID = $("#program_id").val();
+	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",

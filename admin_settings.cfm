@@ -15,6 +15,10 @@
 					<label for="support_number">Support Number</label><br />
 					<input type="text" id="support_number" class="input-half" value="<cfoutput>#XMLFormat(REQUEST.Settings.SUPPORTNUMBER)#</cfoutput>" />
 				</p>
+				<p class="setting" data-column="ADMINEMAIL">
+					<label for="admin_email">Admin Email (receives system notifications)</label><br />
+					<input type="text" id="admin_email" class="input-half" value="<cfoutput>#XMLFormat(REQUEST.Settings.ADMINEMAIL)#</cfoutput>" />
+				</p>
 				<p class="setting" data-column="ISENABLEDAPPLICATIONS">
 					<label for="is_enabled_applications">
 						<input type="checkbox" id="is_enabled_applications" value="1" <cfoutput>#IIF(EncodeForHTMLAttribute(REQUEST.Settings.ISENABLEDAPPLICATIONS) IS 1, DE('checked="checked"'), DE(''))#</cfoutput>" /> Applications Enabled

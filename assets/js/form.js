@@ -124,6 +124,7 @@ function clearAutoreply(){
 }
 
 function showAutoreply(autoreply, div){
+	div = $(div); // should accommodate for being passed in as "#id" or $("#id")
 	console.log(JSON.stringify(autoreply));
 	
 	div.find(".autoreply").remove(); // remove existing autoreply from the specific form

@@ -20,6 +20,7 @@ $(document).ready(function(){
 		var pstr = new Object();
 		pstr.method = "resetPassword";
 		pstr.AccountEmail = $("#login_email").val();
+		pstr.CSRF = $.cookie("CSRF");
 
 		if(pstr.AccountEmail.length == 0) {
 			var autoreply = new Object();
@@ -51,6 +52,7 @@ function login(){
 	pstr.method = "loginAccount";
 	pstr.email = $("#login_email").val();
 	pstr.plainpw = $("#login_password").val();
+	pstr.CSRF = $.cookie("CSRF");
 
 	$("#login_form_group").find(".autoreply").remove();
 
@@ -85,6 +87,7 @@ function register(){
 	pstr.Website = $("#agency_website").val();
 	pstr.AccountName = $("#account_name").val();
 	pstr.AccountEmail = $("#account_email").val();
+	pstr.CSRF = $.cookie("CSRF");
 	
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",

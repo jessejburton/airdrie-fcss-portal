@@ -14,6 +14,7 @@ $(document).on("click", "#verify_submit", function(){
 		pstr.GUID = $("#guid").val();
 		pstr.EMAILHASH = $("#emailhash").val();
 		pstr.PLAINPW = $("#password").val();
+		pstr.CSRF = $.cookie("CSRF");
 
 		$.ajax({
 			url: "assets/cfc/webservices.cfc",

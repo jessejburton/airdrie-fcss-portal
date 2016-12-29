@@ -297,6 +297,7 @@ function saveBudget(){
 	pstr.REVENUESEXPLANATION = $("#revenues_explanation").val();
 	pstr.EXPENDITURESEXPLANATION = $("#expenditures_explanation").val();
 	pstr.DISTRIBUTIONTOTALS = JSON.stringify(getDistributionTotals());
+	pstr.CSRF = $.cookie("CSRF");
 
 	if(pstr.PREVIOUSYEARBUDGET.length == 0) pstr.PREVIOUSYEARBUDGET = 0;
 	if(pstr.REQUESTEDFROMAIRDRIE.length == 0) pstr.REQUESTEDFROMAIRDRIE = 0;	

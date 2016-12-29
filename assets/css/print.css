@@ -1,0 +1,18 @@
+* {
+	box-sizing: border-box;	
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+}
+h1 {
+	color: #005596;
+	font-size: 1.25em;
+	font-weight: normal;
+}
+h2 {
+	color: #005596;
+	font-size: 1.15em;
+	font-weight: normal;
+}
+.document-section {
+	margin-bottom: 25px;
+}

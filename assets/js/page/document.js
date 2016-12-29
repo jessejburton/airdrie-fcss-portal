@@ -42,6 +42,7 @@ $(document).ready(function(){
         pstr.method = "setDocumentTypeByDocumentID";
         pstr.documentID = $(this).closest(".document").data("id");
         pstr.documentTypeID = $(this).val();
+        pstr.CSRF = $.cookie("CSRF");
 
         $.ajax({
             url: "assets/cfc/webservices.cfc",
@@ -64,6 +65,7 @@ $(document).ready(function(){
             var pstr = new Object();
             pstr.method = "removeDocument";
             pstr.documentID = $(this).closest(".document").data("id");
+            pstr.CSRF = $.cookie("CSRF");
 
             $.ajax({
                 url: "assets/cfc/webservices.cfc",

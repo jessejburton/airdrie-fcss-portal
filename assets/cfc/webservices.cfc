@@ -4,16 +4,21 @@
 	<!--- Verify Account --->
 	<cffunction name="verifyAccountAndSetPassword" access="remote" returntype="struct" returnformat="JSON"
 		hint="Checks to see if the values submitted match an account in the database that is ready for verification.">
-		<cfargument name="GUID" type="string" required="true">
-		<cfargument name="EmailHash" type="string" required="true">
-		<cfargument name="PlainPW" type="string" required="true">
+		<cfargument name="GUID" type="string" required="true" hint="The GUID to check against in the database passed from the verification email">
+		<cfargument name="EmailHash" type="string" required="true" hint="The has of the email address passed from the verification email">
+		<cfargument name="PlainPW" type="string" required="true" hint="The password to be set for the account">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfinvoke component="#APPLICATION.cfcpath#account" method="verifyAccount" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.AccountCheck" />
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfinvoke component="#APPLICATION.cfcpath#account" method="verifyAccount" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.AccountCheck" />
 
-		<cfif LOCAL.AccountCheck>
-			<cfreturn getSuccessResponse("<strong>Thank You!</strong> your account has now been verified. You can now <a href='#APPLICATION.URL#'>visit</a> the portal.")>
+			<cfif LOCAL.AccountCheck>
+				<cfreturn getSuccessResponse("<strong>Thank You!</strong> your account has now been verified. You can now <a href='#APPLICATION.URL#'>visit</a> the portal.")>
+			<cfelse>
+				<cfreturn getErrorResponse("<strong>Sorry!</strong> the information provided did not match our records for verification. If you feel that this is a mistake please contact #REQUEST.SETTINGS.SupportNumber#. We appologise for any inconveniences.")>
+			</cfif>
 		<cfelse>
-			<cfreturn getErrorResponse("<strong>Sorry!</strong> the information provided did not match our records for verification. If you feel that this is a mistake please contact #REQUEST.SETTINGS.SupportNumber#. We appologise for any inconveniences.")>
+			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
 
@@ -22,12 +27,17 @@
 		hint="Adds a new login account to an Agency">
 		<cfargument name="Name" required="true" type="string">
 		<cfargument name="Email" required="true" type="string">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfinvoke component="#APPLICATION.cfcpath#account" method="Insert" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" AgencyID="#REQUEST.AGENCY.AGENCYID#" returnvariable="LOCAL.account">
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfinvoke component="#APPLICATION.cfcpath#account" method="Insert" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" AgencyID="#REQUEST.AGENCY.AGENCYID#" returnvariable="LOCAL.account" />
 
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Account has been created. An email will be sent to the address provided for the user to setup their account.")>
-		<cfset LOCAL.response.DATA = LOCAL.account>
-		<cfreturn LOCAL.response>
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Account has been created. An email will be sent to the address provided for the user to setup their account.")>
+			<cfset LOCAL.response.DATA = LOCAL.account>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction> 
 
 	<!--- Update an Account --->
@@ -37,12 +47,17 @@
 		<cfargument name="Name" required="true" type="string">
 		<cfargument name="Email" required="true" type="string">
 		<cfargument name="isActive" required="true" type="boolean">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfinvoke component="#APPLICATION.cfcpath#account" method="Update" accountID="#ARGUMENTS.AccountID#" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" isActive="#ARGUMENTS.isActive#" returnvariable="LOCAL.account">
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfinvoke component="#APPLICATION.cfcpath#account" method="Update" accountID="#ARGUMENTS.AccountID#" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" isActive="#ARGUMENTS.isActive#" returnvariable="LOCAL.account">
 
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This account has been updated.")>
-		<cfset LOCAL.response.DATA = LOCAL.account>
-		<cfreturn LOCAL.response>
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This account has been updated.")>
+			<cfset LOCAL.response.DATA = LOCAL.account>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction> 	
 
 <!--- LOGIN ACCOUNT --->
@@ -50,74 +65,143 @@
 		hint="Log a user in">
 		<cfargument name="Email" type="string" required="true">
 		<cfargument name="PlainPW" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfquery name="LOCAL.qCheckAccount">
-			SELECT 	AccountID, Password, GUID
-			FROM	Account_tbl
-			WHERE	Email = <cfqueryparam value="#ARGUMENTS.Email#" cfsqltype="varchar">
-			AND 	isActive = 1
-			AND 	DateVerified IS NOT NULL
-		</cfquery>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfquery name="LOCAL.qCheckAccount">
+				SELECT 	AccountID, Password, GUID
+				FROM	Account_tbl
+				WHERE	Email = <cfqueryparam value="#ARGUMENTS.Email#" cfsqltype="varchar">
+				AND 	isActive = 1
+				AND 	DateVerified IS NOT NULL
+			</cfquery>
 
-		<!--- Validate the password --->
-		<cfif LOCAL.qCheckAccount.recordcount IS 1 AND validatePassword(ARGUMENTS.PlainPW, LOCAL.qCheckAccount.Password)>
-			<cfset SESSION.GUID = LOCAL.qCheckAccount.GUID>
-			<cfset SESSION.AccountID = LOCAL.qCheckAccount.AccountID>
-			<cfreturn getSuccessResponse("Account logged in successfully")>
+			<!--- Validate the password --->
+			<cfif LOCAL.qCheckAccount.recordcount IS 1 AND validatePassword(ARGUMENTS.PlainPW, LOCAL.qCheckAccount.Password)>
+				<cfset SESSION.GUID = LOCAL.qCheckAccount.GUID>
+				<cfset SESSION.AccountID = LOCAL.qCheckAccount.AccountID>
+				<cfreturn getSuccessResponse("Account logged in successfully")>
+			<cfelse>
+				<cfreturn getErrorResponse("Invalid email or password. Please try again.")>
+			</cfif>
 		<cfelse>
-			<cfreturn getErrorResponse("Invalid email or password. Please try again.")>
-		</cfif>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>			
 	</cffunction>
 
 	<cffunction name="resetPassword" returntype="struct" returnformat="JSON" access="remote"
 		hint="Sends the user an email that they can be used to set their password.">
 		<cfargument name="AccountEmail" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<!--- Get the GUID --->
-		<cfquery name="LOCAL.qGUID">
-			SELECT	GUID 
-			FROM 	Account_tbl
-			WHERE	Email = <cfqueryparam value="#ARGUMENTS.AccountEmail#" cfsqltype="cf_sql_varchar">
-		</cfquery>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- Get the GUID --->
+			<cfquery name="LOCAL.qGUID">
+				SELECT	GUID 
+				FROM 	Account_tbl
+				WHERE	Email = <cfqueryparam value="#ARGUMENTS.AccountEmail#" cfsqltype="cf_sql_varchar">
+			</cfquery>
 
-		<!--- Only send the email if the email is valid, but return success either way so as not to spill the beans about if the email is valid or not --->
-		<cfif LOCAL.qGUID.recordcount IS 1>
-			<!--- Now send the verification email --->
-			<cfmail to="#ARGUMENTS.AccountEmail#"
-					from="#APPLICATION.fromemail#"
-					type="html"
-					subject="#APPLICATION.Name# - Account Verification">
+			<!--- Only send the email if the email is valid, but return success either way so as not to spill the beans about if the email is valid or not --->
+			<cfif LOCAL.qGUID.recordcount IS 1>
+				<!--- Now send the verification email --->
+				<cfmail to="#ARGUMENTS.AccountEmail#"
+						from="#APPLICATION.fromemail#"
+						type="html"
+						subject="#APPLICATION.Name# - Account Verification">
 
-				<h1>Password Reset</h1>
-				
-				<p>You recently requested to reset your password on your #APPLICATION.Name# account.</p>
-				<div>
-					<!--[if mso]>
-					<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.EXAMPLE.com/" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
-					<w:anchorlock/>
-					<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
-					  Reset Your Password
-					</center>
-					</v:roundrect>
-					<![endif]-->
-					<![if !mso]>
-					<table cellspacing="0" cellpadding="0"> <tr> 
-					<td align="center" width="200" height="40" bgcolor="##005596" style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color: ##ffffff; display: block;">
-						<a href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
-					<span style="color: ##ffffff;">
-					  Reset Your Password
-					</span>
-					</a>
-					</td> 
-					</tr> </table> 
-					<![endif]>
-				</div>
-				<p>If you did not request this reset, please disregard this email.</p>
-			</cfmail>
+					<h1>Password Reset</h1>
+					
+					<p>You recently requested to reset your password on your #APPLICATION.Name# account.</p>
+					<div>
+						<!--[if mso]>
+						<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.EXAMPLE.com/" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
+						<w:anchorlock/>
+						<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
+						  Reset Your Password
+						</center>
+						</v:roundrect>
+						<![endif]-->
+						<![if !mso]>
+						<table cellspacing="0" cellpadding="0"> <tr> 
+						<td align="center" width="200" height="40" bgcolor="##005596" style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color: ##ffffff; display: block;">
+							<a href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
+						<span style="color: ##ffffff;">
+						  Reset Your Password
+						</span>
+						</a>
+						</td> 
+						</tr> </table> 
+						<![endif]>
+					</div>
+					<p>If you did not request this reset, please disregard this email.</p>
+				</cfmail>
+			</cfif>
+
+			<cfreturn getSuccessResponse("<strong>Success!</strong> Account reset email has been sent to #XMLFormat(ARGUMENTS.AccountEmail)#.")>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
-
-		<cfreturn getSuccessResponse("<strong>Success!</strong> Account reset email has been sent to #XMLFormat(ARGUMENTS.AccountEmail)#.")>
 	</cffunction>	
+
+<!--- WEB FUNCTIONS RELATED TO RESOURCES --->
+	<cffunction name="addResource" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Adds a resource link">
+		<cfargument name="Title" type="string" required="true">
+		<cfargument name="URL" type="string" required="true">
+		<cfargument name="ResourceType" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<!--- TODO - Nice to have, ability to add documents --->
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- Make sure this is an internal account --->
+			<cfif isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS true>	
+				<cfquery result="LOCAL.qResource">
+					INSERT INTO Resource_tbl 
+					(
+						Title, URL, ResourceType, AccountID, isOrder
+					) VALUES (
+						<cfqueryparam value="#ARGUMENTS.Title#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.URL#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.ResourceType#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#REQUEST.USER.AccountID#" cfsqltype="cf_sql_integer">,
+						isNull((SELECT MAX(isOrder) + 1 FROM Resource_tbl WHERE ResourceType = <cfqueryparam value="#ARGUMENTS.ResourceType#" cfsqltype="cf_sql_varchar">), 0)
+					)
+				</cfquery>
+
+				<cfset LOCAL.response = getSuccessResponse("Resource has been added.")>
+				<cfset LOCAL.response.DATA = StructNew()>
+					<cfset LOCAL.response.DATA.RESOURCEID = LOCAL.qResource.GeneratedKey>
+					<cfset LOCAL.response.DATA.TITLE = ARGUMENTS.Title>
+					<cfset LOCAL.response.DATA.URL = ARGUMENTS.URL>
+					<cfset LOCAL.response.DATA.RESOURCETYPE = ARGUMENTS.ResourceType>
+				<cfreturn LOCAL.response>
+			</cfif>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>
+
+	<cffunction name="removeResource" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Removes a resource link">
+		<cfargument name="ResourceID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- Make sure this is an internal account --->
+			<cfif isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS true>	
+				<cfquery>
+					DELETE FROM Resource_tbl 
+					WHERE ResourceID = <cfqueryparam value="#ARGUMENTS.ResourceID#" cfsqltype="cf_sql_integer">
+				</cfquery>
+			</cfif>
+
+			<cfreturn getSuccessResponse("Resource has been removed.")>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>
 
 <!--- WEB FUNCTIONS RELATED TO AGENCY'S --->
 	<!--- Add a new Agency --->
@@ -134,119 +218,150 @@
 		<cfargument name="MailingAddress" type="string" default="">
 		<cfargument name="AccountName" type="string" required="true">
 		<cfargument name="AccountEmail" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<!--- TODO - make this a cftransaction --->
-		<cfinvoke component="#APPLICATION.cfcpath#agency" method="insert" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
-		<cfinvoke component="#APPLICATION.cfcpath#account" method="insert" AgencyID="#LOCAL.Agency.AgencyID#" AccountName="#ARGUMENTS.AccountName#" AccountEmail="#ARGUMENTS.AccountEmail#" returnvariable="LOCAL.Account" />
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- TODO - make this a cftransaction --->
+			<cfinvoke component="#APPLICATION.cfcpath#agency" method="insert" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
+			<cfinvoke component="#APPLICATION.cfcpath#account" method="insert" AgencyID="#LOCAL.Agency.AgencyID#" AccountName="#ARGUMENTS.AccountName#" AccountEmail="#ARGUMENTS.AccountEmail#" returnvariable="LOCAL.Account" />
 
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your agency has now been registered. Please check your e-mail to verify your account and receive your login information. <br /><br /><span><i class='fa fa-question-circle'></i> Having difficulties? Contact City of Airdrie Social Planning at 403.948.8800 or social.planning@airdrie.ca.</span>")>
-		<cfset LOCAL.response.DATA = LOCAL.Agency>
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your agency has now been registered. Please check your e-mail to verify your account and receive your login information. <br /><br /><span><i class='fa fa-question-circle'></i> Having difficulties? Contact City of Airdrie Social Planning at 403.948.8800 or social.planning@airdrie.ca.</span>")>
+			<cfset LOCAL.response.DATA = LOCAL.Agency>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 	<!--- Update an existing new Agency --->
 	<cffunction name="updateAgency" access="remote" returnformat="JSON" returntype="Struct"
 		hint="Update an existing Agency.">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
 
-		<!--- Make sure the new Agency Name isn't already taken --->
-		<cfquery name="LOCAL.qAgency">
-			SELECT	AgencyID
-			FROM	Agency_tbl
-			WHERE	Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="varchar">
-			AND 	AgencyID <> <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">
-		</cfquery>
+			<!--- Make sure the new Agency Name isn't already taken --->
+			<cfquery name="LOCAL.qAgency">
+				SELECT	AgencyID
+				FROM	Agency_tbl
+				WHERE	Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="varchar">
+				AND 	AgencyID <> <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">
+			</cfquery>
 
-		<cfif LOCAL.qAgency.recordcount GT 0>
-			<cfreturn getErrorResponse("<strong>Sorry!</strong> An Agency with that name already exists.")>
+			<cfif LOCAL.qAgency.recordcount GT 0>
+				<cfreturn getErrorResponse("<strong>Sorry!</strong> An Agency with that name already exists.")>
+			</cfif>
+			
+			<cfinvoke component="#APPLICATION.cfcpath#agency" method="update" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
+
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> your agency has been updated.")>
+			<cfset LOCAL.response.DATA = LOCAL.Agency>
+
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
-		
-		<cfinvoke component="#APPLICATION.cfcpath#agency" method="update" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
-
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> your agency has been updated.")>
-		<cfset LOCAL.response.DATA = LOCAL.Agency>
-
-		<cfreturn LOCAL.response>
 	</cffunction>
 
 	<cffunction name="getAgencyByID" access="remote" returnformat="JSON" returntype="Struct"
 		hint="Get the details about an agency by its ID.">
 		<cfargument name="AgencyID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency" />
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#ARGUMENTS.AgencyID#" returnvariable="LOCAL.Agency" />
 
-		<cfset LOCAL.response = getSuccessResponse("Agency details retrieved.")>
-		<cfset LOCAL.response.DATA = LOCAL.Agency>
+			<cfset LOCAL.response = getSuccessResponse("Agency details retrieved.")>
+			<cfset LOCAL.response.DATA = LOCAL.Agency>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 <!--- WEB FUNCTIONS RELATED TO SURVEYS --->
 	<cffunction name="getSurveysByProgramID" access="remote" returntype="struct" returnformat="JSON"
 			hint="Gets all of the surveys available for an application.">
 		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfquery name="LOCAL.qSurveys">
-			SELECT	SurveyID, Name, Description, Citation
-			FROM 	Survey_tbl
-			WHERE isActive = 1
-			ORDER BY isOrder
-		</cfquery>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfquery name="LOCAL.qSurveys">
+				SELECT	SurveyID, Name, Description, Citation
+				FROM 	Survey_tbl
+				WHERE isActive = 1
+				ORDER BY isOrder
+			</cfquery>
 
-		<cfset LOCAL.response = getSuccessResponse("")>
+			<cfset LOCAL.response = getSuccessResponse("")>
 
-		<cfset LOCAL.response.DATA = ArrayNew(1)>
-		<cfoutput query="LOCAL.qSurveys">
-			<cfset LOCAL.Survey = StructNew()>
-			<cfset LOCAL.Survey.ID = LOCAL.qSurveys.SurveyID>
-			<cfset LOCAL.Survey.Name = LOCAL.qSurveys.Name>
-			<cfset LOCAL.Survey.Description = LOCAL.qSurveys.Description>
-			<cfset LOCAL.Survey.Citation = LOCAL.qSurveys.Citation>
+			<cfset LOCAL.response.DATA = ArrayNew(1)>
+			<cfoutput query="LOCAL.qSurveys">
+				<cfset LOCAL.Survey = StructNew()>
+				<cfset LOCAL.Survey.ID = LOCAL.qSurveys.SurveyID>
+				<cfset LOCAL.Survey.Name = LOCAL.qSurveys.Name>
+				<cfset LOCAL.Survey.Description = LOCAL.qSurveys.Description>
+				<cfset LOCAL.Survey.Citation = LOCAL.qSurveys.Citation>
 
-			<cfset ArrayAppend(LOCAL.response.DATA, LOCAL.Survey)>
-		</cfoutput>
+				<cfset ArrayAppend(LOCAL.response.DATA, LOCAL.Survey)>
+			</cfoutput>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 	<cffunction name="getSurveyByID" access="remote" returntype="struct" returnformat="JSON"
 			hint="Gets all of the information about a specific survey including questions and responses.">
 		<cfargument name="SurveyID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfinvoke component="survey" method="getSurveyByID" SurveyID="#ARGUMENTS.SurveyID#" returnvariable="LOCAL.SURVEY">
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfinvoke component="survey" method="getSurveyByID" SurveyID="#ARGUMENTS.SurveyID#" returnvariable="LOCAL.SURVEY" />
 
-		<cfset LOCAL.response = getSuccessResponse("")>
-		<cfset LOCAL.response.DATA = LOCAL.SURVEY>
+			<cfset LOCAL.response = getSuccessResponse("")>
+			<cfset LOCAL.response.DATA = LOCAL.SURVEY>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 	<cffunction name="getParticipantSuggestBySurveyID" access="remote" returntype="string" returnformat="JSON"
 		hint="Used to find participants that have already started a survey. (primarily to collect post-data)">
 		<cfargument name="SurveyID" type="numeric" required="true">
 		<cfargument name="Term" type="string" required="true">
-		<!--- TODO Need to add CSRF trapping as well as maybe additional security to ensure this is protected --->
-		<cfset LOCAL.response = ArrayNew(1)>
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+		<!--- TODO Need to add additional security to ensure this is protected --->
 
-		<cfquery name="LOCAL.qClients">
-			SELECT 	Name, ClientID, DateAdded
-			FROM 	SurveyClient_tbl
-			WHERE	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
-			AND 	Name LIKE <cfqueryparam value="#ARGUMENTS.Term#%" cfsqltype="cf_sql_varchar">
-		</cfquery>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfset LOCAL.response = ArrayNew(1)>
 
-		<cfoutput query="LOCAL.qClients">
-			<cfset LOCAL.person = StructNew()>
-			<cfset LOCAL.person['label'] = LOCAL.qClients.Name & ' (collected: ' & DateFormat(LOCAL.qClients.DateAdded, "MM/DD/YYYY") & ')' >
-			<cfset LOCAL.person['id'] = LOCAL.qClients.ClientID>
-			<cfset LOCAL.person['value'] = LOCAL.qClients.Name>
+			<cfquery name="LOCAL.qClients">
+				SELECT 	Name, ClientID, DateAdded
+				FROM 	SurveyClient_tbl
+				WHERE	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+				AND 	Name LIKE <cfqueryparam value="#ARGUMENTS.Term#%" cfsqltype="cf_sql_varchar">
+			</cfquery>
 
-			<cfset ArrayAppend(LOCAL.response, LOCAL.person)>
-		</cfoutput>
+			<cfoutput query="LOCAL.qClients">
+				<cfset LOCAL.person = StructNew()>
+				<cfset LOCAL.person['label'] = LOCAL.qClients.Name & ' (collected: ' & DateFormat(LOCAL.qClients.DateAdded, "MM/DD/YYYY") & ')' >
+				<cfset LOCAL.person['id'] = LOCAL.qClients.ClientID>
+				<cfset LOCAL.person['value'] = LOCAL.qClients.Name>
 
-		<cfreturn serializeJSON(LOCAL.response)>
+				<cfset ArrayAppend(LOCAL.response, LOCAL.person)>
+			</cfoutput>
+
+			<cfreturn serializeJSON(LOCAL.response)>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 	<cffunction name="savePersonData" access="remote" returntype="struct" returnformat="JSON"
@@ -261,103 +376,113 @@
 		<cfargument name="Residence" type="string" required="true">
 		<cfargument name="Language" type="string" required="true">
 		<cfargument name="Income" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
 
-		<!--- Check if the user exists --->
-		<cfinvoke component="#APPLICATION.cfcpath#survey" method="checkSurveyClientNameExists" SurveyID="#ARGUMENTS.SurveyID#" ProgramID="#ARGUMENTS.ProgramID#" Name="#ARGUMENTS.Name#" ClientID="#ARGUMENTS.ClientID#" returnvariable="LOCAL.qCheck" />
-		<cfif LOCAL.qCheck IS true>
-			<cfreturn getErrorResponse("A client with this name already exists, please select a new name.")>
-		</cfif>		
+			<!--- Check if the user exists --->
+			<cfinvoke component="#APPLICATION.cfcpath#survey" method="checkSurveyClientNameExists" SurveyID="#ARGUMENTS.SurveyID#" ProgramID="#ARGUMENTS.ProgramID#" Name="#ARGUMENTS.Name#" ClientID="#ARGUMENTS.ClientID#" returnvariable="LOCAL.qCheck" />
+			<cfif LOCAL.qCheck IS true>
+				<cfreturn getErrorResponse("A client with this name already exists, please select a new name.")>
+			</cfif>		
 
-		<!--- If adding a new client --->
-		<cfif NOT isDefined('ARGUMENTS.ClientID') OR ARGUMENTS.ClientID IS 0>
-			<cfquery result="LOCAL.qClient">
-				INSERT INTO SurveyClient_tbl
-				(
-					ProgramID, SurveyID, Name, Gender, Age, NumPeople, Residence, Language, Income, AccountID
-				) VALUES (
-					<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
-					<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
-					<cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
-					<cfqueryparam value="#ARGUMENTS.Gender#" cfsqltype="cf_sql_varchar">,
-					<cfqueryparam value="#ARGUMENTS.Age#" cfsqltype="cf_sql_varchar">,
-					<cfqueryparam value="#ARGUMENTS.NumPeople#" cfsqltype="cf_sql_integer">,
-					<cfqueryparam value="#ARGUMENTS.Residence#" cfsqltype="cf_sql_varchar">,
-					<cfqueryparam value="#ARGUMENTS.Language#" cfsqltype="cf_sql_varchar">,
-					<cfqueryparam value="#ARGUMENTS.Income#" cfsqltype="cf_sql_varchar">,
-					<cfqueryparam value="#REQUEST.USER.AccountID#" cfsqltype="cf_sql_integer">
-				)
-			</cfquery>
+			<!--- If adding a new client --->
+			<cfif NOT isDefined('ARGUMENTS.ClientID') OR ARGUMENTS.ClientID IS 0>
+				<cfquery result="LOCAL.qClient">
+					INSERT INTO SurveyClient_tbl
+					(
+						ProgramID, SurveyID, Name, Gender, Age, NumPeople, Residence, Language, Income, AccountID
+					) VALUES (
+						<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.Gender#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.Age#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.NumPeople#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#ARGUMENTS.Residence#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.Language#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.Income#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#REQUEST.USER.AccountID#" cfsqltype="cf_sql_integer">
+					)
+				</cfquery>
 
-			<cfset ARGUMENTS.CLIENTID = LOCAL.qClient.GeneratedKey>
+				<cfset ARGUMENTS.CLIENTID = LOCAL.qClient.GeneratedKey>
+			<cfelse>
+				<!--- You can't update the program or survey id for a client. I was also going to make it so that you can't update the name once the survey has been started but I feel like there may be cases where it would be cleaner if you can update the name. Especially since it is just a UI anyways --->
+				<cfquery>
+					UPDATE SurveyClient_tbl
+					SET
+						Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
+						Gender = <cfqueryparam value="#ARGUMENTS.Gender#" cfsqltype="cf_sql_varchar">,
+						Age = <cfqueryparam value="#ARGUMENTS.Age#" cfsqltype="cf_sql_varchar">,
+						NumPeople = <cfqueryparam value="#ARGUMENTS.NumPeople#" cfsqltype="cf_sql_integer">,
+						Residence = <cfqueryparam value="#ARGUMENTS.Residence#" cfsqltype="cf_sql_varchar">,
+						Language = <cfqueryparam value="#ARGUMENTS.Language#" cfsqltype="cf_sql_varchar">,
+						Income = <cfqueryparam value="#ARGUMENTS.Income#" cfsqltype="cf_sql_varchar">,
+						AccountID = <cfqueryparam value="#REQUEST.USER.AccountID#" cfsqltype="cf_sql_integer">
+					WHERE ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+				</cfquery>			
+			</cfif>
+
+			<cfset LOCAL.response = getSuccessResponse("Client has been saved.")>
+			<cfset LOCAL.response.DATA = ARGUMENTS>
+			<cfreturn LOCAL.response>
 		<cfelse>
-			<!--- You can't update the program or survey id for a client. I was also going to make it so that you can't update the name once the survey has been started but I feel like there may be cases where it would be cleaner if you can update the name. Especially since it is just a UI anyways --->
-			<cfquery>
-				UPDATE SurveyClient_tbl
-				SET
-					Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
-					Gender = <cfqueryparam value="#ARGUMENTS.Gender#" cfsqltype="cf_sql_varchar">,
-					Age = <cfqueryparam value="#ARGUMENTS.Age#" cfsqltype="cf_sql_varchar">,
-					NumPeople = <cfqueryparam value="#ARGUMENTS.NumPeople#" cfsqltype="cf_sql_integer">,
-					Residence = <cfqueryparam value="#ARGUMENTS.Residence#" cfsqltype="cf_sql_varchar">,
-					Language = <cfqueryparam value="#ARGUMENTS.Language#" cfsqltype="cf_sql_varchar">,
-					Income = <cfqueryparam value="#ARGUMENTS.Income#" cfsqltype="cf_sql_varchar">,
-					AccountID = <cfqueryparam value="#REQUEST.USER.AccountID#" cfsqltype="cf_sql_integer">
-				WHERE ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
-			</cfquery>			
+			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
-
-		<cfset LOCAL.response = getSuccessResponse("Client has been saved.")>
-		<cfset LOCAL.response.DATA = ARGUMENTS>
-		<cfreturn LOCAL.response>
 	</cffunction>
 
 	<cffunction name="getClientSurveyData" access="remote" returnformat="JSON" returntype="struct" 
 		hint="Gets all of the survey data collected be a client">
 		<cfargument name="SurveyID" type="numeric" required="true">
 		<cfargument name="ClientID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<!--- TODO - check to make sure this account has access to this survey --->
-		<!--- Get the Client Data --->
-		<cfquery name="LOCAL.qData">
-			SELECT 	[Name],[Gender],[Age],[NumPeople],[Residence],[Language],[Income]
-			FROM SurveyClient_tbl
-			WHERE ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
-			<!--- TODO - Should only the person who collected the data be able to see this? Maybe a setting --->
-		</cfquery>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- TODO - check to make sure this account has access to this survey --->
+			<!--- Get the Client Data --->
+			<cfquery name="LOCAL.qData">
+				SELECT 	[Name],[Gender],[Age],[NumPeople],[Residence],[Language],[Income]
+				FROM SurveyClient_tbl
+				WHERE ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+				<!--- TODO - Should only the person who collected the data be able to see this? Maybe a setting --->
+			</cfquery>
 
-		<cfset LOCAL.person = StructNew()>
-		<cfset LOCAL.person.NAME 		= LOCAL.qData.Name>
-		<cfset LOCAL.person.GENDER 		= LOCAL.qData.Gender> 
-		<cfset LOCAL.person.AGE 		= LOCAL.qData.Age> 
-		<cfset LOCAL.person.NUMPEOPLE 	= LOCAL.qData.NumPeople> 
-		<cfset LOCAL.person.RESIDENCE 	= LOCAL.qData.Residence> 
-		<cfset LOCAL.person.LANGUAGE 	= LOCAL.qData.Language> 
-		<cfset LOCAL.person.INCOME 		= LOCAL.qData.Income>
+			<cfset LOCAL.person = StructNew()>
+			<cfset LOCAL.person.NAME 		= LOCAL.qData.Name>
+			<cfset LOCAL.person.GENDER 		= LOCAL.qData.Gender> 
+			<cfset LOCAL.person.AGE 		= LOCAL.qData.Age> 
+			<cfset LOCAL.person.NUMPEOPLE 	= LOCAL.qData.NumPeople> 
+			<cfset LOCAL.person.RESIDENCE 	= LOCAL.qData.Residence> 
+			<cfset LOCAL.person.LANGUAGE 	= LOCAL.qData.Language> 
+			<cfset LOCAL.person.INCOME 		= LOCAL.qData.Income>
 
-		<!--- Get the Survey data --->
-		<cfquery name="LOCAL.qSurveyData">
-			SELECT 	PrePost, sr.AnswerID, sa.QuestionID FROM SurveyResponse_tbl sr
-			INNER JOIN SurveyAnswer_tbl sa ON sa.AnswerID = sr.AnswerID
-			WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
-			AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
-		</cfquery>
+			<!--- Get the Survey data --->
+			<cfquery name="LOCAL.qSurveyData">
+				SELECT 	PrePost, sr.AnswerID, sa.QuestionID FROM SurveyResponse_tbl sr
+				INNER JOIN SurveyAnswer_tbl sa ON sa.AnswerID = sr.AnswerID
+				WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+				AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+			</cfquery>
 
-		<cfset LOCAL.response = getSuccessResponse("Client-survey data retrieved.")>
-		<cfset LOCAL.response.DATA.PERSON = LOCAL.person>
-		
-		<cfset LOCAL.response.DATA.PREDATA = StructNew()>
-		<cfset LOCAL.response.DATA.POSTDATA = StructNew()>
-		<cfoutput query="LOCAL.qSurveyData">
-			<cfif LOCAL.qSurveyData.PrePost IS "Pre">
-				<cfset LOCAL.response.DATA.PREDATA[LOCAL.qSurveyData.QuestionID] = LOCAL.qSurveyData.AnswerID>
-			<cfelse>
-				<cfset LOCAL.response.DATA.POSTDATA[LOCAL.qSurveyData.QuestionID] = LOCAL.qSurveyData.AnswerID>
-			</cfif>
-		</cfoutput>
+			<cfset LOCAL.response = getSuccessResponse("Client-survey data retrieved.")>
+			<cfset LOCAL.response.DATA.PERSON = LOCAL.person>
+			
+			<cfset LOCAL.response.DATA.PREDATA = StructNew()>
+			<cfset LOCAL.response.DATA.POSTDATA = StructNew()>
+			<cfoutput query="LOCAL.qSurveyData">
+				<cfif LOCAL.qSurveyData.PrePost IS "Pre">
+					<cfset LOCAL.response.DATA.PREDATA[LOCAL.qSurveyData.QuestionID] = LOCAL.qSurveyData.AnswerID>
+				<cfelse>
+					<cfset LOCAL.response.DATA.POSTDATA[LOCAL.qSurveyData.QuestionID] = LOCAL.qSurveyData.AnswerID>
+				</cfif>
+			</cfoutput>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 	<cffunction name="saveSurvey" access="remote" returntype="struct" returnformat="JSON"
@@ -366,75 +491,85 @@
 		<cfargument name="ClientID" type="numeric" required="true">
 		<cfargument name="PreData" type="string" required="true">
 		<cfargument name="PostData" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<!--- check to make sure that this client has access to this survey --->
-		<cfquery name="LOCAL.qCheck">
-			SELECT 	ClientID, SurveyID
-			FROM 	SurveyClient_tbl
-			WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
-			AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
-		</cfquery>
-
-		<cfif LOCAL.qCheck.recordcount IS 0>
-			<cfreturn getErrorResponse("This client is not a part of this survey.")>
-		</cfif>
-
-		<cftransaction>
-			<!--- Clear existing data for this client --->
-			<cfquery>
-				DELETE 	FROM SurveyResponse_tbl
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- check to make sure that this client has access to this survey --->
+			<cfquery name="LOCAL.qCheck">
+				SELECT 	ClientID, SurveyID
+				FROM 	SurveyClient_tbl
 				WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
 				AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
 			</cfquery>
 
-			<cfloop list="#ARGUMENTS.PREDATA#" index="p">
-				<cfquery>
-					INSERT INTO SurveyResponse_tbl
-					( 
-						ClientID, SurveyID, AnswerID, PrePost 
-					) VALUES (
-						<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
-						'Pre'
-					)
-				</cfquery>
-			</cfloop>
+			<cfif LOCAL.qCheck.recordcount IS 0>
+				<cfreturn getErrorResponse("This client is not a part of this survey.")>
+			</cfif>
 
-			<cfloop list="#ARGUMENTS.POSTDATA#" index="p">
+			<cftransaction>
+				<!--- Clear existing data for this client --->
 				<cfquery>
-					INSERT INTO SurveyResponse_tbl
-					( 
-						ClientID, SurveyID, AnswerID, PrePost 
-					) VALUES (
-						<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
-						'Post'
-					)
+					DELETE 	FROM SurveyResponse_tbl
+					WHERE 	ClientID = <cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">
+					AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
 				</cfquery>
-			</cfloop>
-		</cftransaction>
 
-		<cfreturn getSuccessResponse("Survey Data has been collected, you can now collect for a new client.")>
+				<cfloop list="#ARGUMENTS.PREDATA#" index="p">
+					<cfquery>
+						INSERT INTO SurveyResponse_tbl
+						( 
+							ClientID, SurveyID, AnswerID, PrePost 
+						) VALUES (
+							<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
+							'Pre'
+						)
+					</cfquery>
+				</cfloop>
+
+				<cfloop list="#ARGUMENTS.POSTDATA#" index="p">
+					<cfquery>
+						INSERT INTO SurveyResponse_tbl
+						( 
+							ClientID, SurveyID, AnswerID, PrePost 
+						) VALUES (
+							<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
+							'Post'
+						)
+					</cfquery>
+				</cfloop>
+			</cftransaction>
+
+			<cfreturn getSuccessResponse("Survey Data has been collected, you can now collect for a new client.")>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 	<cffunction name="getNextClientID" access="remote" returntype="Struct" returnformat="JSON"
 		hint="Gets the next available client ID for a specific program and survey and returns 'Client X' where X is the next available ID number.">
 		<cfargument name="ProgramID" type="string" required="true">
 		<cfargument name="SurveyID" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfquery name="LOCAL.qNextID">
-			SELECT 	MAX(ClientID) + 1 AS ID
-			FROM 	SurveyClient_tbl
-			WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
-			AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
-		</cfquery>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfquery name="LOCAL.qNextID">
+				SELECT 	MAX(ClientID) + 1 AS ID
+				FROM 	SurveyClient_tbl
+				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+				AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+			</cfquery>
 
-		<cfset LOCAL.response = getSuccessResponse("Client ID retrieved.")>
-		<cfset LOCAL.response.DATA = "Client " & LOCAL.qNextID.ID>
+			<cfset LOCAL.response = getSuccessResponse("Client ID retrieved.")>
+			<cfset LOCAL.response.DATA = "Client " & LOCAL.qNextID.ID>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 <!--- WEB FUNCTIONS RELATED TO PROGRAMS --->
@@ -465,50 +600,65 @@
 		<cfargument name="ShortTermGoals" type="string" required="false">
 		<cfargument name="MidTermGoals" type="string" required="false">
 		<cfargument name="LongTermGoals" type="string" required="false">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-	<!--- Set accountID and AgencyID to defaults even if they are passed in through the web services which restricts creating with accounts or agency's 
-		  you don't have permission to, you CAN however do it through coldfusion in the program.cfc --->
-		<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
-		<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+		<!--- Set accountID and AgencyID to defaults even if they are passed in through the web services which restricts creating with accounts or agency's 
+			  you don't have permission to, you CAN however do it through coldfusion in the program.cfc --->
+			<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
+			<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
 
-		<cftry>	
-			<cfinvoke component="#APPLICATION.cfcpath#program" method="saveProgram" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Program" />
+			<cftry>	
+				<cfinvoke component="#APPLICATION.cfcpath#program" method="saveProgram" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Program" />
 
-			<cfset LOCAL.response = getSuccessResponse("Program information has been saved.")>
-			<cfset LOCAL.response.DATA = LOCAL.Program>
+				<cfset LOCAL.response = getSuccessResponse("Program information has been saved.")>
+				<cfset LOCAL.response.DATA = LOCAL.Program>
 
-			<cfcatch>
-				<cfset LOCAL.response = getErrorResponse(CFCATCH.MESSAGE & ' ' & CFCATCH.DETAIL)>
-			</cfcatch>
-		</cftry>
+				<cfcatch>
+					<cfset LOCAL.response = getErrorResponse(CFCATCH.MESSAGE & ' ' & CFCATCH.DETAIL)>
+				</cfcatch>
+			</cftry>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 <!--- MARK APPLICATION FOR REVIEW --->
 	<cffunction name="markApplicationForReview" access="remote" returnformat="JSON" returntype="Struct"
 		hint="Marks the application / LOI ready for review. The system handles what status that needs to be set. (NOT SUBMITTED TO AIRDRIE - Internal Agency review process)">
 		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<!--- TODO CSRF and Account Check --->
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- TODO Account Check --->
 
-		<cfinvoke component="#APPLICATION.cfcpath#program" method="markApplicationForReview" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been saved for review.")>
+			<cfinvoke component="#APPLICATION.cfcpath#program" method="markApplicationForReview" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been saved for review.")>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 <!--- MARK APPLICATION SUBMITTED --->
 	<cffunction name="markApplicationSubmitted" access="remote" returnformat="JSON" returntype="Struct"
 		hint="Marks the application / LOI Submitted for review by Airdrie. The system handles what status that needs to be set.">
 		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<!--- TODO CSRF and Account Check --->
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- TODO Account Check --->
 
-		<cfinvoke component="#APPLICATION.cfcpath#program" method="markApplicationSubmitted" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been submitted to the City of Airdrie.")>
+			<cfinvoke component="#APPLICATION.cfcpath#program" method="markApplicationSubmitted" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been submitted to the City of Airdrie.")>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>	
 
 <!--- WEB FUNCTIONS RELATED TO BOARD MEMBERS --->
@@ -516,14 +666,19 @@
 		hint="Removes and inserts the board members passed in through an array.">
 		<cfargument name="BoardMembers" type="string" required="true">
 		<cfargument name="AgencyID" type="numeric" default="#REQUEST.AGENCY.AGENCYID#">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfset ARGUMENTS.BoardMembers = DeSerializeJSON(ARGUMENTS.BoardMembers)>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfset ARGUMENTS.BoardMembers = DeSerializeJSON(ARGUMENTS.BoardMembers)>
 
-		<cfinvoke component="#APPLICATION.cfcpath#board" method="updateBoardMembers" argumentcollection="#ARGUMENTS#"  returnvariable="LOCAL.BoardMembers" />
+			<cfinvoke component="#APPLICATION.cfcpath#board" method="updateBoardMembers" argumentcollection="#ARGUMENTS#"  returnvariable="LOCAL.BoardMembers" />
 
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Board members saved.")>
-		<cfset LOCAL.response.DATA = LOCAL.BoardMembers>
-		<cfreturn LOCAL.response>
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Board members saved.")>
+			<cfset LOCAL.response.DATA = LOCAL.BoardMembers>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>
 
 <!--- WEB FUNCTIONS FOR DOCUMENTS --->
@@ -531,35 +686,45 @@
 		hint="Update the type of document to label it as a specific required document">
 		<cfargument name="DocumentID" type="numeric" required="true">
 		<cfargument name="DocumentTypeID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-	<!--- Set accountID and AgencyID to defaults even if they are passed in through the web services which restricts creating with accounts or agency's 
-		  you don't have permission to, you CAN however do it through coldfusion in the program.cfc --->
-		<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
-		<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+		<!--- Set accountID and AgencyID to defaults even if they are passed in through the web services which restricts creating with accounts or agency's 
+			  you don't have permission to, you CAN however do it through coldfusion in the program.cfc --->
+			<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
+			<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
 
-		<cfinvoke component="#APPLICATION.cfcpath#document" method="setDocumentTypeByDocumentID" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.document" />
+			<cfinvoke component="#APPLICATION.cfcpath#document" method="setDocumentTypeByDocumentID" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.document" />
 
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Document type has been updated.")>
-		<cfset LOCAL.response.DATA = LOCAL.document>
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Document type has been updated.")>
+			<cfset LOCAL.response.DATA = LOCAL.document>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>	
 
 	<cffunction name="removeDocument" access="remote" returnformat="JSON" returntype="struct"
 		hint="Remove a document from an Agency.">
 		<cfargument name="DocumentID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-	<!--- Set accountID and AgencyID to defaults even if they are passed in through the web services which restricts creating with accounts or agency's 
-		  you don't have permission to, you CAN however do it through coldfusion in the program.cfc --->
-		<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
-		<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+		<!--- Set accountID and AgencyID to defaults even if they are passed in through the web services which restricts creating with accounts or agency's 
+			  you don't have permission to, you CAN however do it through coldfusion in the program.cfc --->
+			<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
+			<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
 
-		<cfinvoke component="#APPLICATION.cfcpath#document" method="removeDocument" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.removed" />
+			<cfinvoke component="#APPLICATION.cfcpath#document" method="removeDocument" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.removed" />
 
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This document has been removed.")>
-		<cfset LOCAL.response.DATA = LOCAL.removed>
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This document has been removed.")>
+			<cfset LOCAL.response.DATA = LOCAL.removed>
 
-		<cfreturn LOCAL.response>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>	
 
 <!--- WEB FUNCTIONS RELATING TO THE BUDGET --->
@@ -574,31 +739,36 @@
 		<cfargument name="RevenuesExplanation" type="string" required="true">
 		<cfargument name="ExpendituresExplanation" type="string" required="true">
 		<cfargument name="DistributionTotals" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfset LOCAL.ARGS = StructNew()>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfset LOCAL.ARGS = StructNew()>
 
-		<cfset LOCAL.ARGS.BUDGETID = ARGUMENTS.BudgetID>
-		<cfset LOCAL.ARGS.AccountID = REQUEST.USER.AccountID>
-		<cfset LOCAL.ARGS.Revenues = deserializeJSON(ARGUMENTS.Revenues)>
-		<cfset LOCAL.ARGS.Expenses = deserializeJSON(ARGUMENTS.Expenses)>
-		<cfset LOCAL.ARGS.Staff = deserializeJSON(ARGUMENTS.Staff)>
-		<cfset LOCAL.ARGS.PreviousYearBudget = ARGUMENTS.PreviousYearBudget>
-		<cfset LOCAL.ARGS.RequestedFromAirdrie = ARGUMENTS.RequestedFromAirdrie>
-		<cfset LOCAL.ARGS.RevenuesExplanation = ARGUMENTS.RevenuesExplanation>
-		<cfset LOCAL.ARGS.ExpendituresExplanation = ARGUMENTS.ExpendituresExplanation>
-		<cfset LOCAL.ARGS.DistributionTotals = deserializeJSON(ARGUMENTS.DistributionTotals)>
+			<cfset LOCAL.ARGS.BUDGETID = ARGUMENTS.BudgetID>
+			<cfset LOCAL.ARGS.AccountID = REQUEST.USER.AccountID>
+			<cfset LOCAL.ARGS.Revenues = deserializeJSON(ARGUMENTS.Revenues)>
+			<cfset LOCAL.ARGS.Expenses = deserializeJSON(ARGUMENTS.Expenses)>
+			<cfset LOCAL.ARGS.Staff = deserializeJSON(ARGUMENTS.Staff)>
+			<cfset LOCAL.ARGS.PreviousYearBudget = ARGUMENTS.PreviousYearBudget>
+			<cfset LOCAL.ARGS.RequestedFromAirdrie = ARGUMENTS.RequestedFromAirdrie>
+			<cfset LOCAL.ARGS.RevenuesExplanation = ARGUMENTS.RevenuesExplanation>
+			<cfset LOCAL.ARGS.ExpendituresExplanation = ARGUMENTS.ExpendituresExplanation>
+			<cfset LOCAL.ARGS.DistributionTotals = deserializeJSON(ARGUMENTS.DistributionTotals)>
 
-		<cfinvoke component="#APPLICATION.cfcpath#budget" method="saveBudget" argumentcollection="#LOCAL.ARGS#" returnvariable="LOCAL.budget" />
+			<cfinvoke component="#APPLICATION.cfcpath#budget" method="saveBudget" argumentcollection="#LOCAL.ARGS#" returnvariable="LOCAL.budget" />
 
-		<cfif LOCAL.budget IS true>
-			<cfset LOCAL.response = getSuccessResponse("Budget has been updated.")>
+			<cfif LOCAL.budget IS true>
+				<cfset LOCAL.response = getSuccessResponse("Budget has been updated.")>
+			<cfelse>
+				<cfset LOCAL.response = getErrorResponse("There was a problem saving this budget.")>
+			</cfif>
+			<cfset LOCAL.response.BUDGETID = ARGUMENTS.BUDGETID>
+			<cfset LOCAL.response.SAVED = LOCAL.budget>
+
+			<cfreturn LOCAL.response>
 		<cfelse>
-			<cfset LOCAL.response = getErrorResponse("There was a problem saving this budget.")>
+			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
-		<cfset LOCAL.response.BUDGETID = ARGUMENTS.BUDGETID>
-		<cfset LOCAL.response.SAVED = LOCAL.budget>
-
-		<cfreturn LOCAL.response>
 	</cffunction>	
 
 <!--- WEB FUNCTIONS RELATED TO SYSTEM ADMINISTRATION --->
@@ -608,32 +778,41 @@
 		<cfargument name="isEnabledApplications" type="boolean" required="false">
 		<cfargument name="isEnabledLetterOfIntent" type="boolean" required="false">
 		<cfargument name="SupportNumber" type="string" required="false">
+		<cfargument name="AdminEmail" type="string" required="false">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
-		<cfif NOT isAdminAccount()>
-			<cfreturn getErrorResponse("<strong>Sorry!</strong> This account does not have permission to save the settings.")>
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfif NOT isAdminAccount()>
+				<cfreturn getErrorResponse("<strong>Sorry!</strong> This account does not have permission to save the settings.")>
+			</cfif>
+
+			<!--- TODO - update the settings to not be optional, doing this different than I initially thought of it so needs some cleanup --->			
+			<cfquery>
+				UPDATE Settings_tbl
+				SET DateUpdated = GetDate(),
+					AccountID = <cfqueryparam value="#REQUEST.User.AccountID#" cfsqltype="cf_sql_integer">
+					<cfif isDefined('ARGUMENTS.MaxCharacterLength')>
+						,MaxCharacterLength = <cfqueryparam value="#ARGUMENTS.MaxCharacterLength#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif isDefined('ARGUMENTS.isEnabledLetterOfIntent')>
+						,isEnabledLetterOfIntent = <cfqueryparam value="#ARGUMENTS.isEnabledLetterOfIntent#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif isDefined('ARGUMENTS.isEnabledApplications')>
+						,isEnabledApplications = <cfqueryparam value="#ARGUMENTS.isEnabledApplications#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif isDefined('ARGUMENTS.SupportNumber')>
+						,SupportNumber = <cfqueryparam value="#ARGUMENTS.SupportNumber#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif isDefined('ARGUMENTS.AdminEmail')>
+						,AdminEmail = <cfqueryparam value="#ARGUMENTS.AdminEmail#" cfsqltype="cf_sql_varchar">
+					</cfif>
+			</cfquery>
+
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Settings have been saved.")>
+			<cfset LOCAL.response.DATA = ARGUMENTS>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
-
-		<!--- In this query I set MaxCharacterLength equal to itself so that all parameters can be optional --->
-		<cfquery>
-			UPDATE Settings_tbl
-			SET DateUpdated = GetDate(),
-				AccountID = <cfqueryparam value="#REQUEST.User.AccountID#" cfsqltype="cf_sql_integer">
-				<cfif isDefined('ARGUMENTS.MaxCharacterLength')>
-					,MaxCharacterLength = <cfqueryparam value="#ARGUMENTS.MaxCharacterLength#" cfsqltype="cf_sql_integer">
-				</cfif>
-				<cfif isDefined('ARGUMENTS.isEnabledLetterOfIntent')>
-					,isEnabledLetterOfIntent = <cfqueryparam value="#ARGUMENTS.isEnabledLetterOfIntent#" cfsqltype="cf_sql_integer">
-				</cfif>
-				<cfif isDefined('ARGUMENTS.isEnabledApplications')>
-					,isEnabledApplications = <cfqueryparam value="#ARGUMENTS.isEnabledApplications#" cfsqltype="cf_sql_integer">
-				</cfif>
-				<cfif isDefined('ARGUMENTS.SupportNumber')>
-					,SupportNumber = <cfqueryparam value="#ARGUMENTS.SupportNumber#" cfsqltype="cf_sql_varchar">
-				</cfif>
-		</cfquery>
-
-		<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Settings have been saved.")>
-		<cfset LOCAL.response.DATA = ARGUMENTS>
-		<cfreturn LOCAL.response>
 	</cffunction>	
 </cfcomponent>

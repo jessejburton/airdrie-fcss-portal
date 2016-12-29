@@ -6,6 +6,8 @@ $(document).ready(function(){
 		pstr.isEnabledApplications = $("#is_enabled_applications").is(":checked");
 		pstr.isEnabledLetterOfIntent = $("#is_enabled_letter_of_intent").is(":checked");
 		pstr.SupportNumber = $("#support_number").val();
+		pstr.AdminEmail = $("#admin_email").val();
+		pstr.CSRF = $.cookie("CSRF");
 
 		$.ajax({
 			url: 'assets/cfc/webservices.cfc',

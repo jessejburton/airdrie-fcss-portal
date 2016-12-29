@@ -9,13 +9,17 @@
 
 	<meta name="viewport" content="width=500">
 
+	<!--- Libraries --->
 	<script src="assets/libs/jquery-3.1.1.min.js" type="text/javascript"></script>
 	<script src="assets/libs/jquery-ui/jquery-ui.js" type="text/javascript"></script>
 	<script src="assets/libs/jquery.form.min.js" type="text/javascript"></script>
-	<script src="assets/js/common.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
-	<script src="assets/js/form.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
+	<script src="assets/libs/jquery.form.min.js" type="text/javascript"></script>
 	<script src="https://use.fontawesome.com/40939fccf0.js"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="assets/libs/jquery.cookie.js" type="text/javascript"></script>
+	<!--- Scripts --->
+	<script src="assets/js/common.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
+	<script src="assets/js/form.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
 
 	<!--- Include any page specific javascript --->
  	<cfset pagename = ReplaceNoCase(ListLast(cgi.script_name,"/"), ".cfm", "")>

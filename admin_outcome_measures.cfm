@@ -1,6 +1,6 @@
 <cfinclude template="shared/header.cfm">
 
-<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getOutcomeMeasures" ProgramID="#URL.ProgramID#" returnvariable="response" />
+<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getOutcomeMeasures" ProgramID="1" returnvariable="response" />
 
 <!--- MAIN CONTENT --->
 	<section id="main_content">
