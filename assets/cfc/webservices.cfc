@@ -142,6 +142,127 @@
 		<cfelse>
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
+	</cffunction>
+
+<!--- WEB FUNCTIONS RELATED TO PACKAGES --->
+	<cffunction name="savePackage" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Saves a package to be used for export.">
+		<cfargument name="PackageID" type="numeric" required="false" hint="Only passed in if saving an existing package">
+		<cfargument name="PackageName" type="string" required="true" hint="The name to reference the package by">
+		<cfargument name="PackageContent" type="string" required="true" hint="An array of package content items">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>	
+			<cfset LOCAL.PackageContent = DeSerializeJSON(ARGUMENTS.PackageContent)>
+
+			<!--- Make sure the name isn't in use --->
+			<cfquery name="LOCAL.qCheck">
+				SELECT 	PackageID
+				FROM 	Package_tbl
+				WHERE 	PackageName = <cfqueryparam value="#ARGUMENTS.PackageName#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined('ARGUMENTS.PackageID')>		<!--- This will allow this check to handle both saving and updating --->
+					AND 	PackageID <> <cfqueryparam value="#ARGUMENTS.PackageID#" cfsqltype="cf_sql_integer">
+				</cfif>
+			</cfquery>
+
+			<cfif LOCAL.qCheck.recordcount NEQ 0>
+				<cfreturn getErrorResponse("A package with this name already exists, please choose a different name")>
+			</cfif>
+
+			<cftransaction>
+			<!--- Name is ok, so now either update the package or save a new one --->
+			<cfif isDefined('ARGUMENTS.PackageID')> 										<!--- Saving an existing package --->
+				<cfset LOCAL.PackageID = ARGUMENTS.PackageID>
+				<!--- Update the program name --->
+				<cfquery>
+					UPDATE 	Package_tbl
+					SET 	PackageName = <cfqueryparam value="#ARGUMENTS.PackageName#" cfsqltype="cf_sql_varchar">
+					WHERE 	PackageID = <cfqueryparam value="#LOCAL.PackageID#" cfsqltype="cf_sql_integer">
+				</cfquery>
+			<cfelse>																		<!--- Adding a new package --->
+				<!--- Add the new package and get the ID --->
+				<cfquery result="LOCAL.qNewPackage">
+					INSERT 	INTO Package_tbl
+					( PackageName ) VALUES ( <cfqueryparam value="#ARGUMENTS.PackageName#" cfsqltype="cf_sql_varchar"> )
+				</cfquery>
+
+				<cfset LOCAL.PackageID = LOCAL.qNewPackage.GeneratedKey>
+			</cfif>
+
+			<!--- Handle the package contents --->
+			<!--- Remove the existing records so that we can just look through and add the new ones --->
+			<cfquery>
+				DELETE 	FROM PackageData_tbl 
+				WHERE 	PackageID = <cfqueryparam value="#LOCAL.PackageID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+
+			<cfset LOCAL.curOrder = 0>
+			<cfloop array="#LOCAL.PackageContent#" index="LOCAL.content">
+				<cfset LOCAL.content = DeSerializeJSON(LOCAL.content)>
+				<cfquery>
+					INSERT INTO PackageData_tbl
+					(
+						PackageID, TableView, SectionTitle, ColumnName, TemplateFile, isSectionHeading, isOrder
+					) VALUES (
+						<cfqueryparam value="#LOCAL.PackageID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#LOCAL.content.TableView#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#LOCAL.content.SectionTitle#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#LOCAL.content.ColumnName#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#LOCAL.content.TemplateFile#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#LOCAL.content.isSectionHeading#" cfsqltype="cf_sql_bit">,
+						<cfqueryparam value="#LOCAL.curOrder#" cfsqltype="cf_sql_integer">
+					)
+				</cfquery>
+
+				<cfset LOCAL.curOrder ++>
+			</cfloop>			
+					
+			</cftransaction>
+
+			<cfset LOCAL.response = getSuccessResponse("The package <strong>#ARGUMENTS.PackageName#</strong> has been saved and is now ready for use.")>
+			<cfset LOCAL.response.PackageID = LOCAL.PackageID>
+
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>	
+
+	<cffunction name="getPackageByID" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Get a package to edit by its ID.">
+		<cfargument name="PackageID" type="numeric" required="false" hint="Only passed in if saving an existing package">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfquery name="LOCAL.qPackageContents">
+				SELECT 	p.PackageName, TableView, SectionTitle, ColumnName, TemplateFile, isSectionHeading, isOrder
+				FROM 	PackageData_tbl pd
+				INNER JOIN Package_tbl p ON pd.PackageID = p.PackageID
+				WHERE 	pd.PackageID = <cfqueryparam value="#ARGUMENTS.PackageID#" cfsqltype="cf_sql_integer">
+				ORDER BY isOrder
+			</cfquery>
+
+			<cfset LOCAL.response = getSuccessResponse("")>
+			<cfset LOCAL.response.DATA = StructNew()>
+			<cfset LOCAL.response.DATA.PackageName = LOCAL.qPackageContents.PackageName>
+			<cfset LOCAL.response.DATA.PackageContents = ArrayNew(1)>
+
+			<cfoutput query="LOCAL.qPackageContents">
+				<cfset LOCAL.elm = StructNew()>
+				<cfset LOCAL.elm.TableView = LOCAL.qPackageContents.TableView>
+				<cfset LOCAL.elm.SectionTitle = LOCAL.qPackageContents.SectionTitle>
+				<cfset LOCAL.elm.ColumnName = LOCAL.qPackageContents.ColumnName>
+				<cfset LOCAL.elm.TemplateFile = LOCAL.qPackageContents.TemplateFile>
+				<cfset LOCAL.elm.isSectionHeading = LOCAL.qPackageContents.isSectionHeading>
+				<cfset LOCAL.elm.isOrder = LOCAL.qPackageContents.isOrder>
+
+				<cfset ArrayAppend(LOCAL.response.DATA.PackageContents, LOCAL.elm)>
+			</cfoutput>
+
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
 	</cffunction>	
 
 <!--- WEB FUNCTIONS RELATED TO RESOURCES --->
@@ -283,6 +404,124 @@
 	</cffunction>
 
 <!--- WEB FUNCTIONS RELATED TO SURVEYS --->
+	<cffunction name="saveSurvey" access="remote" returntype="struct" returnformat="JSON"
+			hint="Saves survey data">
+		<cfargument name="SurveyID" type="numeric" required="false">
+		<cfargument name="Name" type="string" required="true">
+		<cfargument name="Description" type="string" default="">
+		<cfargument name="Citation" type="string" default="">
+		<cfargument name="IndicatorID" type="numeric" required="true">
+		<cfargument name="Questions" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+		
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND isAdminAccount()>
+		<!--- Check to make sure the name is ok --->
+			<cfquery name="LOCAL.qCheck">
+				SELECT 	Name
+				FROM 	Survey_tbl
+				<cfif isDefined('ARGUMENTS.SurveyID')>
+					AND SurveyID <> <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer"> 
+				</cfif>
+			</cfquery>
+
+			<!--- Handle the surveys --->
+			<cfif isDefined('ARGUMENTS.SurveyID') AND ARGUMENTS.SurveyID NEQ 0>	
+				<!--- Update Survey details --->
+				<cfquery>
+					UPDATE Survey_tbl 
+					SET 	Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
+							Description = <cfqueryparam value="#ARGUMENTS.Description#" cfsqltype="cf_sql_varchar">,
+							Citation = <cfqueryparam value="#ARGUMENTS.Citation#" cfsqltype="cf_sql_varchar">,
+							IndicatorID = <cfqueryparam value="#ARGUMENTS.IndicatorID#" cfsqltype="cf_sql_integer">
+					WHERE 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+				</cfquery>
+
+				<cfset LOCAL.SurveyID = ARGUMENTS.SurveyID>
+			<cfelse>
+				<!--- Add the new survey --->
+				<cfquery result="LOCAL.qSurvey">
+					INSERT INTO Survey_tbl
+					(
+						Name, Description, Citation, IndicatorID
+					) VALUES (
+						<cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.Description#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.Citation#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#ARGUMENTS.IndicatorID#" cfsqltype="cf_sql_integer">
+					)
+				</cfquery>
+
+				<cfset LOCAL.SurveyID = LOCAL.qSurvey.GeneratedKey>
+			</cfif>
+
+			<!--- Now handle the questions --->
+			<!--- Remove any existing questions and the re-add them --->
+			<cftransaction>				
+				<cfquery>
+					DELETE FROM SurveyQuestion_tbl WHERE SurveyID = <cfqueryparam value="#LOCAL.SurveyID#" cfsqltype="cf_sql_integer">
+				</cfquery>
+
+				<cfset LOCAL.curOrder = 0>
+				<cfloop list="#ARGUMENTS.Questions#" index="question">
+					<cfquery result="LOCAL.qQuestion">
+						INSERT INTO SurveyQuestion_tbl
+						(
+							Question, SurveyID, isOrder
+						) VALUES (
+							<cfqueryparam value="#question#" cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#LOCAL.SurveyID#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#LOCAL.curOrder#" cfsqltype="cf_sql_integer">
+						)
+					</cfquery>
+
+					<!--- Add the answers for this question --->
+					<cfset addAnswersToQuestion(LOCAL.qQuestion.GeneratedKey)>
+
+					<cfset LOCAL.curOrder ++>
+				</cfloop>
+			</cftransaction>
+
+			<cfreturn getSuccessResponse("Survey has been saved.")>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>
+
+	<cffunction name="addAnswersToQuestion" access="private" returntype="boolean" returnformat="JSON"
+			hint="Adds the questions 1 - 5 to the survey">
+		<!--- 	At the time that the system was created they only wanted all questions to be 1-5 answers and so the database is set
+				up to accommodate for having different answers but we just add the defaults for now, I can see them eventually wanting to 
+				add different responses and question types --->
+		<cfargument name="QuestionID" type="numeric" required="true">
+		
+		<cfoutput>
+			<cftransaction>
+				<cfquery>
+					DELETE FROM SurveyAnswer_tbl WHERE QuestionID = <cfqueryparam value="#ARGUMENTS.QuestionID#" cfsqltype="cf_sql_integer">
+				</cfquery>
+
+				<cfset LOCAL.curOrder = 0>
+				<cfloop list="1 - low,2,3,4,5 - high,No Response" index="a">
+					<cfquery>
+						INSERT INTO SurveyAnswer_tbl
+						(
+							Answer, QuestionID, isOrder, isDefault
+						) VALUES (
+							<cfqueryparam value="#a#" cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#ARGUMENTS.QuestionID#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#LOCAL.curOrder#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#a IS 'No Response'#" cfsqltype="cf_sql_bit">
+						)
+					</cfquery>
+
+					<cfset LOCAL.curOrder ++>
+				</cfloop>		
+			</cftransaction>		
+		</cfoutput>
+
+		<cfreturn true>
+	</cffunction>
+
 	<cffunction name="getSurveysByProgramID" access="remote" returntype="struct" returnformat="JSON"
 			hint="Gets all of the surveys available for an application.">
 		<cfargument name="ProgramID" type="numeric" required="true">
@@ -485,7 +724,7 @@
 		</cfif>
 	</cffunction>
 
-	<cffunction name="saveSurvey" access="remote" returntype="struct" returnformat="JSON"
+	<cffunction name="saveSurveyData" access="remote" returntype="struct" returnformat="JSON"
 		hint="Saves the Pre and Post Survey data.">
 		<cfargument name="SurveyID" type="numeric" required="true">
 		<cfargument name="ClientID" type="numeric" required="true">
@@ -656,6 +895,57 @@
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been submitted to the City of Airdrie.")>
 
 			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>	
+
+<!--- MARK APPLICATION APPROVED --->
+	<cffunction name="markApplicationApproved" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Marks the application / LOI as approved and ready for the next step">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfif isAdminAccount()> <!--- Only if this is an admin account --->
+				<cfquery name="LOCAL.qProgramStatus">
+					SELECT 	s.Status
+					FROM 	ProgramStatus_tbl ps
+					INNER JOIN Status_tbl s ON ps.StatusID = s.StatusID
+					WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+					ORDER BY DateAdded DESC
+				</cfquery>
+
+				<cfset LOCAL.StatusList = ValueList(LOCAL.qProgramStatus.Status)>
+
+				<cfif ListFindNoCase(LOCAL.StatusList, "LOI - Approved") EQ 0>
+					<!--- Approve the LOI --->
+					<cfquery>
+						INSERT INTO ProgramStatus_tbl
+						( 
+							ProgramID, StatusID, AccountID 
+						) VALUES (
+							<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+							(SELECT StatusID FROM Status_tbl WHERE Status = 'LOI - Approved'),
+							<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_varchar">
+						)
+					</cfquery>
+				<cfelseif ListFindNoCase(LOCAL.StatusList, "APPLICATION - Approved") EQ 0>
+					<!--- Approve the Application --->
+					<cfquery>
+						INSERT INTO ProgramStatus_tbl
+						( 
+							ProgramID, StatusID, AccountID 
+						) VALUES (
+							<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+							(SELECT StatusID FROM Status_tbl WHERE Status = 'APPLICATION - Approved'),
+							<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_varchar">
+						)
+					</cfquery>
+				</cfif>
+
+				<cfreturn getSuccessResponse("Program status has been updated.")>
+			</cfif>
 		<cfelse>
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>

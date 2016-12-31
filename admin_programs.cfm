@@ -8,9 +8,34 @@
 	<section id="main_content">
 		<div class="wrapper clearfix">
 			<div id="program_alerts">
-				<h1><i class="fa fa-exclamation-circle"></i> Alerts</h1>
-				<!--- TODO - take a look how the email created the link and make that appear here --->
-				<cfdump var="#Alerts#">
+				<h1><i class="fa fa-exclamation-circle"></i> Notice!</h1>
+				<p>The following programs require your attention:</p>
+				<cfoutput>
+					<cfloop array="#Alerts#" index="alert">
+						<div class="program program-alert" data-programid="#alert.PROGRAMID#">
+							<cfif alert.STATUS IS 'LOI - Submitted to Airdrie'>
+								<p>
+									<strong>#alert.PROGRAMNAME#</strong><br />
+									LOI has been submitted and is ready for your review and approval.
+								</p>
+								<div class="clearfix">
+									<button type="button" class="btn btn-secondary pull-left program-review"><i class="fa fa-file-text"></i> Review Program</button>
+									<button type="button" class="btn btn-primary pull-right program-approve"><i class="fa fa-check-circle"></i> Approve LOI</button>
+								</div>	
+							</cfif>
+							<cfif alert.STATUS IS 'APPLICATION - Submitted to Airdrie'>
+								<p>
+									<strong>#alert.PROGRAMNAME#</strong><br />
+									Application has been submitted and is ready for your review and approval.
+								</p>
+								<div class="clearfix">
+									<button type="button" class="btn btn-secondary pull-left program-review"><i class="fa fa-file-text"></i> Review Program</button>
+									<button type="button" class="btn btn-primary pull-right program-approve"><i class="fa fa-check-circle"></i> Approve Application</button>
+								</div>								
+							</cfif>
+						</div>	
+					</cfloop>
+				</cfoutput>
 			</div>
 
 			<h1>Programs</h1>
@@ -36,7 +61,8 @@
 									<tr><th>Agency:</th><td>#XMLFormat(program.AGENCY)#</td></tr>
 								</tbody>
 								<tfoot>
-									<tr><th colspan="2"><a class="link" target="_blank" href="admin_create_package.cfm?programID=#EncodeForHTMLAttribute(program.PROGRAMID)#"><i class="fa fa-file-pdf-o"></i> View Full Details</a></th></tr>
+									<tr><th colspan="2">
+										<a class="btn btn-secondary" target="_blank" href="admin_create_package.cfm?programID=#EncodeForHTMLAttribute(program.PROGRAMID)#"><i class="fa fa-file-text"></i> View Full Details</a></th></tr>
 								</tfoot>
 							</table>
 						</div>

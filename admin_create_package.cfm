@@ -1,3 +1,8 @@
+<!--- 	
+	TODO - Future Enhancement
+	Add the ability to control whether or not the package includes the header and footer 
+--->
+
 <cfset output = ArrayNew(1)>
 
 <cfif isDefined('URL.ProgramID')>
@@ -10,9 +15,12 @@
 <!--- Otherwise use the form data that is passed in to decide which package and what programs / agencies to include --->
 	<cfinvoke component="#APPLICATION.cfcpath#package" method="getPackageNameByPackageID" PackageID="#FORM.PackageID#" returnvariable="PackageName" />
 
-	<cfsavecontent variable="output">
-		<h1>Package</h1>
-	</cfsavecontent>
+	<cfoutput>
+		<cfloop list="#FORM.Programs#" index="programID">
+			<cfinvoke component="#APPLICATION.cfcpath#package" method="getPackageContent" ProgramID="#programID#" PackageID="#FORM.PackageID#" returnvariable="DATA" />
+			<cfset ArrayAppend(output, DATA)>
+		</cfloop>
+	</cfoutput>
 </cfif>
 
 <!--- Serve the PDF --->
@@ -37,5 +45,3 @@
 		</cfdocumentsection>
 	</cfloop>
 </cfdocument>	
-
-</html>

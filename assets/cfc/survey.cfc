@@ -89,4 +89,42 @@
 
 		<cfreturn LOCAL.qCheck.recordcount IS 1>
 	</cffunction>	
+
+	<cffunction name="getOutcomeMeasures" access="public" returntype="query" returnformat="JSON"
+		hint="Get a list of the availbale outcome measures.">
+
+		<cfquery name="LOCAL.qOutcomeMeasures">
+			SELECT 	Measure, MeasureID 
+			FROM	Measures_tbl
+			WHERE	isActive = 1
+		</cfquery>
+
+		<cfreturn LOCAL.qOutcomeMeasures>
+	</cffunction>
+
+	<cffunction name="getAllSurveys" access="public" returntype="query" returnformat="JSON"
+	    hint="Gets a query of all active surveys and their ID's">
+
+	    <cfquery name="LOCAL.qSurveys">
+	    	SELECT 	SurveyID, Name
+	    	FROM	Survey_tbl
+	    	WHERE 	isActive = 1
+	    </cfquery>
+	    
+	    <cfreturn LOCAL.qSurveys>
+	</cffunction>
+
+	<cffunction name="getIndicators" access="public" returntype="query" returnformat="JSON"
+	    hint="Gets a query of all available indicators">
+
+	    <cfquery name="LOCAL.qIndicators">
+	    	SELECT 	IndicatorID, Indicator, m.Measure 
+	    	FROM 	Indicator_tbl i 
+	    	INNER JOIN Measures_tbl m ON m.MeasureID = i.MeasureID 
+	    	WHERE i.isActive = 1
+	    	ORDER BY m.Measure
+	    </cfquery>
+	    
+	    <cfreturn LOCAL.qIndicators>
+	</cffunction>	
 </cfcomponent>

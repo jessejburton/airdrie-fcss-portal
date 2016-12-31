@@ -38,6 +38,7 @@
 	</div>
 
 	<div id="saving"><img src="assets/images/saving-gear.gif" /> Saving...</div>
+	<div id="loading"><img src="assets/images/saving-gear.gif" /> Loading...</div>
 
 	<!--- Session Timeout --->
 	<cfif isDefined('REQUEST.loggedin')>

@@ -8,6 +8,12 @@ h1 {
 	font-size: 1.25em;
 	font-weight: normal;
 }
+	h1.section-heading {
+		color: #FFF;
+		background-color: #005596;
+		text-align: center;
+		padding: 10px 0 5px 0;	
+	}
 h2 {
 	color: #005596;
 	font-size: 1.15em;

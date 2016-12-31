@@ -15,7 +15,7 @@
 			</cfif>
 
 			<cfquery name="LOCAL.qPackage">
-				SELECT	[TableView], [SectionTitle], [ColumnName], [TemplateFile], [isShowHeading], [isOrder]
+				SELECT	[TableView], [SectionTitle], [ColumnName], [TemplateFile], [isSectionHeading], [isOrder]
 				FROM	PackageData_tbl
 				WHERE 	PackageID = <cfqueryparam value="#ARGUMENTS.PackageID#" cfsqltype="cf_sql_integer">
 				ORDER BY isOrder
@@ -32,17 +32,16 @@
 						<cfif LEN(LOCAL.qPackage.TemplateFile) GT 0>
 							<cfmodule template="#application.templatepath##LOCAL.qPackage.TemplateFile#" ProgramID="#ARGUMENTS.ProgramID#">
 						<cfelse>
-							<cfif LOCAL.qPackage.isShowHeading>
-								<h1>#LOCAL.qPackage.SectionTitle#</h1>
-							</cfif>
 							<cfquery name="LOCAL.qContent">
 								SELECT [#LOCAL.qPackage.ColumnName#] AS data FROM #LOCAL.qPackage.TableView#
 								WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
 							</cfquery>
-							<cfif LOCAL.qPackage.isShowHeading>
-								<p>#LOCAL.qContent.data#</p>
+							
+							<cfif LOCAL.qPackage.isSectionHeading>
+								<h1 class="section-heading">#LOCAL.qContent.data#</h1>
 							<cfelse>
-								<h1>#LOCAL.qContent.data#</h1>
+								<h1>#LOCAL.qPackage.SectionTitle#</h1>
+								<p>#LOCAL.qContent.data#</p>
 							</cfif>
 						</cfif>
 					</div>
@@ -64,5 +63,17 @@
 
 		<cfreturn LOCAL.qPackage.PackageName>
 	</cffunction>
+
+	<cffunction name="getPackages" access="public" returntype="query" returnformat="JSON"
+		hint="Returns a query of saved packages">
+
+		<cfquery name="LOCAL.qPackages">
+			SELECT 	PackageID, PackageName 
+			FROM 	Package_tbl
+			WHERE 	isActive = 1
+		</cfquery>
+
+		<cfreturn LOCAL.qPackages>
+	</cffunction>	
 
 </cfcomponent>

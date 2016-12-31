@@ -128,21 +128,62 @@
 		padding: 0;
 	}
 		#package_elements ul li, #package_available_elements ul li {
-			padding: 3px 0;
+			position: relative;
+			height: 30px;
+			padding: 0;
+			background-color: #FFF;
+		}
+		#package_elements ul li span, #package_available_elements ul li span {
+			line-height: 30px;
+			padding: 5px;	
+			clear: both;	
 		}
 	#package_available_elements_list li.heading, #package_elements_list li.heading {
 		font-weight: bold;
 		padding: 10px 5px;
+		margin-bottom: 15px;
 	}
 	#package_available_elements_list li:not(.heading), #package_elements_list li:not(.heading) {
 		cursor: pointer;
-		padding: 5px!important;
 		border: 1px solid #8E8E8E;
 		margin-bottom: 3px;
 		transition: background-color .2s ease-in-out;
 	}
-		#package_available_elements_list li:not(.heading):hover, #package_elements_list li:not(.heading):hover {
+		#package_available_elements_list li:not(.heading):hover {
 			background-color: #EDEDED;
+		}
+	.package-options {
+		font-size: .7em;
+		float: right;
+		height: 29px;
+		text-align: right;
+		font-style: italic;
+	}
+		.package-options div {
+			display: inline-block;
+			line-height: 29px;
+		}
+		.package-option {
+			width: 20px;
+			height: 29px;
+			background-color: #8E8E8E;
+			color: #000;
+			cursor: pointer;
+			margin-left: 15px;
+			text-align: center;
+		}
+			.package-option:hover {
+				background-color: #999;
+			}
+		.package-sortable-handle {
+			float: left;
+		    width: 15px;
+		    height: 29px;
+		    background-color: #8E8E8E;
+		    cursor: ns-resize;
+		    text-align: center;
+		    line-height: 29px;
+		    color: #525252;
 		}
 
 /*** FOOTER ***/
@@ -257,6 +298,9 @@
 		.program table th, .program table tfoot {
 			border: none!important;
 		}
+	.program-alert {
+
+	}
 
 /*** TABLES ***/
 	.table {
@@ -290,6 +334,7 @@
 
 /*** FORMS ***/
 	.btn {
+		text-decoration: none!important;
 	    display: inline-block;
 	    padding: 8px 14px;
 	    margin-bottom: 0;
@@ -487,6 +532,12 @@
 	}
 
 /*** UTILITIES ***/
+	.border-bottom {
+		border-bottom: 1px solid #A2A2A2;
+	}
+	.border-top {
+		border-top: 1px solid #A2A2A2;
+	}
 	.placeholder {
 		padding: 15px;
 		color: #B7B7B7;
@@ -650,6 +701,38 @@
 		color: #005596;
 	}
 
+/*** SURVEYS ***/
+	#survey_form .question {
+		padding-left: 40px;
+		padding-right: 40px;
+		position: relative;
+		margin-bottom: 15px;
+	}
+		#survey_form .question .question-handle, #survey_form .question .remove-question {
+			position: absolute;
+			top: 0;
+		} 
+			#survey_form .question .question-handle {
+				background-color: #CCC;
+				left: 0;
+				width: 20px;
+				height: 100%;
+				cursor: ns-resize;;
+			}
+			#survey_form .question .remove-question {
+				text-align: center;
+				width: 40px;
+				line-height: 4em;
+				right: 0;
+				cursor: pointer;
+			}
+				#survey_form .question .remove-question:hover {
+					transform: scale(1.1,1.1);
+				}
+	#indicatorID option.heading{
+		font-weight: bold;
+		font-size: 1.1em;
+	}
 
 /*** COLORS ***/
 	.green-background {
