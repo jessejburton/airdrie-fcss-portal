@@ -39,6 +39,7 @@ $(document).on("click", ".show-next", function(){
 
 /* Resources
 ***************************************************************************************/ 
+$(document).on("click", ".resource-link", showResources);
 
 // Adding Resources
 $(document).on("click", ".add-resource", function(){

@@ -41,7 +41,7 @@ label {
 	display: none;
 }
 
-@media only screen and (min-width:1366px) {
+@media only screen and (min-width:1200px) {
 	#login_form_container {
 		width: 400px;
 		float: right;

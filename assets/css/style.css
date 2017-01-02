@@ -31,7 +31,7 @@
 		font-family: 'Open Sans Condensed', sans-serif;
 		height: 75px;
 		line-height: 75px;
-		font-size: 1.7em;
+		font-size: 1.9em;
 		color: #FFF;
 		padding: 0 25px;
 		border-bottom: 1px solid #204A6B;
@@ -43,6 +43,14 @@
 			text-decoration: none;
 			color: inherit;
 		}
+
+/*** SPLASH ***/
+.splash a:link, .splash a{
+	color: #418ACE!important;
+}
+	.splash a:hover {
+		text-decoration: underline;
+	}
 
 /*** RESOURCES ***/
 #resources_container {
@@ -850,7 +858,7 @@ ul.application-process a.complete i {
 }
 
 /*** RESPONSIVE ***/
-@media only screen and (min-width:1366px) {
+@media only screen and (min-width:1200px) {
 	.wrapper {
 		margin: 0 auto;
 		max-width: 1200px;

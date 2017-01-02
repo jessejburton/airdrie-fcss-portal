@@ -15,12 +15,12 @@
 					<a href="javascript:;" id="forgot_btn" class="underlined small-text">Forgot Your Password?</a>
 				</p>
 
-				<input type="submit" id="login_submit" name="login_submit" value="Login" class="btn btn-primary btn-lg btn-block" />
+				<input type="submit" id="login_submit" name="login_submit" value="Log In" class="btn btn-primary btn-lg btn-block" />
 			</div>
 		</form>
 
 		<div class="centered spaced small-text">
-			<p class="spaced"><a href="javascript:;" id="register_btn" class="underlined login">Register Your Agency</a></p>
+			Don't have an account? <p class="spaced"><a href="javascript:;" id="register_btn" class="underlined login">Register Your Agency</a></p>
 		</div>
 	</div>	
 
