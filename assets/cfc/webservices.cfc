@@ -115,7 +115,7 @@
 					<p>You recently requested to reset your password on your #APPLICATION.Name# account.</p>
 					<div>
 						<!--[if mso]>
-						<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.EXAMPLE.com/" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
+						<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
 						<w:anchorlock/>
 						<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
 						  Reset Your Password
