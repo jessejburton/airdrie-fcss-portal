@@ -74,7 +74,7 @@
 
 			<!--- Set the users password --->
 			<cfset updateAccountPassword(LOCAL.qAccountCheck.AccountID, ARGUMENTS.PlainPW)>
-			<cfinvoke component="#APPLICATION.cfcpath#webservices" method="loginAccount" email="#LOCAL.qAccountCheck.Email#" plainpw="#ARGUMENTS.PlainPW#" />
+			<cfinvoke component="#APPLICATION.cfcpath#webservices" method="loginAccount" email="#LOCAL.qAccountCheck.Email#" plainpw="#ARGUMENTS.PlainPW#" csrf="#COOKIE.CSRF#" />
 			<cfreturn true>
 		<cfelse>
 			<cfreturn false>

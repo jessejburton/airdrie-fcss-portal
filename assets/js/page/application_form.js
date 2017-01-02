@@ -83,6 +83,7 @@ function saveApplication(){
 			$.ajax({
 				url: "assets/cfc/webservices.cfc",
 				data: pstr,
+				method: "POST",
 				success: function(response){
 					if(!response.SUCCESS){
 						showAutoreply(response, $("#application_form"));
@@ -178,6 +179,8 @@ function markApplicationSubmitted(){
 
 function reviewState(){
 	_REVIEW_STATE = true;
+	reviewApplication();
+
 	$(".accordion .ui-state-disabled").removeClass("ui-state-disabled");
 
 	var autoreply = new Object();
