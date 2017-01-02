@@ -413,14 +413,16 @@
 		<cfargument name="IndicatorID" type="numeric" required="true">
 		<cfargument name="Questions" type="string" required="true">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
-		
+
+		<cfset LOCAL.Questions = DeserializeJSON(ARGUMENTS.Questions)>
+
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND isAdminAccount()>
 		<!--- Check to make sure the name is ok --->
 			<cfquery name="LOCAL.qCheck">
 				SELECT 	Name
 				FROM 	Survey_tbl
 				<cfif isDefined('ARGUMENTS.SurveyID')>
-					AND SurveyID <> <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer"> 
+					WHERE SurveyID <> <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer"> 
 				</cfif>
 			</cfquery>
 
@@ -455,30 +457,49 @@
 			</cfif>
 
 			<!--- Now handle the questions --->
-			<!--- Remove any existing questions and the re-add them --->
 			<cftransaction>				
-				<cfquery>
-					DELETE FROM SurveyQuestion_tbl WHERE SurveyID = <cfqueryparam value="#LOCAL.SurveyID#" cfsqltype="cf_sql_integer">
-				</cfquery>
-
 				<cfset LOCAL.curOrder = 0>
-				<cfloop list="#ARGUMENTS.Questions#" index="question">
-					<cfquery result="LOCAL.qQuestion">
-						INSERT INTO SurveyQuestion_tbl
-						(
-							Question, SurveyID, isOrder
-						) VALUES (
-							<cfqueryparam value="#question#" cfsqltype="cf_sql_varchar">,
-							<cfqueryparam value="#LOCAL.SurveyID#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#LOCAL.curOrder#" cfsqltype="cf_sql_integer">
-						)
-					</cfquery>
+				<cfset LOCAL.questionIDs = "">  <!--- Use this to know if we need to delete any questions --->
 
-					<!--- Add the answers for this question --->
-					<cfset addAnswersToQuestion(LOCAL.qQuestion.GeneratedKey)>
+				<cfloop array="#LOCAL.Questions#" index="LOCAL.question">
+					<cfset LOCAL.question = DeserializeJSON(LOCAL.question)>
+
+					<cfif StructKeyExists(LOCAL.question, "QuestionID")>
+						<cfquery>
+							UPDATE SurveyQuestion_tbl
+							SET  Question = <cfqueryparam value="#LOCAL.question.Question#" cfsqltype="cf_sql_varchar">,
+								 isOrder = <cfqueryparam value="#LOCAL.curOrder#" cfsqltype="cf_sql_integer">
+							WHERE QuestionID = <cfqueryparam value="#LOCAL.question.QuestionID#" cfsqltype="cf_sql_integer">
+						</cfquery>
+
+						<cfset LOCAL.questionIDs = ListAppend(LOCAL.questionIDs, LOCAL.question.QuestionID)>
+					<cfelse> 
+						<cfquery result="LOCAL.qQuestion">
+							INSERT INTO SurveyQuestion_tbl
+							(
+								Question, SurveyID, isOrder
+							) VALUES (
+								<cfqueryparam value="#LOCAL.question.Question#" cfsqltype="cf_sql_varchar">,
+								<cfqueryparam value="#LOCAL.SurveyID#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#LOCAL.curOrder#" cfsqltype="cf_sql_integer">
+							)
+						</cfquery>
+
+						<!--- Add the answers for this question --->
+						<cfset addAnswersToQuestion(LOCAL.qQuestion.GeneratedKey)>	
+						<cfset LOCAL.questionIDs = ListAppend(LOCAL.questionIDs, LOCAL.qQuestion.GeneratedKey)>					
+					</cfif>
 
 					<cfset LOCAL.curOrder ++>
 				</cfloop>
+
+				<!--- Clear up any questions that were removed --->
+				<cfquery>
+					UPDATE SurveyQuestion_tbl 
+					SET isActive = 0
+					WHERE SurveyID = <cfqueryparam value="#LOCAL.SurveyID#" cfsqltype="cf_sql_integer">
+					AND QuestionID NOT IN (<cfqueryparam value="#LOCAL.QuestionIDs#" cfsqltype="cf_sql_integer" list="true">)
+				</cfquery>
 			</cftransaction>
 
 			<cfreturn getSuccessResponse("Survey has been saved.")>
@@ -521,6 +542,50 @@
 
 		<cfreturn true>
 	</cffunction>
+
+	<cffunction name="getSurvey" access="remote" returntype="struct" returnformat="JSON" 
+		hint="get a survey for editing">
+		<cfargument name="SurveyID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND isAdminAccount()>
+			<cfquery name="LOCAL.qSurvey">
+				SELECT 	Name, Description, IndicatorID, Citation 
+				FROM 	Survey_tbl
+				WHERE 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+
+			<cfset LOCAL.DATA = StructNew()>
+			<cfset LOCAL.DATA.Name = LOCAL.qSurvey.Name> 
+			<cfset LOCAL.DATA.Description = LOCAL.qSurvey.Description>
+			<cfset LOCAL.DATA.IndicatorID = LOCAL.qSurvey.IndicatorID>
+			<cfset LOCAL.DATA.Citation = LOCAL.qSurvey.Citation>
+
+			<!--- Questions --->
+			<cfquery name="LOCAL.qQuestions">
+				SELECT 	QuestionID, Question 
+				FROM 	SurveyQuestion_tbl 
+				WHERE 	isActive = 1
+				AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+				ORDER BY isOrder 
+			</cfquery>
+
+			<cfset LOCAL.DATA.Questions = ArrayNew(1)>
+			<cfoutput query="LOCAL.qQuestions">
+				<cfset LOCAL.q = StructNew()>
+				<cfset LOCAL.q.Question = LOCAL.qQuestions.Question>
+				<cfset LOCAL.q.QuestionID = LOCAL.qQuestions.QuestionID> 
+
+				<cfset ArrayAppend(LOCAL.DATA.Questions, LOCAL.q)>
+			</cfoutput>
+
+			<cfset LOCAL.response = getSuccessResponse("Survey Loaded")>
+			<cfset LOCAL.response.DATA = LOCAL.DATA>
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>	
 
 	<cffunction name="getSurveysByProgramID" access="remote" returntype="struct" returnformat="JSON"
 			hint="Gets all of the surveys available for an application.">

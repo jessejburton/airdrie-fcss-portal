@@ -76,7 +76,7 @@ $(document).ready(function(){
 			pstr.CSRF = $.cookie("CSRF");
 
 		// Create the package array
-		$("#package_elements_list li:not(.heading)").each(function(key, elm){
+		$("#package_elements_list li:not(.heading)").each(function(){
 			var c = new Object();
 				c.SectionTitle = $(this).find("span").text();
 				c.isSectionHeading = $(this).find(".section-heading-checkbox").is(":checked");
