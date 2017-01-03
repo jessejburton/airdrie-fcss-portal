@@ -37,11 +37,13 @@
 								WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
 							</cfquery>
 							
-							<cfif LOCAL.qPackage.isSectionHeading>
-								<h1 class="section-heading">#LOCAL.qContent.data#</h1>
-							<cfelse>
-								<h1>#LOCAL.qPackage.SectionTitle#</h1>
-								<p>#LOCAL.qContent.data#</p>
+							<cfif LEN(TRIM(LOCAL.qContent.data)) GT 0> 	<!--- Only display if it has content --->
+								<cfif LOCAL.qPackage.isSectionHeading>
+									<h1 class="section-heading">#LOCAL.qContent.data#</h1>
+								<cfelse>
+									<h1>#LOCAL.qPackage.SectionTitle#</h1>
+									<p>#LOCAL.qContent.data#</p>
+								</cfif>
 							</cfif>
 						</cfif>
 					</div>

@@ -242,6 +242,7 @@ function updateProgram(){
 	program.MidTermGoals = (typeof $("#mid_term_goals").val() === 'undefined') ? "" : $("#mid_term_goals").val();
 	program.LongTermGoals = (typeof $("#long_term_goals").val() === 'undefined') ? "" : $("#long_term_goals").val();
 
+	console.log(JSON.stringify(program));
 	return program;
 }
 

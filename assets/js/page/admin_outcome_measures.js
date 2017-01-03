@@ -142,7 +142,9 @@ function loadSurvey(surveyid){
 				$("#question_container").append(question);
 			}
 
-			$(".question").first().remove(); 	// remove the blank one
+			if(survey.QUESTIONS.length > 0){
+				$(".question").first().remove(); 	// remove the blank one
+			}
 		}
 	});
 }

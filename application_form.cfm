@@ -32,7 +32,7 @@
 <cfif PROGRAM.Status IS "APPLICATION - Submitted to Airdrie" OR PROGRAM.Status IS "LOI - Submitted to Airdrie" OR PROGRAM.Status IS "APPLICATION - Reviewed" OR PROGRAM.Status IS "APPLICATION - Approved">
 	<cfset showForm = false>
 	<div class="autoreply autoreply-info autoreply-visible">
-		<p><strong>Submitted!</strong> This form has been submitted to the City of Airdrie, changes can not be made at this time. If you would like to review what was submitted you can download a <a href="javascript:;" class="link" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> printable version</a>.
+		<p><strong>Submitted!</strong> This form has been submitted to the City of Airdrie, changes can not be made at this time. If you would like to review what was submitted you can download a <a href="admin_create_package.cfm?programID=<cfoutput>#URL.ID#</cfoutput>" class="link" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> printable version</a>.
 	</div>
 </cfif>
 
@@ -357,7 +357,7 @@
 						<div class="form-buttons clearfix"> 
 							<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
 							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
-							<a href="javascript:;" class="pull-right small-text link inline" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
+							<a href="admin_create_package.cfm?programID=<cfoutput>#URL.ID#</cfoutput>" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
 						</div>
 					</div>	
 				</div>

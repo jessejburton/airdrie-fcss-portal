@@ -92,6 +92,7 @@ $(document).ready(function(){
 		$.ajax({
 			url: "assets/cfc/webservices.cfc",
 			data: pstr,
+			Method: "POST",
 			success: function(response){	
 				showAutoreply(response, $(".wrapper"));
 				if(response.SUCCESS){

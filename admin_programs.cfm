@@ -61,8 +61,15 @@
 									<tr><th>Agency:</th><td>#XMLFormat(program.AGENCY)#</td></tr>
 								</tbody>
 								<tfoot>
-									<tr><th colspan="2">
-										<a class="btn btn-secondary" target="_blank" href="admin_create_package.cfm?programID=#EncodeForHTMLAttribute(program.PROGRAMID)#"><i class="fa fa-file-text"></i> View Full Details</a></th></tr>
+									<tr>
+										<th>
+											<a class="btn btn-secondary" target="_blank" href="admin_create_package.cfm?programID=#EncodeForHTMLAttribute(program.PROGRAMID)#"><i class="fa fa-file-text"></i> View Full Details</a>
+										</th>
+										<th style="text-align: right;">
+											<input type="number" class="allocate-fund-amount input-currency" placeholder="Amount" style="width: 200px">
+											<button class="btn btn-primary" type="button"><i class="fa fa-check-circle"></i> Allocate Funds</button>
+										</th>
+									</tr>
 								</tfoot>
 							</table>
 						</div>

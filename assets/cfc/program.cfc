@@ -23,8 +23,8 @@
 		<cfargument name="Alignment" type="string" default="">
 		<cfargument name="MissionFit" type="string" default="">
 		<cfargument name="ConsideredPartnerships" type="string" default="">
-		<cfargument name="EstimatedFromAirdrie" type="numeric" default="0">
-		<cfargument name="EstimatedFromOther" type="numeric" default="0">
+		<cfargument name="EstimatedFromAirdrie" type="numeric" required="false">
+		<cfargument name="EstimatedFromOther" type="numeric" required="false">
 		<cfargument name="ShortTermGoals" type="string" default="">
 		<cfargument name="MidTermGoals" type="string" default="">
 		<cfargument name="LongTermGoals" type="string" default="">
@@ -87,8 +87,10 @@
 					,Alignment = <cfqueryparam value="#ARGUMENTS.Alignment#" cfsqltype="cf_sql_varchar">
 					,MissionFit = <cfqueryparam value="#ARGUMENTS.MissionFit#" cfsqltype="cf_sql_varchar">
 					,ConsideredPartnerships = <cfqueryparam value="#ARGUMENTS.ConsideredPartnerships#" cfsqltype="cf_sql_varchar">
-					,EstimatedFromAirdrie = <cfqueryparam value="#ARGUMENTS.EstimatedFromAirdrie#" cfsqltype="cf_sql_float">
-					,EstimatedFromOther = <cfqueryparam value="#ARGUMENTS.EstimatedFromOther#" cfsqltype="cf_sql_float">
+					<cfif isDefined('ARGUMENTS.EstimatedFromAirdrie') AND isDefined('ARGUMENTS.EstimatedFromOther')>
+						,EstimatedFromAirdrie = <cfqueryparam value="#ARGUMENTS.EstimatedFromAirdrie#" cfsqltype="cf_sql_float">
+						,EstimatedFromOther = <cfqueryparam value="#ARGUMENTS.EstimatedFromOther#" cfsqltype="cf_sql_float">
+					</cfif>
 					,ShortTermGoals = <cfqueryparam value="#ARGUMENTS.ShortTermGoals#" cfsqltype="cf_sql_varchar">
 					,MidTermGoals = <cfqueryparam value="#ARGUMENTS.MidTermGoals#" cfsqltype="cf_sql_varchar">
 					,LongTermGoals = <cfqueryparam value="#ARGUMENTS.LongTermGoals#" cfsqltype="cf_sql_varchar">
