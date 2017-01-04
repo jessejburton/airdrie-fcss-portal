@@ -22,32 +22,60 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-		<!--- If they haven't selected indicators yet --->
-		<cfdump var="#REQUEST.SURVEYS#">
+			<!--- If they haven't selected indicators yet --->
+			<cfif ArrayLen(REQUEST.SURVEYS) IS 0>
+				<h1>Outcome Measures</h1>
+				<p>Agencies are asked to conduct outcome measurement for each of their FCSS funded programs. Outcome measurement is used to improve accountability, and more importantly, to help programs improve services. Outcome measurement addresses the question: "What difference has this program made in the lives of individuals, families or the community?"</p>
 
-			<h1>Surveys For <cfoutput>#PROGRAM.ProgramName#</cfoutput></h1>
+				<p>Before you begin, ensure that you have already met with the City of Airdrie FCSS team to discuss your program's outcomes and indicators. Meetings are usually held in February and March.</p>
 
-			<div class="autoreply autoreply-success" id="imported_message">
-				<p><strong>Success!</strong> Your survey data has been imported.</p>
-			</div>
+				<cfoutput>
+					<p><strong class="blue">No, we haven't met with the FCSS team yet.</strong><br />Contact Social Planning at #REQUEST.SETTINGS.SupportNumber# or via email at <a href="mailto:#REQUEST.SETTINGS.AdminEmail#">#REQUEST.SETTINGS.AdminEmail#</a></p>
+				</cfoutput>
 
-			<cfoutput>
-				<cfloop array="#REQUEST.SURVEYS#" index="survey">
-					<div class="survey">
-						<h3>#survey.NAME#</h3>
-						<p>#survey.DESCRIPTION#</p>						
-						<p class="small-text"><em>#survey.citation#</em></p>
-						<div class="form-buttons clearfix">
-							<button class="btn btn-secondary pull-left" onclick="selectFile();">Import Data</button>
-							<a class="btn btn-primary pull-right" href="survey.cfm?SurveyID=#URLEncodedFormat(survey.ID)#&ProgramID=#URLEncodedFormat(URL.ProgramID)#">Begin Survey</a>
-							<input type="file" id="import_file_select" class="hidden" />
+				<p><strong class="blue">Yes, we've met with the FCSS team already.</strong><br />Please continue by selecting up to two indicators for your program, keeping in mind what was discussed at your meeting:</p>
+
+				<div id="indicators">
+					<!--- Get the available indicators --->
+					<cfinvoke component="#APPLICATION.cfcpath#survey" method="getIndicators" returnvariable="qIndicators" />
+					<cfset currentMeasure = "">
+					<cfoutput query="qIndicators">
+						<cfif currentMeasure NEQ qIndicators.Measure>
+							<h4>#qIndicators.Measure#</h4>
+							<cfset currentMeasure = qIndicators.Measure>
+						</cfif>
+						<label for="indicator_#qIndicators.IndicatorID#" style="font-weight: normal;"><input type="checkbox" id="indicator_#qIndicators.IndicatorID#" class="indicator-checkbox" value="#qIndicators.IndicatorID#" /> #qIndicators.Indicator#</label><br />
+					</cfoutput>
+				</div>
+
+				<div class="form-buttons clearfix">
+					<input type="hidden" id="programID" value="<cfoutput>#URL.ProgramID#</cfoutput>" />
+					<button type="button" class="save-indicators btn btn-primary pull-right"><i class="fa fa-save"></i> Save</button>
+				</div>	
+			<cfelse>
+				<h1>Surveys For <cfoutput>#PROGRAM.ProgramName#</cfoutput></h1>
+
+				<div class="autoreply autoreply-success" id="imported_message">
+					<p><strong>Success!</strong> Your survey data has been imported.</p>
+				</div>
+
+				<cfoutput>
+					<cfloop array="#REQUEST.SURVEYS#" index="survey">
+						<div class="survey">
+							<h3>#survey.NAME#</h3>
+							<p>#survey.DESCRIPTION#</p>						
+							<p class="small-text"><em>#survey.citation#</em></p>
+							<div class="form-buttons clearfix">
+								<button class="btn btn-secondary pull-left" onclick="selectFile();">Import Data</button>
+								<a class="btn btn-primary pull-right" href="survey.cfm?SurveyID=#URLEncodedFormat(survey.ID)#&ProgramID=#URLEncodedFormat(URL.ProgramID)#">Begin Survey</a>
+								<input type="file" id="import_file_select" class="hidden" />
+							</div>
+
+							<p class="small-text"><a href="survey_template.xlsx" class="link underlined" target="_blank">download</a> the import template for this survey.</p>
 						</div>
-
-						<p class="small-text"><a href="survey_template.xlsx" class="link underlined" target="_blank">download</a> the import template for this survey.</p>
-					</div>
-				</cfloop>
-			</cfoutput>
-			
+					</cfloop>
+				</cfoutput>
+			</cfif>
 		</div>
 	</section>	
 

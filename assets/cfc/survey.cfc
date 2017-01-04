@@ -13,7 +13,6 @@
 			FROM Survey_tbl
 			WHERE SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
 			AND isActive = 1
-			Order by isOrder
 		</cfquery>
 
 		<cfset LOCAL.response.SurveyID = ARGUMENTS.SurveyID>

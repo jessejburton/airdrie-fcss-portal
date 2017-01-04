@@ -2,12 +2,19 @@
 <cfif NOT isDefined('URL.SurveyID') OR NOT isNumeric(URL.SurveyID)>
 	<cflocation url="index.cfm" addtoken="false">
 <cfelse>
+	<!--- Check Permission for program --->
+	<cfinvoke component="#APPLICATION.cfcpath#core" method="checkProgramAccessByAccountID" programID="#URL.ProgramID#" returnvariable="programpermission" />
+	<cfinvoke component="#APPLICATION.cfcpath#core" method="checkSurveyAccessByProgramID" surveyID="#URL.SurveyID#" programID="#URL.ProgramID#" returnvariable="surveypermission" />
+	<cfif NOT programpermission OR NOT surveypermission>
+		<cflocation url="index.cfm" addtoken="false">
+	</cfif>
+
 	<!--- Get the approrpriate survey data --->
-	<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getSurveyByID" SurveyID="#URL.SurveyID#" returnvariable="response" />
+	<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getSurveyByID" csrf="#COOKIE.CSRF#" SurveyID="#URL.SurveyID#" returnvariable="response" />
 	<cfset REQUEST.SURVEY = response.DATA>
 </cfif>
 
-<!--- Get lookup values (TODO - It might be a good idea to switch these to lookup tables but because I am not sure if they are going to be changing the questions I wanted to wait until I get more information before putting in the time) --->
+<!--- Get lookup values (TODO - It might be a good idea to switch these to lookup tables but because I am not sure if they are going to be changing the questions I wanted to wait until I get more information before putting in the time) They do not appear to be clear as to what they want specifically for surveys as it seems to change. I did ask Jessie if it is ok to assume that for now at least all questions will be answered 1 - 5 --->
 <cfset GENDER = ArrayNew(1)>
 	<cfset ArrayAppend(GENDER, "Male")>
 	<cfset ArrayAppend(GENDER, "Female")>

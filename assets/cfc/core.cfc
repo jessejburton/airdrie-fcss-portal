@@ -98,4 +98,26 @@
 		<cfreturn LOCAL.qCheck.recordcount IS 1>
 	</cffunction>
 
+<!--- Check if a specific program has access to a survey --->
+	<cffunction name="checkSurveyAccessByProgramID" returntype="boolean" returnformat="JSON" access="public"
+		hint="Checks to see if a program has access to a specific survey.">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="SurveyID" type="numeric" required="true">
+
+		<!--- Get the indicator for the surve --->
+		<cfquery name="LOCAL.qSurvey">
+			SELECT IndicatorID FROM Survey_tbl 
+			WHERE SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<!--- Check the program --->
+		<cfquery name="LOCAL.qProgram">
+			SELECT  ProgramID FROM ProgramIndicator_tbl
+			WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+			AND 	IndicatorID = <cfqueryparam value="#LOCAL.qSurvey.IndicatorID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfreturn LOCAL.qProgram.recordcount IS 1>
+	</cffunction>	
+
 </cfcomponent>

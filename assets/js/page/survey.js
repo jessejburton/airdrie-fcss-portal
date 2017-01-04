@@ -6,7 +6,7 @@ $(document).ready(function(){
 	// Open the first panel
 	$('.accordion').accordion('option', 'active', 0);
 
-	var autocompleteURL = "assets/cfc/webservices.cfc?method=getParticipantSuggestBySurveyID&SurveyID=" + parseInt($("#SurveyID").val());
+	var autocompleteURL = "assets/cfc/webservices.cfc?method=getParticipantSuggestBySurveyID&csrf=" + $.cookie("CSRF") + "&SurveyID=" + parseInt($("#SurveyID").val());
 
 	$("#participant_name").autocomplete({
 	    source: autocompleteURL,
@@ -122,7 +122,7 @@ function saveSurvey(){
 	});
 
 	var pstr = new Object();
-	pstr.method = "saveSurvey";
+	pstr.method = "saveSurveyData";
 	pstr.SurveyID = $("#SurveyID").val();
 	pstr.ClientID = $("#client_id").val();	
 	pstr.preData = preData.toString();

@@ -508,6 +508,39 @@
 		</cfif>
 	</cffunction>
 
+	<cffunction name="saveProgramIndicators" access="remote" returntype="Struct" returnformat="JSON"
+		hint="Saves the selected indicators for a program.">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="Indicators" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true">
+
+		<!--- First check permissions --->
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND checkProgramAccessByAccountID(ARGUMENTS.ProgramID)>
+			<cftransaction>
+				<!--- Remove existing Indicators --->
+				<cfquery>
+					DELETE FROM ProgramIndicator_tbl
+					WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+				</cfquery>
+
+				<cfloop list="#ARGUMENTS.Indicators#" index="LOCAL.i">
+					<cfquery>
+						INSERT INTO ProgramIndicator_tbl
+						( ProgramID, IndicatorID ) VALUES
+						(
+							<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#LOCAL.i#" cfsqltype="cf_sql_integer">
+						)
+					</cfquery>
+				</cfloop>
+			</cftransaction>
+
+			<cfreturn getSuccessResponse("Indicators have been saved.")>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>
+
 	<cffunction name="addAnswersToQuestion" access="private" returntype="boolean" returnformat="JSON"
 			hint="Adds the questions 1 - 5 to the survey">
 		<!--- 	At the time that the system was created they only wanted all questions to be 1-5 answers and so the database is set
@@ -567,7 +600,6 @@
 				FROM 	SurveyQuestion_tbl 
 				WHERE 	isActive = 1
 				AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
-				ORDER BY isOrder 
 			</cfquery>
 
 			<cfset LOCAL.DATA.Questions = ArrayNew(1)>
