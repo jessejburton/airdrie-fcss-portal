@@ -43,7 +43,7 @@
 			<div id="current_programs">
 				<cfoutput>
 					<cfloop array="#Programs#" index="program">
-						<div class="program">
+						<div class="program" data-programid="#program.ProgramID#">
 							<table class="table">
 								<thead>
 									<tr><th colspan="2"><h1>#XMLFormat(program.ProgramName)#</h1></th></tr>
@@ -59,15 +59,20 @@
 										<tr><th>Mailing Address:</th><td>#XMLFormat(program.PROGRAMMAILINGADDRESS)#</td></tr>
 									</cfif>
 									<tr><th>Agency:</th><td>#XMLFormat(program.AGENCY)#</td></tr>
+									<tr><th>Estimated Budget:</th><td>#XMLFormat(DollarFormat(program.ESTIMATEDFROMAIRDRIE))#</td></tr>
 								</tbody>
 								<tfoot>
 									<tr>
 										<th>
 											<a class="btn btn-secondary" target="_blank" href="admin_create_package.cfm?programID=#EncodeForHTMLAttribute(program.PROGRAMID)#"><i class="fa fa-file-text"></i> View Full Details</a>
 										</th>
-										<th style="text-align: right;">
-											<input type="number" class="allocate-fund-amount input-currency" placeholder="Amount" style="width: 200px">
-											<button class="btn btn-primary" type="button"><i class="fa fa-check-circle"></i> Allocate Funds</button>
+										<th style="text-align: right;" class="fund-section">
+											<cfif LEN(program.FUNDSALLOCATED) IS 0>
+												<input type="number" class="allocate-fund-amount input-currency" placeholder="Amount" style="width: 200px">
+												<button class="btn btn-primary program-fund" type="button"><i class="fa fa-check-circle"></i> Allocate Funds</button>
+											<cfelse>
+												Funded in the amount of #DollarFormat(program.FUNDSALLOCATED)#
+											</cfif>
 										</th>
 									</tr>
 								</tfoot>

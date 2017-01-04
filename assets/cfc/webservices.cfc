@@ -587,38 +587,6 @@
 		</cfif>
 	</cffunction>	
 
-	<cffunction name="getSurveysByProgramID" access="remote" returntype="struct" returnformat="JSON"
-			hint="Gets all of the surveys available for an application.">
-		<cfargument name="ProgramID" type="numeric" required="true">
-		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
-
-		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
-			<cfquery name="LOCAL.qSurveys">
-				SELECT	SurveyID, Name, Description, Citation
-				FROM 	Survey_tbl
-				WHERE isActive = 1
-				ORDER BY isOrder
-			</cfquery>
-
-			<cfset LOCAL.response = getSuccessResponse("")>
-
-			<cfset LOCAL.response.DATA = ArrayNew(1)>
-			<cfoutput query="LOCAL.qSurveys">
-				<cfset LOCAL.Survey = StructNew()>
-				<cfset LOCAL.Survey.ID = LOCAL.qSurveys.SurveyID>
-				<cfset LOCAL.Survey.Name = LOCAL.qSurveys.Name>
-				<cfset LOCAL.Survey.Description = LOCAL.qSurveys.Description>
-				<cfset LOCAL.Survey.Citation = LOCAL.qSurveys.Citation>
-
-				<cfset ArrayAppend(LOCAL.response.DATA, LOCAL.Survey)>
-			</cfoutput>
-
-			<cfreturn LOCAL.response>
-		<cfelse>
-			<cfthrow message="An error has occurred, please try again later." />
-		</cfif>
-	</cffunction>
-
 	<cffunction name="getSurveyByID" access="remote" returntype="struct" returnformat="JSON"
 			hint="Gets all of the information about a specific survey including questions and responses.">
 		<cfargument name="SurveyID" type="numeric" required="true">
@@ -1011,6 +979,23 @@
 
 				<cfreturn getSuccessResponse("Program status has been updated.")>
 			</cfif>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>	
+
+<!--- MARK PROGRAM FUNDED --->
+	<cffunction name="markProgramFunded" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Marks the program funded and sets the FundsAllocated field in the program table">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="Amount" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND isAdminAccount()>
+			<cfinvoke component="#APPLICATION.cfcpath#program" method="markProgramFunded" programID="#ARGUMENTS.ProgramID#" Amount="#ARGUMENTS.Amount#" returnvariable="LOCAL.marked" />
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This program has been marked as funded.")>
+
+			<cfreturn LOCAL.response>
 		<cfelse>
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>

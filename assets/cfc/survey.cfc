@@ -126,5 +126,32 @@
 	    </cfquery>
 	    
 	    <cfreturn LOCAL.qIndicators>
-	</cffunction>	
+	</cffunction>
+
+	<cffunction name="getSurveysByProgramID" access="public" returntype="struct" returnformat="JSON"
+			hint="Gets all of the surveys available for an application.">
+		<cfargument name="ProgramID" type="numeric" required="true">
+
+		<cfquery name="LOCAL.qSurveys">
+			SELECT	SurveyID, Name, Description, Citation
+			FROM 	Survey_tbl
+			WHERE isActive = 1
+			AND IndicatorID IN (SELECT IndicatorID FROM ProgramIndicator_tbl WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">)
+		</cfquery>
+
+		<cfset LOCAL.response = getSuccessResponse("")>
+
+		<cfset LOCAL.response.DATA = ArrayNew(1)>
+		<cfoutput query="LOCAL.qSurveys">
+			<cfset LOCAL.Survey = StructNew()>
+			<cfset LOCAL.Survey.ID = LOCAL.qSurveys.SurveyID>
+			<cfset LOCAL.Survey.Name = LOCAL.qSurveys.Name>
+			<cfset LOCAL.Survey.Description = LOCAL.qSurveys.Description>
+			<cfset LOCAL.Survey.Citation = LOCAL.qSurveys.Citation>
+
+			<cfset ArrayAppend(LOCAL.response.DATA, LOCAL.Survey)>
+		</cfoutput>
+
+		<cfreturn LOCAL.response>
+	</cffunction>		
 </cfcomponent>

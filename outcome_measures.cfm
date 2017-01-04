@@ -14,20 +14,18 @@
 	<cfabort>
 </cfif>
 
-<cfquery name="qProgram">
-	SELECT ProgramName
-	FROM Program_tbl
-	WHERE ProgramID = <cfqueryparam value="#URL.ProgramID#" cfsqltype="cf_sql_integer">
-</cfquery>
-
-<!--- Get the approrpriate survey data --->
-<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getSurveysByProgramID" ProgramID="#URL.ProgramID#" returnvariable="response" />
+<!--- Get the approrpriate survey and program data --->
+<cfinvoke component="#APPLICATION.cfcpath#survey" method="getSurveysByProgramID" ProgramID="#URL.ProgramID#" returnvariable="response" />
+<cfinvoke component="#APPLICATION.cfcpath#program" method="getProgramByID" ProgramID="#URL.ProgramID#" returnvariable="PROGRAM" />
 <cfset REQUEST.SURVEYS = response.DATA>
 
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<h1>Surveys For <cfoutput>#qProgram.ProgramName#</cfoutput></h1>
+		<!--- If they haven't selected indicators yet --->
+		<cfdump var="#REQUEST.SURVEYS#">
+
+			<h1>Surveys For <cfoutput>#PROGRAM.ProgramName#</cfoutput></h1>
 
 			<div class="autoreply autoreply-success" id="imported_message">
 				<p><strong>Success!</strong> Your survey data has been imported.</p>

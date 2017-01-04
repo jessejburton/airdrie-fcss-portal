@@ -210,7 +210,7 @@
 
 		<!--- Get the program data but make sure the user has access to it --->
 		<cfquery name="LOCAL.qPrograms">
-			SELECT 	ProgramID, ProgramName, ProgramStatement, PrimaryContactName, PrimaryPhone, PrimaryEmail, ProgramAddress, ProgramMailingAddress, Status, a.Name
+			SELECT 	ProgramID, ProgramName, ProgramStatement, PrimaryContactName, PrimaryPhone, PrimaryEmail, ProgramAddress, ProgramMailingAddress, Status, a.Name, FundsAllocated, EstimatedFromAirdrie, EstimatedFromOther
 			FROM 	Program_vw p 
 			INNER JOIN Agency_tbl a on p.AgencyID = a.AgencyID
 			WHERE	Year(p.DateAdded) = <cfqueryparam value="#ARGUMENTS.Year#" cfsqltype="cf_sql_integer">
@@ -229,7 +229,10 @@
 			<cfset LOCAL.program.ProgramAddress = LOCAL.qPrograms.ProgramAddress>
 			<cfset LOCAL.program.ProgramMailingAddress = LOCAL.qPrograms.ProgramMailingAddress>
 			<cfset LOCAL.program.Agency = LOCAL.qPrograms.Name>
-			<cfset LOCAL.program.CurrentStatus = LOCAL.qPrograms.Status>			
+			<cfset LOCAL.program.CurrentStatus = LOCAL.qPrograms.Status>
+			<cfset LOCAL.program.FundsAllocated = LOCAL.qPrograms.FundsAllocated>	
+			<cfset LOCAL.program.EstimatedFromAirdrie = LOCAL.qPrograms.EstimatedFromAirdrie>	
+			<cfset LOCAL.program.EstimatedFromOther = LOCAL.qPrograms.EstimatedFromOther>		
 
 			<cfquery name="LOCAL.qProgramStatus">
 				SELECT 	s.Status, ps.DateAdded, ps.AccountID, a.Name
@@ -379,4 +382,33 @@
 
 		<cfreturn true>
 	</cffunction>	
+
+<!--- Marks a program funded --->
+	<cffunction name="markProgramFunded" access="public" returnformat="JSON" returntype="boolean"
+		hint="Marks a program as funded and updates the FundsAllocated" field in the Program table>
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="Amount" type="numeric" required="true">
+
+			<!--- Update the funded amount --->
+			<cfquery>
+				UPDATE 	Program_tbl
+				SET 	FundsAllocated = <cfqueryparam value="#ARGUMENTS.Amount#" cfsqltype="cf_sql_float">
+				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer"> 
+			</cfquery>
+
+			<!--- Insert the Status record --->
+			<cfquery>
+				INSERT INTO ProgramStatus_tbl
+				( ProgramID, StatusID, AccountID )
+				VALUES 
+				(
+					<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+					(SELECT StatusID FROM Status_tbl WHERE Status = 'PROGRAM - Funded'),
+					<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_integer">
+				)
+			</cfquery>
+
+		<cfreturn true>
+	</cffunction>
+
 </cfcomponent>

@@ -20,7 +20,7 @@
 		</form>
 
 		<div class="centered spaced small-text">
-			Don't have an account? <p class="spaced"><a href="javascript:;" id="register_btn" class="underlined login">Register Your Agency</a></p>
+			<p class="spaced">Don't have an account? <a href="javascript:;" id="register_btn" class="underlined login">Register Your Agency</a></p>
 		</div>
 	</div>	
 
