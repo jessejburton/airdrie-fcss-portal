@@ -68,7 +68,7 @@
 			<h1><cfoutput>#XMLFormat(REQUEST.SURVEY.Name)#</cfoutput></h1>
 			<p><cfoutput>#XMLFormat(REQUEST.SURVEY.Description)#</cfoutput></p>
 
-			<p><a href="surveys.cfm?ProgramID=<cfoutput>#URLEncodedFormat(URL.ProgramID)#</cfoutput>" class="link"><i class="fa fa-arrow-circle-o-left"></i> Back to Surveys</a></p>
+			<p><a href="outcome_measures.cfm?ProgramID=<cfoutput>#URLEncodedFormat(URL.ProgramID)#</cfoutput>" class="link"><i class="fa fa-arrow-circle-o-left"></i> Back to Surveys</a></p>
 
 			<form id="survey">
 			<!--- HIDDEN FIELDS --->
