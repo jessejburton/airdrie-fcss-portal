@@ -88,7 +88,7 @@
 	</section>	
 
 	<!--- USED FOR MESSAGE --->
-	<div id="superadmin">
+	<div id="superadmin" class="hidden">
 		<p>Please enter both your password and the super password to confirm funding this program in the amount of $<span id="fund_amount" style="font-weight: bold;"></span>.</p>
 		<p>
 			<label for="your_password">Your Password:</label><br />
@@ -104,7 +104,7 @@
 		</p>	
 	</div>
 
-	<div id="enterpassword">
+	<div id="enterpassword" class="hidden">
 		<p>Please enter your password to approve this program.</p>
 		<p>
 			<label for="your_password">Your Password:</label><br />

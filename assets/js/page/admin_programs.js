@@ -10,7 +10,7 @@ $(document).on("click", ".program-review", function(){
 $(document).on("click", ".program-approve", function(){
 	var program = $(this).closest(".program");
 	
-	$("#message").html($("#enterpassword").clone(false));
+	$("#message").html($("#enterpassword").clone(false).removeClass("hidden"));
 	$("#message").find("#confirm_approve_program").on("click", function(){
 		// TODO - check password first
 	    
@@ -46,7 +46,7 @@ $(document).on("click", ".program-fund", function(){
 		return false;
 	}
 
-	$("#message").html($("#superadmin").clone(false));
+	$("#message").html($("#superadmin").clone(false).removeClass("hidden"));
 	$("#message").find("#fund_amount").html(program.find(".allocate-fund-amount").val());
 	$("#message").find("#confirm_fund_program").on("click", function(){
 		// TODO - FIRST CHECK PASSWORDS
