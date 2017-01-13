@@ -118,14 +118,25 @@ $(document).on("click", ".add-board", function(){
 	sm.find("input").first().focus();
 });
 
+function showMessage(){
+	$("#message").animate({"top":0}, 350);
+	$("#message").find(".cancel").on("click", hideMessage);
+}
+
+function hideMessage(){
+	$("#message").animate({"top": -(50+$("#message").height())}, 350, function(){
+		$("#message").html("");
+	});
+}
+
 function closeResources(){
 	$("#resources_container").fadeOut("slow");	
-	$("html, body").css({ overflow: 'auto', height: 'auto' });			// Enable Scrolling
+	enableScroll();														// Enable Scrolling
 }
 
 function showResources(){
-	$("#resources_container").fadeIn("slow");	
-	$("html, body").css({ overflow: 'hidden', height: '100%' });			// Disable Scrolling
+	$("#resources_container").fadeIn("slow");
+	disableScroll();													// Disable Scrolling
 }
 
 function currentTime(){
@@ -188,4 +199,12 @@ function isScrolledIntoView(elem)
 /*** UTILITY FUNCTIONS ***/
 String.prototype.inList = function(list){
    return ( list.indexOf(this.toString()) != -1)
+}
+
+function disableScroll(){
+	$('html, body').css({ overflow: 'hidden', height: '100%' });
+}
+
+function enableScroll(){
+	$("html, body").css({ overflow: 'auto', height: 'auto' });
 }

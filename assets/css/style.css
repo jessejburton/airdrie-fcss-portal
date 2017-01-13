@@ -194,6 +194,22 @@
 		    color: #525252;
 		}
 
+/*** MESSAGE ***/
+	#message {
+		width: 500px;
+		height: auto;
+		padding: 25px;
+		background-color: #FFF;
+		border: 1px solid #BABABA;
+		position: fixed;
+		left: 50%;
+		margin-left: -250px;
+		top: -500px;
+		-webkit-box-shadow: 5px 5px 14px 0px rgba(0,0,0,0.33);
+        -moz-box-shadow: 5px 5px 14px 0px rgba(0,0,0,0.33);
+		box-shadow: 5px 5px 14px 0px rgba(0,0,0,0.33);
+	}
+
 /*** FOOTER ***/
 	#footer {
 		text-align: center;

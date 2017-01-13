@@ -8,8 +8,12 @@ $(document).on("click", ".program-review", function(){
 /* Approving a program
 *********************************************************************************************/
 $(document).on("click", ".program-approve", function(){
-	if(confirm("Are you sure you would like to approve this?")){
-	    var program = $(this).closest(".program");
+	var program = $(this).closest(".program");
+	
+	$("#message").html($("#enterpassword").clone(false));
+	$("#message").find("#confirm_approve_program").on("click", function(){
+		// TODO - check password first
+	    
 		var pstr = new Object();
 			pstr.programID = program.data("programid");
 			pstr.Method = "markApplicationApproved";
@@ -20,42 +24,52 @@ $(document).on("click", ".program-approve", function(){
 			data: pstr,
 			success: function(response){
 				if(response.SUCCESS){
+					hideMessage();
 					program.remove();
 				}
 				showAutoreply(response, ".wrapper")
 			}
 		});
-	}
+	});
+	showMessage();
 });
 
 /* Funding a program
 *********************************************************************************************/
 $(document).on("click", ".program-fund", function(){
     var program = $(this).closest(".program");
-	var pstr = new Object();
-		pstr.programID = program.data("programid");
-		pstr.amount = program.find(".allocate-fund-amount").val();
-		pstr.Method = "markProgramFunded";
-		pstr.CSRF = $.cookie("CSRF");
+    	amount = program.find(".allocate-fund-amount").val();
 
 	// Make sure they have entered a value	
-	if(pstr.amount == 0 || pstr.amount.length == 0){
+	if(amount == 0 || amount.length == 0){
 		showAutoreply({"SUCCESS":false,"TYPE":"error","MESSAGE":"Please enter an amount to allocate"}, program.find(".fund-section"));
 		return false;
 	}
 
-	if(confirm("Are you sure you would like to fund this program?")){
+	$("#message").html($("#superadmin").clone(false));
+	$("#message").find("#fund_amount").html(program.find(".allocate-fund-amount").val());
+	$("#message").find("#confirm_fund_program").on("click", function(){
+		// TODO - FIRST CHECK PASSWORDS
+
+		var pstr = new Object();
+			pstr.programID = program.data("programid");
+			pstr.amount = amount;
+			pstr.Method = "markProgramFunded";
+			pstr.CSRF = $.cookie("CSRF");
+
 		$.ajax({
 			url: "assets/cfc/webservices.cfc",
 			data: pstr,
 			success: function(response){
 				if(response.SUCCESS){
 					program.find(".fund-section").html("Funded in the amount of $" + pstr.amount);
+					hideMessage();
 				}
 				showAutoreply(response, program)
 			}
-		});
-	}
+		});		
+	});
+	showMessage();
 });
 
 /* Hitting enter to allocate funds 

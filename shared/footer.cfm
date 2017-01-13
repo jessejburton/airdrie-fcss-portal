@@ -37,6 +37,7 @@
 		</div>
 	</div>
 
+	<div id="message"></div>
 	<div id="saving"><img src="assets/images/saving-gear.gif" /> Saving...</div>
 	<div id="loading"><img src="assets/images/saving-gear.gif" /> Loading...</div>
 
