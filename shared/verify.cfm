@@ -19,9 +19,5 @@
 				<input type="button" id="verify_submit" name="verify_submit" value="Set Password" class="btn btn-primary btn-lg btn-block" />
 			</div>
 		</form>
-
-		<div class="centered spaced small-text">
-			<p><a href="javascript:;" id="register_btn" class="spaced underlined login">Register Your Agency</a></p>
-		</div>
 	</div>	
 </div>

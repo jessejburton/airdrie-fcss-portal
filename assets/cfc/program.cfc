@@ -29,10 +29,10 @@
 		<cfargument name="MidTermGoals" type="string" default="">
 		<cfargument name="LongTermGoals" type="string" default="">
 
-		<cfif NOT isNumeric(ARGUMENTS.EstimatedFromAirdrie)>
+		<cfif isDefined('ARGUMENTS.EstimatedFromAirdrie') AND NOT isNumeric(ARGUMENTS.EstimatedFromAirdrie)>
 			<cfset ARGUMENTS.EstimatedFromAirdrie = 0>
 		</cfif>
-		<cfif NOT isNumeric(ARGUMENTS.EstimatedFromOther)>
+		<cfif isDefined('ARGUMENTS.EstimatedFromOther') AND NOT isNumeric(ARGUMENTS.EstimatedFromOther)>
 			<cfset ARGUMENTS.EstimatedFromOther = 0>
 		</cfif>
 

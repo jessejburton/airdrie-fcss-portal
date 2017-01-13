@@ -89,18 +89,6 @@
 		<cfreturn LOCAL.qCheck.recordcount IS 1>
 	</cffunction>	
 
-	<cffunction name="getOutcomeMeasures" access="public" returntype="query" returnformat="JSON"
-		hint="Get a list of the availbale outcome measures.">
-
-		<cfquery name="LOCAL.qOutcomeMeasures">
-			SELECT 	Measure, MeasureID 
-			FROM	Measures_tbl
-			WHERE	isActive = 1
-		</cfquery>
-
-		<cfreturn LOCAL.qOutcomeMeasures>
-	</cffunction>
-
 	<cffunction name="getAllSurveys" access="public" returntype="query" returnformat="JSON"
 	    hint="Gets a query of all active surveys and their ID's">
 
@@ -111,20 +99,94 @@
 	    </cfquery>
 	    
 	    <cfreturn LOCAL.qSurveys>
+	</cffunction>	
+
+	<cffunction name="getAreas" access="public" returntype="query" returnformat="JSON"
+		hint="Get a list of the availbale Areas.">
+
+		<cfquery name="LOCAL.qAreas">
+			SELECT 	Area, AreaID 
+			FROM	Area_tbl
+			WHERE	isActive = 1
+		</cfquery>
+
+		<cfreturn LOCAL.qAreas>
+	</cffunction>	
+
+	<cffunction name="getOutcomes" access="public" returntype="query" returnformat="JSON"
+		hint="Get a list of the availbale outcomes.">
+
+		<cfquery name="LOCAL.qOutcomes">
+			SELECT 	Outcome, OutcomeID 
+			FROM	Outcome_tbl
+			WHERE	isActive = 1
+		</cfquery>
+
+		<cfreturn LOCAL.qOutcomes>
 	</cffunction>
 
 	<cffunction name="getIndicators" access="public" returntype="query" returnformat="JSON"
+		hint="Get a list of the availbale indicators.">
+
+		<cfquery name="LOCAL.qIndicators">
+			SELECT 	Indicator, IndicatorID 
+			FROM	Outcome_tbl
+			WHERE	isActive = 1
+		</cfquery>
+
+		<cfreturn LOCAL.qOutcomes>
+	</cffunction>
+
+	<cffunction name="getFullIndicators" access="public" returntype="struct" returnformat="JSON"
 	    hint="Gets a query of all available indicators">
 
-	    <cfquery name="LOCAL.qIndicators">
-	    	SELECT 	IndicatorID, Indicator, m.Measure 
-	    	FROM 	Indicator_tbl i 
-	    	INNER JOIN Measures_tbl m ON m.MeasureID = i.MeasureID 
-	    	WHERE i.isActive = 1
-	    	ORDER BY m.Measure
-	    </cfquery>
-	    
-	    <cfreturn LOCAL.qIndicators>
+	    <cfset LOCAL.response = StructNew()>
+
+	    <!--- Areas --->
+	    <cfset LOCAL.qAreas = getAreas()>
+	    <cfset LOCAL.response.AREAS = ArrayNew(1)>
+	   	<cfoutput query="LOCAL.qAreas">
+	   		<cfset LOCAL.area = StructNew()>
+	   		<cfset LOCAL.area.AREAID = LOCAL.qAreas.AreaID> 
+	   		<cfset LOCAL.area.AREA = LOCAL.qAreas.Area> 
+	   		<cfset LOCAL.area.OUTCOMES = ArrayNew(1)>
+
+		   	<!--- Outcomes --->
+			<cfquery name="LOCAL.qOutcomes">
+				SELECT 	Outcome, OutcomeID 
+				FROM	Outcome_tbl
+				WHERE	isActive = 1
+				AND 	AreaID = <cfqueryparam value="#LOCAL.qAreas.AreaID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+		   	<cfloop query="LOCAL.qOutcomes">
+		   		<cfset LOCAL.outcome = StructNew()>
+		   		<cfset LOCAL.outcome.OUTCOMEID = LOCAL.qOutcomes.OutcomeID> 
+		   		<cfset LOCAL.outcome.OUTCOME = LOCAL.qOutcomes.Outcome> 
+		   		<cfset LOCAL.outcome.INDICATORS = ArrayNew(1)>
+
+		   		<!--- Indicators --->
+			    <cfquery name="LOCAL.qIndicators">
+			    	SELECT 	IndicatorID, Indicator
+			    	FROM 	Indicator_tbl 
+			    	WHERE 	isActive = 1
+			    	AND 	OutcomeID = <cfqueryparam value="#LOCAL.qOutcomes.OutcomeID#" cfsqltype="cf_sql_integer">
+			    	ORDER BY Indicator
+			    </cfquery>
+
+				<cfloop query="LOCAL.qIndicators">
+			    	<cfset LOCAL.indicator = StructNew()>
+			    	<cfset LOCAL.indicator.INDICATORID = LOCAL.qIndicators.IndicatorID> 
+			    	<cfset LOCAL.indicator.INDICATOR = LOCAL.qIndicators.Indicator>
+			    	<cfset ArrayAppend(LOCAL.outcome.INDICATORS, LOCAL.indicator)>
+			    </cfloop>
+
+		   		<cfset ArrayAppend(LOCAL.area.OUTCOMES, LOCAL.outcome)>
+		   	</cfloop>	
+
+	   		<cfset ArrayAppend(LOCAL.response.AREAS, LOCAL.area)>
+	   	</cfoutput>	    
+
+	    <cfreturn LOCAL.response>
 	</cffunction>
 
 	<cffunction name="getSurveysByProgramID" access="public" returntype="struct" returnformat="JSON"

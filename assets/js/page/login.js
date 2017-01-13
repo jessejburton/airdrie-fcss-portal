@@ -1,5 +1,6 @@
-$(document).ready(function(){
-	
+var interval; 	// Used for timeout after password try
+
+$(document).ready(function(){	
 	// Show the registration form if clicking on the register button
 	$("#register_btn").on("click", function(){
 		$("#login").fadeOut("slow", function(){
@@ -48,6 +49,9 @@ $(document).ready(function(){
 
 // Login Function
 function login(){
+	// disable the login button
+	$("#login_submit").prop("disabled", true);
+
 	var pstr = new Object();
 	pstr.method = "loginAccount";
 	pstr.email = $("#login_email").val();
@@ -63,6 +67,9 @@ function login(){
 			if(response.SUCCESS){
 				window.location = "index.cfm";
 			} else {
+				$("#timeleft").find("span").text(3);			// Set the time to 3 seconds
+				$("#timeleft").show();
+				interval = setInterval(showTimeLeft, 1000); 	// Start the countdown
 				var msg = getFormattedAutoreply(response, true);
 				$("#login_form_group").prepend(msg);
 			}
@@ -96,4 +103,18 @@ function register(){
 			$("#register").html(getFormattedAutoreply(response, true));
 		}
 	});
+}
+
+function showTimeLeft(){
+	$("#timeleft").show();
+	var timeleft = parseInt($("#timeleft").find("span").text());
+		timeleft = timeleft-1;
+	$("#timeleft").find("span").html(timeleft);
+	console.log(timeleft);
+	
+	if(timeleft == 0){
+		clearInterval(interval);
+		$("#timeleft").hide();
+		$("#login_submit").prop("disabled", false);
+	}
 }

@@ -94,7 +94,6 @@ $(document).on("keyup", ".expenditure-add-value", function(){
 		}
 	});
 
-	$("#expenditure_total").html("$ " + total.toFixed(2));
 	row.find(".row-total").val(total);
 	
 	updateTableColumns($(this).closest(".table"));
@@ -306,6 +305,7 @@ function saveBudget(){
 		$.ajax({
 			url: "assets/cfc/webservices.cfc",
 			data: pstr,
+			method: "POST",
 			success: function(response){
 				console.log(response);
 				$("#last_saved").html("Last Saved: " + currentTime());

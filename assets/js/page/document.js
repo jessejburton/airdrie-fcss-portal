@@ -13,6 +13,16 @@ $(document).ready(function(){
         var n = $(sender).val().lastIndexOf('\\');
         var file = $(sender).val().substring(n + 1);
 
+        // Validate file type. This also gets checked Coldfusion side in document_upload.cfm 
+        // so if you ever need to add any valid types it needs to be changed there.
+        var ext = file.substr(file.lastIndexOf('.') + 1);
+        var valid = "jpg, png, pdf, doc, docx, xls, xlsx, txt";
+
+        if(valid.indexOf(ext) == -1){
+            showAutoreply({"TYPE":"error","MESSAGE":"Document must be one of the following types: " + valid.toString()}, $("#document_type_display"));
+            return false;            
+        }
+
         $("#no_documents").remove();
 
         $(this).closest("#upload_document_form").ajaxSubmit({
@@ -27,12 +37,16 @@ $(document).ready(function(){
                 percent.html(percentVal + " (" + file + ")");
             },
             success: function(response){
-                var d = $(".document.template").clone(false);
-                $(d).removeClass("template");
-                $(status).replaceWith(d);
-                $(d).find(".document-filename").html(response.FILENAME);
-                $(d).find(".document-filename").attr("href", $(d).find(".document-filename").attr("href") + response.FILENAME);
-                $(d).data("id", response.DOCUMENTID);
+                if(response.SUCCESS == false){
+                    showAutoreply(response, $("#document_type_display").closest(".form-group"));
+                } else {
+                    var d = $(".document.template").clone(false);
+                    $(d).removeClass("template");
+                    $(status).replaceWith(d);
+                    $(d).find(".document-filename").html(response.FILENAME);
+                    $(d).find(".document-filename").attr("href", $(d).find(".document-filename").attr("href") + response.FILENAME);
+                    $(d).data("id", response.DOCUMENTID);
+                }
             }
         });
     });
@@ -51,7 +65,7 @@ $(document).ready(function(){
                 if(response.SUCCESS){
                     updateDocumentTypeDisplay();
                 } else {
-                    showAutoreply(response, $("#document_type_display"));
+                    showAutoreply(response, $("#document_type_display").closest(".form-group"));
                 }
             }
         });

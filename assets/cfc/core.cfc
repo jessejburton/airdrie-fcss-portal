@@ -83,6 +83,16 @@
 		<cfreturn isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS True>
 	</cffunction>
 
+<!--- Only allow access to this page if this is an admin account --->
+	<cffunction name="adminOnly" returntype="void" access="public"
+		hint="Used to secure admin pages, if this account is not an admin account then return them to the home page.">
+
+		<cfif NOT isAdminAccount()>
+			<cflocation url="index.cfm" addtoken="false">
+		</cfif>
+
+	</cffunction>
+
 <!--- Check if a specific account has access to a program --->
 	<cffunction name="checkProgramAccessByAccountID" returntype="boolean" returnformat="JSON" access="public"
 		hint="Checks to see if the current user has access to a program.">

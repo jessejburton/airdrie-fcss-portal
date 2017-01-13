@@ -1,3 +1,6 @@
+<!--- Admin only page --->
+<cfinvoke component="#APPLICATION.cfcpath#core" method="adminOnly" />
+
 <cfinclude template="shared/header.cfm">
 
 <!--- MAIN CONTENT --->

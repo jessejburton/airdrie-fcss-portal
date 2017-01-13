@@ -46,7 +46,7 @@
 
 				<p>Please complete all of the following information. You can click on the heading for a section to jump directly to that section of the form</p> 
 				<p>
-					<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
+					<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 					<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
 					<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #XMLFormat(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 				</p>
@@ -357,14 +357,14 @@
 						<div class="form-buttons clearfix"> 
 							<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
 							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
-							<a href="admin_create_package.cfm?programID=<cfoutput>#URL.ID#</cfoutput>" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
+							<a href="admin_create_package.cfm?programID=" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
 						</div>
 					</div>	
 				</div>
 			</cfoutput>				
 
 			<p>
-				<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
+				<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
 				<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #XMLFormat(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 			</p>

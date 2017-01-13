@@ -43,8 +43,8 @@
 			<cfset LOCAL.BUDGET.BudgetID = LOCAL.qBudget.GeneratedKey>
 			<cfset LOCAL.BUDGET.PreviousYearBudget = 0>
 			<cfset LOCAL.BUDGET.RequestedFromAirdrie = 0>
-			<cfset LOCAL.REVENUESEXPLANATION = "">
-			<cfset LOCAL.EXPENDITURESEXPLANATION = "">
+			<cfset LOCAL.BUDGET.REVENUESEXPLANATION = "">
+			<cfset LOCAL.BUDGET.EXPENDITURESEXPLANATION = "">
 			<cfset LOCAL.BUDGET.PERCENTCHILD = 0>
 			<cfset LOCAL.BUDGET.PERCENTFAMILY = 0>
 			<cfset LOCAL.BUDGET.PERCENTADULT = 0>

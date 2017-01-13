@@ -9,6 +9,11 @@ $(document).ready(function(){
 	_APPLICATION_TYPE = $("#application_type").val();
 	_PROGRAM_STATUS = $("#program_status").val();
 
+	// Enable save button if it has already been saved
+	if(_PROGRAM_STATUS.length > 0){
+		$(".save").removeClass("disabled");
+	}
+
 	// Check for states
 	if(_PROGRAM_STATUS == "LOI - Saved for Review" || _PROGRAM_STATUS == "APPLICATION - Saved for Review"){
 		_REVIEW_STATE = true;
@@ -42,9 +47,9 @@ $(document).ready(function(){
 	// Enable saving once something has been added to the Program Name
 	$("#program_name").on("keyup", function(){
 		if($(this).val().length > 0){
-			$("#save").removeClass("disabled");
+			$(".save").removeClass("disabled");
 		} else {
-			$("#save").addClass("disabled");
+			$(".save").addClass("disabled");
 		}
 	});
 

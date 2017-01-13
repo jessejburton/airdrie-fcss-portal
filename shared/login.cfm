@@ -16,6 +16,7 @@
 				</p>
 
 				<input type="submit" id="login_submit" name="login_submit" value="Log In" class="btn btn-primary btn-lg btn-block" />
+				<div id="timeleft" class="hidden centered small-text">retry in <span>3</span> seconds</div>
 			</div>
 		</form>
 

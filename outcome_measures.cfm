@@ -30,23 +30,23 @@
 				<p>Before you begin, ensure that you have already met with the City of Airdrie FCSS team to discuss your program's outcomes and indicators. Meetings are usually held in February and March.</p>
 
 				<cfoutput>
-					<p><strong class="blue">No, we haven't met with the FCSS team yet.</strong><br />Contact Social Planning at #REQUEST.SETTINGS.SupportNumber# or via email at <a href="mailto:#REQUEST.SETTINGS.AdminEmail#">#REQUEST.SETTINGS.AdminEmail#</a></p>
+					<p><strong class="blue">No, we haven't met with the FCSS team yet.</strong><br />Contact Social Planning at #REQUEST.SETTINGS.SupportNumber# or via email at <a href="mailto:#REQUEST.SETTINGS.AdminEmail#" class="link">#REQUEST.SETTINGS.AdminEmail#</a></p>
 				</cfoutput>
 
 				<p><strong class="blue">Yes, we've met with the FCSS team already.</strong><br />Please continue by selecting up to two indicators for your program, keeping in mind what was discussed at your meeting:</p>
-
-				<div id="indicators">
-					<!--- Get the available indicators --->
-					<cfinvoke component="#APPLICATION.cfcpath#survey" method="getIndicators" returnvariable="qIndicators" />
-					<cfset currentMeasure = "">
-					<cfoutput query="qIndicators">
-						<cfif currentMeasure NEQ qIndicators.Measure>
-							<h4>#qIndicators.Measure#</h4>
-							<cfset currentMeasure = qIndicators.Measure>
-						</cfif>
-						<label for="indicator_#qIndicators.IndicatorID#" style="font-weight: normal;"><input type="checkbox" id="indicator_#qIndicators.IndicatorID#" class="indicator-checkbox" value="#qIndicators.IndicatorID#" /> #qIndicators.Indicator#</label><br />
+				
+				<!--- Get the available indicators --->
+				<cfinvoke component="#APPLICATION.cfcpath#survey" method="getFullIndicators" returnvariable="Indicators" />
+				<cfdump var="#Indicators#">
+<!---				<div id="indicators">	
+					<cfoutput>
+						<cfloop array="#Indicators.AREAS#" index="a">
+							<div class="area">
+								<div class="area-heading">#a.AREA#</div>
+							</div>
+						</cfloop>
 					</cfoutput>
-				</div>
+				</div>--->
 
 				<div class="form-buttons clearfix">
 					<input type="hidden" id="programID" value="<cfoutput>#URL.ProgramID#</cfoutput>" />
