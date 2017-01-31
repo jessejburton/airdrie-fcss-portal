@@ -130,11 +130,11 @@
 
 		<cfquery name="LOCAL.qIndicators">
 			SELECT 	Indicator, IndicatorID 
-			FROM	Outcome_tbl
+			FROM	Indicator_tbl
 			WHERE	isActive = 1
 		</cfquery>
 
-		<cfreturn LOCAL.qOutcomes>
+		<cfreturn LOCAL.qIndicators>
 	</cffunction>
 
 	<cffunction name="getFullIndicators" access="public" returntype="struct" returnformat="JSON"

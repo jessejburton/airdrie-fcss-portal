@@ -49,10 +49,6 @@
 					<select id="indicatorID" class="input-half">
 						<option value="">--- Select an indicator ---</option>
 						<cfoutput query="qIndicators">
-							<cfif currentMeasure NEQ qIndicators.Measure>
-								<option value="" disabled class="heading">#qIndicators.Measure#</option>
-								<cfset currentMeasure = qIndicators.Measure>
-							</cfif>
 							<option value="#qIndicators.IndicatorID#">#qIndicators.Indicator#</option>
 						</cfoutput>
 					</select>
