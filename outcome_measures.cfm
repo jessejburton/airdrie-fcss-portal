@@ -37,16 +37,26 @@
 				
 				<!--- Get the available indicators --->
 				<cfinvoke component="#APPLICATION.cfcpath#survey" method="getFullIndicators" returnvariable="Indicators" />
-				<cfdump var="#Indicators#">
-<!---				<div id="indicators">	
+				<div id="indicators" class="clearfix">	
 					<cfoutput>
 						<cfloop array="#Indicators.AREAS#" index="a">
 							<div class="area">
-								<div class="area-heading">#a.AREA#</div>
+								<h1 style="background-color: #EncodeForHTMLAttribute(a.COLOR)#">#XMLFormat(a.AREA)#</h1>			
+								<cfloop array="#a.OUTCOMES#" index="o">
+									<div class="outcome" style="background-color: #EncodeForHTMLAttribute(a.COLOR)#">
+										<h2><strong>Outcome:</strong> #XMLFormat(o.OUTCOME)#</h2>
+										<h2><strong>Indicators:</strong></h2>
+										<ul>
+											<cfloop array="#o.INDICATORS#" index="i">
+												<li class="indicator" data-id="#EncodeForHTMLAttribute(i.INDICATORID)#" style="background-color: #EncodeForHTMLAttribute(a.COLOR)#">#XMLFormat(i.INDICATOR)#</li>
+											</cfloop>
+										</ul>
+									</div>
+								</cfloop>
 							</div>
 						</cfloop>
 					</cfoutput>
-				</div>--->
+				</div>
 
 				<div class="form-buttons clearfix">
 					<input type="hidden" id="programID" value="<cfoutput>#URL.ProgramID#</cfoutput>" />

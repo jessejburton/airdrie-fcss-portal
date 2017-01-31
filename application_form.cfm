@@ -21,6 +21,15 @@
 		<div class="wrapper clearfix">
 			<h1><cfoutput>#PROGRAM.TYPE#</cfoutput></h1>
 
+			<cfif PROGRAM.TYPE IS "Letter Of Intent" AND NOT REQUEST.SETTINGS.ISENABLEDLETTEROFINTENT>
+				<div class="autoreply autoreply-info autoreply-visible"><p>Thank you for your interest in Airdrie FCSS funding for locally-driven preventive social programs. Letters of Intent for funding for the <cfoutput>#Year(Now())#</cfoutput> year have now closed. Please check again in <cfoutput>#Year(Now()) + 1#</cfoutput>.
+ 				<br /><br />
+				<span><i class='fa fa-question-circle'></i> For inquiries, please contact the City of Airdrie Social Planning team at <a href="mailto:<cfoutput>#REQUEST.SETTINGS.AdminEmail#</cfoutput>"><cfoutput>#REQUEST.SETTINGS.AdminEmail#</cfoutput></a> or by phone at <cfoutput>#REQUEST.SETTINGS.SupportNumber#</cfoutput>.</span></p></div>
+			<cfelseif PROGRAM.TYPE IS "Application Form" AND NOT REQUEST.SETTINGS.ISENABLEDAPPLICATIONS>
+				<div class="autoreply autoreply-info autoreply-visible"><p>Thank you for your interest in Airdrie FCSS funding for locally-driven preventive social programs. Applications for funding for the <cfoutput>#Year(Now())#</cfoutput> year have now closed. Please check again in <cfoutput>#Year(Now()) + 1#</cfoutput>.
+ 				<br /><br />
+				<span><i class='fa fa-question-circle'></i> For inquiries, please contact the City of Airdrie Social Planning team at <a href="mailto:<cfoutput>#REQUEST.SETTINGS.AdminEmail#</cfoutput>"><cfoutput>#REQUEST.SETTINGS.AdminEmail#</cfoutput></a> or by phone at <cfoutput>#REQUEST.SETTINGS.SupportNumber#</cfoutput>.</span></p></div>
+			</cfif>
 			<!--- DEVELOPMENT FEATURE --->
 			<cfif APPLICATION.environment IS "development">
 				<p><input type="button" id="fill" class="btn btn-primary" value="FILL REQUIRED FIELDS" /></p>
@@ -304,60 +313,63 @@
 					<h3 class="ui-state-disabled">Review and Submit</h3>
 					<div>
 						<div id="application_review_display">	
-							<h2>Program Information</h2>		
+							<h1>Program Information</h1>		
 								<h3>Program Name</h3><p class="program-name"></p>							
 								<h3>Program Statement</h3><p class="program-statement"></p>
 								<h3>Target Audience</h3><p class="target-audience"></p>
 
-							<h2>Contact Information</h2>
+							<h1>Contact Information</h1>
 								<h3>Primary Contact Name</h3><p class="primary-contact-name"></p>
 								<h3>Primary Phone</h3><p class="primary-phone"></p>
 								<h3>Primary Email</h3><p class="primary-email"></p>
 								<h3>Address</h3><p class="program-address"></p>
 								<h3>Mailing Address</h3><p class="program-mailing-address"></p>
 							
-							<h2>Theory of Change</h2>
+							<h1>Theory of Change</h1>
 								<h3>Need</h3><p class="need"></p>							
 								<h3>Goal</h3><p class="goal"></p>							
 								<h3>Strategies</h3><p class="strategies"></p>		
 								<h3>Rationale</h3><p class="rationale"></p>
 								<h3>Footnotes</h3><p class="footnotes"></p>
 							
-							<h2>Alignment</h2>
+							<h1>Alignment</h1>
 								<h3>How does the program meet the FCSS prevention focus?</h3><p class="prevention-focus"></p>
 								<h3>How does your program align with City of Airdrie's interests</h3><p class="alignment"></p>
 								<h3>How does this program fit with your agency mission and vision?</h3><p class="mission-fit"></p>
 								<h3>Have you considered partnerships?</h3><p class="considered-partnerships"></p>
 
 						<cfif PROGRAM.TYPE IS "Letter of Intent">
-							<h2>Budget Summary</h2>
+							<h1>Budget Summary</h1>
 								<h3>Amount Requested from Airdrie</h3><p class="estimated-from-airdrie"></p>
 								<h3>Amount from Other Sources</h3><p class="estimated-from-other"></p>
 								<h3>Budget Total</h3><p class="budget-total"></p>
 						</cfif>								
-
+												
 						<cfif PROGRAM.TYPE IS "Application Form">
-							<h2>Board Members</h2>
-							<div class="board-summary"></div>
+						<!--- Placeholder for board members --->
+							<div id="board-members-display"></div>
 
-							<h2>Outcomes Plan</h2>
+							<h1>Outcomes Plan</h1>
 								<h3>Short Term Goals</h3><p class="short-term-goals"></p>
 								<h3>Mid Term Goals</h3><p class="mid-term-goals"></p>
 								<h3>Long Term Goals</h3><p class="long-term-goals"></p>
 
-							<h2>Documents</h2>
-							<div class="document-summary"></div>
+						<!--- Placeholder for Documents --->
+							<div id="documents-display"></div>
 
-							<h2>Budget Summary</h2>
-							<div class="budget-summary"></div>							
+						<!--- Placeholder for Budget Summary --->
+							<div id="budget-summary-display"></div>
+													
 						</cfif>		
 
 						</div>
 						
 						<div class="form-buttons clearfix"> 
-							<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
+							<cfif (PROGRAM.TYPE IS "Letter Of Intent" AND REQUEST.SETTINGS.ISENABLEDLETTEROFINTENT) OR (PROGRAM.TYPE IS "Application" AND REQUEST.SETTINGS.ISENABLEDAPPLICATIONS)>
+								<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
+							</cfif>
 							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
-							<a href="admin_create_package.cfm?programID=" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
+							<a href="admin_create_package.cfm?programID=#encodeForHTMLAttribute(URL.ID)#" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
 						</div>
 					</div>	
 				</div>

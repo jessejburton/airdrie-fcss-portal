@@ -71,7 +71,7 @@
 			<cfquery name="LOCAL.qCheckAccount">
 				SELECT 	AccountID, Password, GUID
 				FROM	Account_tbl
-				WHERE	Email = <cfqueryparam value="#ARGUMENTS.Email#" cfsqltype="varchar">
+				WHERE	Email = <cfqueryparam value="#ARGUMENTS.Email#" cfsqltype="cf_sql_varchar">
 				AND 	isActive = 1
 				AND 	DateVerified IS NOT NULL
 			</cfquery>
@@ -88,6 +88,33 @@
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>			
 	</cffunction>
+
+<!--- CHECK ACCOUNT PASSWORD --->
+	<cffunction name="checkPassword" returntype="struct" returnformat="JSON" access="remote"
+		hint="Used for when a user needs to re-enter their password. Checks based on currently logged in user">
+		<cfargument name="pword" type="string" required="true">
+		<cfargument name="spword" type="string" required="false">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfquery name="LOCAL.qCheckAccount">
+				SELECT 	AccountID, Password, GUID
+				FROM	Account_tbl
+				WHERE	Email = <cfqueryparam value="#REQUEST.USER.Email#" cfsqltype="cf_sql_varchar">
+				AND 	isActive = 1
+				AND 	DateVerified IS NOT NULL
+			</cfquery>
+
+			<!--- Validate the password --->
+			<cfif LOCAL.qCheckAccount.recordcount IS 1 AND validatePassword(ARGUMENTS.PlainPW, LOCAL.qCheckAccount.Password)>
+				<cfreturn getSuccessResponse("")>
+			<cfelse>
+				<cfreturn getErrorResponse("Password is incorrect.")>
+			</cfif>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>			
+	</cffunction>	
 
 	<cffunction name="resetPassword" returntype="struct" returnformat="JSON" access="remote"
 		hint="Sends the user an email that they can be used to set their password.">
@@ -1151,6 +1178,7 @@
 		<cfargument name="isEnabledLetterOfIntent" type="boolean" required="false">
 		<cfargument name="SupportNumber" type="string" required="false">
 		<cfargument name="AdminEmail" type="string" required="false">
+		<cfargument name="SuperPassword" type="string" required="false">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
@@ -1171,6 +1199,9 @@
 					</cfif>
 					<cfif isDefined('ARGUMENTS.isEnabledApplications')>
 						,isEnabledApplications = <cfqueryparam value="#ARGUMENTS.isEnabledApplications#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif isDefined('ARGUMENTS.SuperPassword')>
+						,SuperPassword = <cfqueryparam value="#ARGUMENTS.SuperPassword#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					<cfif isDefined('ARGUMENTS.SupportNumber')>
 						,SupportNumber = <cfqueryparam value="#ARGUMENTS.SupportNumber#" cfsqltype="cf_sql_varchar">

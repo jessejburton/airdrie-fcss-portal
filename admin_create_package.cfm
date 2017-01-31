@@ -3,14 +3,19 @@
 	Add the ability to control whether or not the package includes the header and footer 
 --->
 
-<!--- Check permissions --->
-<cfinvoke component="#APPLICATION.cfcpath#core" method="checkProgramAccessByAccountID" programID="#URL.programID#" returnvariable="userHasAccess" />
-<cfinvoke component="#APPLICATION.cfcpath#core" method="isAdminAccount" returnvariable="isAdminAccount" />
+<!--- Check permissions if program ID is passed in through the URL (means single program id and may not be admin) --->
+<!--- This will ALWAYS just serve the package that is named "Program" TODO - restrict the ability to remove or rename this package --->
+<cfif StructKeyExists(URL, "ProgramID")>
+	<cfinvoke component="#APPLICATION.cfcpath#core" method="checkProgramAccessByAccountID" programID="#URL.ProgramID#" returnvariable="userHasAccess" />
+<cfelse>
+	<!--- Must be an admin account --->
+	<cfinvoke component="#APPLICATION.cfcpath#core" method="isAdminAccount" returnvariable="userHasAccess" />
+</cfif>
 
-<cfif isAdminAccount OR userHasAccess>
+<cfif userHasAccess>
 	<cfset output = ArrayNew(1)>
 
-	<cfif isDefined('URL.ProgramID')>
+	<cfif StructKeyExists(URL, "ProgramID")>
 	<!--- If Program ID is passed in, make sure the user has access and then just display all details for that program --->
 		<cfinvoke component="#APPLICATION.cfcpath#package" method="getPackageContent" ProgramID="#URL.ProgramID#" returnvariable="DATA" />
 

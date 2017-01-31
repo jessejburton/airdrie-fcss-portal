@@ -8,8 +8,14 @@
 					<p><strong>Get Started!</strong> You are now ready to begin the application process. The first step to every application is the <a href="application_form.cfm">Letter of Intent</a> (LOI). The LOI allows you to sketch out your application and determine your basic eligibility before creating the full application. Your LOI will be reviewed by Social Planning staff before you can complete the full application. 
 				</div>
 			</cfif>
-				
-			<p class="spaced large-text"><a href="application_form.cfm" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Start New Program Application</a></p>
+			
+			<cfif REQUEST.SETTINGS.ISENABLEDLETTEROFINTENT>
+				<p class="spaced large-text"><a href="application_form.cfm" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Start New Program Application</a></p>
+			<cfelse>
+				<div class="autoreply autoreply-info autoreply-visible"><p>Thank you for your interest in Airdrie FCSS funding for locally-driven preventive social programs. Letters of Intent for funding for the <cfoutput>#Year(Now())#</cfoutput> year have now closed. Please check again in <cfoutput>#Year(Now()) + 1#</cfoutput>.
+ 				<br /><br />
+				<span><i class='fa fa-question-circle'></i> For inquiries, please contact the City of Airdrie Social Planning team at <a href="mailto:<cfoutput>#REQUEST.SETTINGS.AdminEmail#</cfoutput>"><cfoutput>#REQUEST.SETTINGS.AdminEmail#</cfoutput></a> or by phone at <cfoutput>#REQUEST.SETTINGS.SupportNumber#</cfoutput>.</span></p></div>
+			</cfif>
 
 			<!--- Get any existing programs --->
 			<cfinvoke component="#APPLICATION.cfcpath#program" method="getProgramsByAgencyID" AgencyID="#REQUEST.AGENCY.AGENCYID#" returnvariable="PROGRAMS" />

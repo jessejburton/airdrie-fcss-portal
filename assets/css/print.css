@@ -22,3 +22,32 @@ h2 {
 .document-section {
 	margin-bottom: 25px;
 }
+/*** TABLES ***/
+	.table {
+		width: 100%;
+		border: none;
+		border-collapse: collapse;
+	}
+	.table td {
+		position: relative;
+	}
+		.table th {
+			border-bottom: 1px solid #000;
+		}
+		.table th, .table td {
+		    padding: 10px;
+		    text-align: left;
+		}
+		.table tbody tr:nth-child(even) {
+			background-color: #f2f2f2
+		}
+	.table a, .table a:link {
+		color: #235E7C;
+		text-decoration: underline;;
+	}
+	.table a:hover {
+		text-decoration: none;
+	}
+	.table tfoot {
+		border-top: 1px solid #000;
+	}

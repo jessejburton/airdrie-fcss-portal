@@ -78,4 +78,52 @@
 		<cfreturn LOCAL.qPackages>
 	</cffunction>	
 
+	<cffunction name="getPackageElements" access="public" returntype="Array" returnformat="JSON"
+		hint="Gets an array containing all of the package elements organized heirarchichally.">
+
+		<cfset LOCAL.elementArray = ArrayNew(1)>
+
+		<cfquery name="LOCAL.qPackageElements">
+			SELECT 	ElementID, Description
+			FROM 	PackageBuilder_tbl
+			WHERE ParentID IS NULL
+			ORDER BY isOrder
+		</cfquery>
+
+		<cfoutput query="LOCAL.qPackageElements">
+			<cfset LOCAL.element = StructNew()>
+			<cfset LOCAL.element.ID = LOCAL.qPackageElements.ElementID>
+			<cfset LOCAL.element.Description = LOCAL.qPackageElements.Description>
+			
+
+			<cfset ArrayAppend(LOCAL.elementArray, LOCAL.element)>
+		</cfoutput>			
+
+		<cfreturn LOCAL.elementArray>
+	</cffunction>
+
+	<cffunction name="getPackageElementChildren" access="private" returntype="Array" returnformat="JSON"
+		hint="Gets all of the child elements for a specific package">
+		<cfargument name="ParentID" type="numeric" required="true">
+
+		<cfset LOCAL.elementArray = ArrayNew(1)>
+
+		<cfquery name="LOCAL.qPackageElementChildren">
+			SELECT 	ElementID, Description
+			FROM 	PackageBuilder_tbl
+			WHERE 	ParentID = <cfqueryparam value="#ARGUMENTS.ParentID#" cfsqltype="cf_sql_integer">
+			ORDER BY isOrder
+		</cfquery>
+
+		<cfoutput query="LOCAL.qPackageElementChildren">
+			<cfset LOCAL.element = StructNew()>
+			<cfset LOCAL.element.ID = LOCAL.qPackageElementChildren.ElementID>
+			<cfset LOCAL.element.Description = LOCAL.qPackageElementChildren.Description>
+
+			<cfset ArrayAppend(LOCAL.elementArray, LOCAL.element)>
+		</cfoutput>
+
+		<cfreturn LOCAL.elementArray>
+	</cffunction>
+
 </cfcomponent>

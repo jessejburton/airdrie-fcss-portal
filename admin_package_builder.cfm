@@ -47,7 +47,7 @@
 						If you would like to add more elements just add them to the package_available_elements_list, each li shoud have the
 						following data items:
 
-							data-tableview		The name of the table of view to pull the data from (required if template is not used)
+							data-tableview		The name of the table or view to pull the data from (required if template is not used)
 							data-column 		The column to pull the data from (required if template is not used)
 							data-template		Create a page in the templates folder to display the appropriate data, ProgramID will be passed in
 
@@ -57,6 +57,10 @@
 				<div class="clearfix">
 					<div id="package_available_elements">
 						<h1>Package Elements</h1>
+
+						<!---<cfinvoke component="#APPLICATION.cfcpath#package" method="getPackageElements" returnvariable="aPackageElements" />
+						<cfdump var="#aPackageElements#">--->
+
 						<ul id="package_available_elements_list">
 							<li class="heading">Agency Elements</li>
 							<li data-column="Name" data-tableview="Agency_vw"><span>Agency Name</span></li> 

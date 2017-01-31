@@ -555,6 +555,43 @@
 		padding-top: 5px;
 	}
 
+/*** OUTCOME MEASURES ***/
+	.area {
+		font-size: .9em;
+		width: 30%;
+		float: left;
+		color: #FFF!important;
+	}
+		.area ul {
+			list-style: none;
+			padding: 0;
+		}
+		.area li, .area h1, .area div {
+			padding: 5px;
+			margin: 5px;
+		}
+			.area li {
+				display: block;
+				cursor: pointer;
+				padding-left: 30px;
+			}
+			.area li:hover:after, .area li.selected:after {
+				padding-left: 10px;
+				font-family: FontAwesome;
+				content: "\f05d";
+			}
+		.area h1, .area h2 {
+			font-size: 1.1em;
+			color: #FFF!important;
+		}
+		.area h1 {
+			text-align: center;
+		}
+		.area h2 {
+			font-weight: normal;
+			padding-left: 10px;
+		}
+
 /*** UTILITIES ***/
 	.border-bottom {
 		border-bottom: 1px solid #A2A2A2;
@@ -839,6 +876,7 @@
 		opacity: .7;
 	}
 
+
 /*** Programs ***/
 .application-only, .loi-only {
 	display: none!important;
@@ -962,5 +1000,10 @@ ul.application-process a.complete i {
 	padding-top: 5px;
 	padding-bottom: 5px;
 	margin: 0;
+}
+#application_review_display .table {
+	font-size: .9em;
+	padding: 15px;
+	margin-bottom: 25px;
 }
 

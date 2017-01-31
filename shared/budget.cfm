@@ -18,7 +18,7 @@
 		<tr>
 			<cfoutput>
 				<th width="40%">Source</th>
-				<th width="30%">#YEAR(NOW())# Program Budget
+				<th width="30%">#YEAR(NOW())# Program Budget</th>
 				<th width="30%">#YEAR(NOW()) + 1# Revenue Amount</th>								
 			</cfoutput>	
 		</tr>
@@ -90,6 +90,11 @@
 		</tr>
 	</tfoot>
 </table>
+
+<p>
+	<label for="revenues_explanation">Revenues Explanation</label><br />						
+	<textarea id="revenues_explanation" placeholder="Please explain your revenues" class="textarea-large"><cfoutput>#XMLFormat(BUDGET.REVENUESEXPLANATION)#</cfoutput></textarea>		
+</p>
 
 <hr />
 
@@ -230,18 +235,15 @@
 	</table>
 </div>
 
+<p>
+	<label for="expenditures_explanation">Expenditures Explanation</label><br />						
+	<textarea id="expenditures_explanation" placeholder="Please explain your expenditures" class="textarea-large"><cfoutput>#XMLFormat(BUDGET.EXPENDITURESEXPLANATION)#</cfoutput></textarea>		
+</p>	
+
 <hr />
 
 <div class="budget-bottom">
-	<p>
-		<label for="revenues_explanation">Revenues Explanation</label><br />						
-		<textarea id="revenues_explanation" placeholder="Please explain your revenues" class="textarea-large"><cfoutput>#XMLFormat(BUDGET.REVENUESEXPLANATION)#</cfoutput></textarea>		
-	</p>
-	<p>
-		<label for="expenditures_explanation">Expenditures Explanation</label><br />						
-		<textarea id="expenditures_explanation" placeholder="Please explain your expenditures" class="textarea-large"><cfoutput>#XMLFormat(BUDGET.EXPENDITURESEXPLANATION)#</cfoutput></textarea>		
-	</p>
-
+	<h2>Target Groups</h2>
 	<p>Please provide the percentage of funds that will be applied to each target group below</p>
 	<span class="label-sub">Please try to be as accurate as possible but estimates are ok.</span>
 	<ul id="#sliders" class="list-no-style">

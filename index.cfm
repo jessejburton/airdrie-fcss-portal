@@ -12,7 +12,7 @@
 
 		<h1>Dashboard</h1>
 
-<!--- TODO - Add dashboard items 
+<!--- TODO - Add dashboard items --->
 		<cfif isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS true>
 			<h1>City of Airdrie Dashboard</h1>
 			<div class="dashboard-panel dashboard-panel-small">
@@ -82,7 +82,7 @@
 				</div>
 			</div>
 		</cfif>
---->
+
 		
 		</div>
 	</section>	

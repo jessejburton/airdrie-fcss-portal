@@ -105,7 +105,7 @@
 		hint="Get a list of the availbale Areas.">
 
 		<cfquery name="LOCAL.qAreas">
-			SELECT 	Area, AreaID 
+			SELECT 	Area, AreaID, Color
 			FROM	Area_tbl
 			WHERE	isActive = 1
 		</cfquery>
@@ -149,6 +149,7 @@
 	   		<cfset LOCAL.area = StructNew()>
 	   		<cfset LOCAL.area.AREAID = LOCAL.qAreas.AreaID> 
 	   		<cfset LOCAL.area.AREA = LOCAL.qAreas.Area> 
+	   		<cfset LOCAL.area.COLOR = LOCAL.qAreas.Color>
 	   		<cfset LOCAL.area.OUTCOMES = ArrayNew(1)>
 
 		   	<!--- Outcomes --->

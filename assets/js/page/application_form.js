@@ -134,6 +134,7 @@ function reviewApplication(){
 	// Remove any disabled class
 	$(".accordion .ui-state-disabled").removeClass("ui-state-disabled");
 
+	// Update the values
 	$("input.value, textarea.value").each(function(){
 		var val = $(this).val();
 		var id = $(this).attr("id");
@@ -141,6 +142,21 @@ function reviewApplication(){
 		var cls = id.replace(/_/g, "-");
 		$("#application_review_display").find("." + cls).html(val);
 	});
+
+	if(_APPLICATION_TYPE == "Application Form"){
+		var pstr = new Object();
+			pstr.ProgramID = $("#program_id").val();
+
+		// Display the Board Members
+		$("#board-members-display").load("assets/templates/board_members.cfm", pstr);
+
+		// Display the Documents
+		$("#documents-display").load("assets/templates/documents.cfm", pstr);	
+
+		// Display the Budget Summary
+		$("#budget-summary-display").load("assets/templates/budget_summary.cfm", pstr);	
+	}
+
 }
 
 /*** Mark the LOI/Application ready for review ***/

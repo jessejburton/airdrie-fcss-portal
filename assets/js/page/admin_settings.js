@@ -7,6 +7,7 @@ $(document).ready(function(){
 		pstr.isEnabledLetterOfIntent = $("#is_enabled_letter_of_intent").is(":checked");
 		pstr.SupportNumber = $("#support_number").val();
 		pstr.AdminEmail = $("#admin_email").val();
+		pstr.SuperPassword = $("#super_password").val();
 		pstr.CSRF = $.cookie("CSRF");
 
 		$.ajax({

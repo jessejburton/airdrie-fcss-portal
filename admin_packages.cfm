@@ -13,7 +13,7 @@
 		<div class="wrapper clearfix">
 			<h1>Packages</h1>
 
-			<form id="package_export_form" action="admin_create_package.cfm" method="post">
+			<form id="package_export_form" target="_blank" action="admin_create_package.cfm" method="post">
 				<p>
 					<select id="package_select" name="packageID">
 						<option value="0">--- Please select a package ---</option>

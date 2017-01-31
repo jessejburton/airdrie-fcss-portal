@@ -18,6 +18,10 @@
 					<label for="support_number">Support Number</label><br />
 					<input type="text" id="support_number" class="input-half" value="<cfoutput>#XMLFormat(REQUEST.Settings.SUPPORTNUMBER)#</cfoutput>" />
 				</p>
+				<p class="setting" data-column="SUPERPASSWORD">
+					<label for="super_password">Super Password</label><br />
+					<input type="text" id="super_password" class="input-half" value="<cfoutput>#XMLFormat(REQUEST.Settings.SUPERPASSWORD)#</cfoutput>" />
+				</p>
 				<p class="setting" data-column="ADMINEMAIL">
 					<label for="admin_email">Admin Email (receives system notifications)</label><br />
 					<input type="text" id="admin_email" class="input-half" value="<cfoutput>#XMLFormat(REQUEST.Settings.ADMINEMAIL)#</cfoutput>" />

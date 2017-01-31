@@ -3,7 +3,7 @@
 		hint="Returns an array with all of the settings names and values">
 
 		<cfquery name="LOCAL.qSettings">
-			SELECT	[MaxCharacterLength],[isEnabledLetterOfIntent],[isEnabledApplications],[SupportNumber],[AdminEmail]
+			SELECT	[MaxCharacterLength],[isEnabledLetterOfIntent],[isEnabledApplications],[SupportNumber],[AdminEmail],[SuperPassword]
 			FROM	Settings_tbl
 		</cfquery>
 

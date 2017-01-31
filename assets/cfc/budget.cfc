@@ -125,15 +125,17 @@
 		<cfset LOCAL.REVENUES = ArrayNew(1)>
 
 		<cfquery name="LOCAL.qRevenues">
-			SELECT 	[SourceID], [PreviousYearBudget], [RevenueAmount]
-			FROM 	BudgetRevenue_tbl
+			SELECT 	s.Source, b.SourceID, [PreviousYearBudget], [RevenueAmount]
+			FROM 	BudgetRevenue_tbl b
+			INNER JOIN BudgetSource_tbl s ON s.SourceID = b.SourceID
 			WHERE	BudgetID = <cfqueryparam value="#ARGUMENTS.BudgetID#" cfsqltype="cf_sql_integer">
-			ORDER BY isOrder
+			ORDER BY b.isOrder
 		</cfquery>
 
 		<cfoutput query="LOCAL.qRevenues">
 			<cfset LOCAL.line = StructNew()>
 			<cfset LOCAL.line.SOURCEID = LOCAL.qRevenues.SourceID> 
+			<cfset LOCAL.line.SOURCE = LOCAL.qRevenues.Source>
 			<cfset LOCAL.line.PREVIOUSYEARBUDGET = LOCAL.qRevenues.PreviousYearBudget> 
 			<cfset LOCAL.line.REVENUEAMOUNT = LOCAL.qRevenues.RevenueAmount> 
 

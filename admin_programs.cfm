@@ -91,12 +91,12 @@
 	<div id="superadmin" class="hidden">
 		<p>Please enter both your password and the super password to confirm funding this program in the amount of $<span id="fund_amount" style="font-weight: bold;"></span>.</p>
 		<p>
-			<label for="your_password">Your Password:</label><br />
-			<input type="password" is="your_password" placeholder="Your Password" />
+			<label for="your_account_password">Your Password:</label><br />
+			<input type="password" id="your_account_password" placeholder="Your Password" />
 		</p>
 		<p>
-			<label for="super_password">Super Password:</label><br />
-			<input type="password" is="super_password" placeholder="Super Password" />
+			<label for="super_account_password">Super Password:</label><br />
+			<input type="password" id="super_account_password" placeholder="Super Password" />
 		</p>
 		<p class="form-buttons clearfix">
 			<button type="button" class="cancel btn btn-secondary pull-left"><i class="fa fa-close"></i> Cancel</button>
@@ -108,7 +108,7 @@
 		<p>Please enter your password to approve this program.</p>
 		<p>
 			<label for="your_password">Your Password:</label><br />
-			<input type="password" is="your_password" placeholder="Your Password" />
+			<input type="password" id="your_password" placeholder="Your Password" />
 		</p>
 		<p class="form-buttons clearfix">
 			<button type="button" class="cancel btn btn-secondary pull-left"><i class="fa fa-close"></i> Cancel</button>

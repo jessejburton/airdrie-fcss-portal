@@ -98,6 +98,10 @@
 		hint="Checks to see if the current user has access to a program.">
 		<cfargument name="ProgramID" type="numeric" required="true">
 
+		<cfif isAdminAccount()>
+			<cfreturn true>
+		</cfif>
+
 		<cfquery name="LOCAL.qCheck">
 			SELECT 	AgencyID 
 			FROM 	Program_tbl 
