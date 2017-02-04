@@ -26,8 +26,7 @@
 				<cfoutput>
 					<cfloop array="#PROGRAMS#" index="program">
 						<div class="program">
-							<h3 class="spaced">#program.ProgramName#</h3>
-
+							<h3 class="spaced" title="Program ID #encodeForHTMLAttribute(program.ProgramID)#">#XMLFormat(program.ProgramName)#</h3>
 							<cfif ListFind(program.StatusList, "PROGRAM - Funded") IS 0>
 								<div>	
 									<cfif ListFind(PROGRAM.StatusList, 'LOI - Approved') IS 0>
@@ -54,7 +53,7 @@
 										</a>
 									</p>
 									<p>
-										<a href="javascript:;" class="link" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> print application form</a>
+										<a href="admin_create_package.cfm?ProgramID=#URLEncodedFormat(program.ProgramID)#" class="link" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Program Details</a>
 									</p>
 								</div>
 							</cfif>

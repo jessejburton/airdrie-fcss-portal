@@ -63,6 +63,7 @@ function login(){
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",
 		data: pstr,
+		method: "POST",
 		success: function(response){
 			if(response.SUCCESS){
 				window.location = "index.cfm";

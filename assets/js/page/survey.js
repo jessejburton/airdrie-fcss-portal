@@ -68,6 +68,11 @@ $(document).on("click", ".save-participant", function(){
 	savePersonData(false);
 });
 
+// post-survey button
+$(document).on("click", ".post-survey", function(){
+	$('.accordion').accordion('option', 'active', -1);
+});
+
 $(document).on("click", "#new", function(){
 	// TODO - Clear the form without refreshing
 	if(confirm("Are you sure you would like to start a new client?")){
@@ -75,7 +80,7 @@ $(document).on("click", "#new", function(){
 	}
 });
 
-$(document).on("click", "#complete_survey_btn", function(){
+$(document).on("click", ".complete-survey", function(){
 	saveSurvey();
 });
 
@@ -206,7 +211,7 @@ function savePersonData(silent){
 						$("#participant").prev().addClass("heading-success");
 						$("#client_id").val(response.DATA.CLIENTID);
 						$(".accordion .ui-state-disabled").removeClass("ui-state-disabled");
-						$('.accordion').accordion('option', 'active', -1);
+						$('.accordion').accordion('option', 'active', 1);
 					}
 				}
 			}
@@ -225,7 +230,8 @@ function clearForm(){
 	}); 
 	$(".heading-error").removeClass("heading-error");
 	$(".heading-success").removeClass("heading-success");
-	$("#survey_data").addClass("ui-state-disabled");
+	$("#pre_survey_data").addClass("ui-state-disabled");
+	$("#post_survey_data").addClass("ui-state-disabled");
 	$("#new").addClass("hidden");
 	$("#generate").removeClass("hidden");
 }

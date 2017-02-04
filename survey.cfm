@@ -178,22 +178,35 @@
 					</div>
 
 <!--- SURVEY QUESTIONS --->
-					<h3 id="survey_data" class="ui-state-disabled">Survey</h3>
+					<h3 id="pre_survey_data" class="ui-state-disabled">Pre Survey</h3>
 					<div class="form-group">
-					<!--- TODO - ADD A PLACE HERE FOR SPECIAL INSTRUCTIONS MAYBE? --->
 						<cfoutput>
 							<cfloop array="#REQUEST.SURVEY.Questions#" index="question"> 
 								<div class="radio-group question" data-questionid="#question.QUESTIONID#">
 									<span class="label question">#question.QUESTION#</span><br />
 									<div class="pre radio-column">
-									<span>Pre Survey</span>
 										<cfloop array="#question.ANSWERS#" index="answer">
 											<label class="radio" for="pre_#question.QuestionID#_#answer.AnswerID#">
 											<input type="radio" class="#iif(answer.isDefault, DE('default'), DE(''))# answer" id="pre_#question.QuestionID#_#answer.AnswerID#" name="pre_question_#question.QuestionID#" value="#answer.AnswerID#" #iif(answer.isDefault, DE('checked'), DE(''))# /> #answer.Answer#</label>
 										</cfloop>
 									</div>							
+								</div>
+							</cfloop>
+						</cfoutput>
+
+						<div class="form_buttons clearfix">
+							<button type="button" class="btn btn-primary pull-right complete-survey"><i class="fa fa-save"></i> Save Survey</button>
+							<button type="button" class="btn btn-secondary pull-right post-survey"><i class="fa fa-arrow-right"></i> Post Survey</button> 
+						</div>																									
+					</div>	
+
+					<h3 id="post_survey_data" class="ui-state-disabled">Post Survey</h3>
+					<div class="form-group">
+						<cfoutput>
+							<cfloop array="#REQUEST.SURVEY.Questions#" index="question"> 
+								<div class="radio-group question" data-questionid="#question.QUESTIONID#">
+									<span class="label question">#question.QUESTION#</span><br />						
 									<div class="post radio-column">
-										<span>Post Survey</span>
 										<cfloop array="#question.ANSWERS#" index="answer">
 											<label class="radio" for="post_#question.QuestionID#_#answer.AnswerID#">
 											<input type="radio" class="#iif(answer.isDefault, DE('default'), DE(''))# answer" id="post_#question.QuestionID#_#answer.AnswerID#" name="post_question_#question.QuestionID#" value="#answer.AnswerID#" #iif(answer.isDefault, DE('checked'), DE(''))# /> #answer.Answer#</label>
@@ -204,7 +217,7 @@
 						</cfoutput>
 
 						<div class="form_buttons clearfix">
-							<button type="button" class="btn btn-primary pull-right" id="complete_survey_btn"><i class="fa fa-save"></i> Save</button> 
+							<button type="button" class="btn btn-primary pull-right complete-survey"><i class="fa fa-save"></i> Save Survey</button> 
 						</div>																									
 					</div>								
 				</form>

@@ -69,7 +69,7 @@
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
 			<cfquery name="LOCAL.qCheckAccount">
-				SELECT 	AccountID, Password, GUID
+				SELECT 	AccountID, Password, GUID, NumAttempts
 				FROM	Account_tbl
 				WHERE	Email = <cfqueryparam value="#ARGUMENTS.Email#" cfsqltype="cf_sql_varchar">
 				AND 	isActive = 1
@@ -77,11 +77,30 @@
 			</cfquery>
 
 			<!--- Validate the password --->
-			<cfif LOCAL.qCheckAccount.recordcount IS 1 AND validatePassword(ARGUMENTS.PlainPW, LOCAL.qCheckAccount.Password)>
-				<cfset SESSION.GUID = LOCAL.qCheckAccount.GUID>
-				<cfset SESSION.AccountID = LOCAL.qCheckAccount.AccountID>
-				<cfreturn getSuccessResponse("Account logged in successfully")>
-			<cfelse>
+			<cfif LOCAL.qCheckAccount.recordcount IS 1 AND LOCAL.qCheckAccount.NumAttempts LTE 5>
+				<cfif validatePassword(ARGUMENTS.PlainPW, LOCAL.qCheckAccount.Password)>
+					<!--- Update the last logged in --->
+					<cfquery>
+						UPDATE 	Account_tbl 
+						SET 	DateLastOn = getDate(),
+								NumAttempts = 0
+						WHERE 	AccountID = <cfqueryparam value="#LOCAL.qCheckAccount.AccountID#" cfsqltype="cf_sql_integer">
+					</cfquery>
+
+					<cfset SESSION.GUID = LOCAL.qCheckAccount.GUID>
+					<cfset SESSION.AccountID = LOCAL.qCheckAccount.AccountID>
+					<cfreturn getSuccessResponse("Account logged in successfully")>
+				<cfelse>
+					<!--- Update the number of attempts --->
+					<cfquery>
+						UPDATE 	Account_tbl 
+						SET 	NumAttempts = NumAttempts + 1 
+						WHERE 	AccountID = <cfqueryparam value="#LOCAL.qCheckAccount.AccountID#" cfsqltype="cf_sql_integer">
+					</cfquery>
+
+					<cfreturn getErrorResponse("Invalid email or password. Please try again.")>
+				</cfif>
+			<cfelse>				
 				<cfreturn getErrorResponse("Invalid email or password. Please try again.")>
 			</cfif>
 		<cfelse>

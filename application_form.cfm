@@ -365,7 +365,7 @@
 						</div>
 						
 						<div class="form-buttons clearfix"> 
-							<cfif (PROGRAM.TYPE IS "Letter Of Intent" AND REQUEST.SETTINGS.ISENABLEDLETTEROFINTENT) OR (PROGRAM.TYPE IS "Application" AND REQUEST.SETTINGS.ISENABLEDAPPLICATIONS)>
+							<cfif (PROGRAM.TYPE IS "Letter Of Intent" AND REQUEST.SETTINGS.ISENABLEDLETTEROFINTENT) OR (PROGRAM.TYPE IS "Application Form" AND REQUEST.SETTINGS.ISENABLEDAPPLICATIONS)>
 								<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
 							</cfif>
 							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
