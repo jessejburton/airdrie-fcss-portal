@@ -90,6 +90,7 @@
 
 	<form enctype="multipart/form-data" method="post" action="survey_import.cfm" class="hidden" id="survey_import_form">
 		<input type="text" id="import_survey_id" name="import_survey_id" />
+		<input type="text" id="import_program_id" name="import_program_id" value="<cfoutput>#EncodeForHTML(URL.ProgramID)#</cfoutput>" />
 		<input type="file" name="import_file_select" id="import_file_select" /><br />
 		<input type="submit" value="Upload File" />
 	</form>

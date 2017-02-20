@@ -1189,6 +1189,50 @@
 		</cfif>
 	</cffunction>	
 
+<!--- SAVE MIDYEAR --->
+	<cffunction name="saveMidYear" access="remote" returntype="struct" returnformat="JSON"
+		hint="Update the Mid Year values for a program.">
+		<cfargument name="ProgramID" type="numeric" required="true" hint="The ID of the program to be updated.">
+		<cfargument name="MidYearValue" type="string" required="true" hint="value to be updated.">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfset LOCAL.hasAccess = checkProgramAccessByAccountID(ARGUMENTS.ProgramID)>
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND LOCAL.hasAccess>
+			<cfquery>
+				UPDATE 	Program_tbl
+				SET 	midyearvalue = <cfqueryparam value="#ARGUMENTS.MidYearValue#" cfsqltype="cf_sql_varchar">
+				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+
+			<cfreturn getSuccessResponse("Mid Year Values saved.")>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>
+
+<!--- SAVE ENDYEAR --->
+	<cffunction name="saveEndYear" access="remote" returntype="struct" returnformat="JSON"
+		hint="Update the End Year values for a program.">
+		<cfargument name="ProgramID" type="numeric" required="true" hint="The ID of the program to be updated.">
+		<cfargument name="EndYearValue" type="string" required="true" hint="value to be updated.">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfset LOCAL.hasAccess = checkProgramAccessByAccountID(ARGUMENTS.ProgramID)>
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND LOCAL.hasAccess>
+			<cfquery>
+				UPDATE 	Program_tbl
+				SET 	endyearvalue = <cfqueryparam value="#ARGUMENTS.EndYearValue#" cfsqltype="cf_sql_varchar">
+				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+
+			<cfreturn getSuccessResponse("Mid Year Values saved.")>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>		
+
 <!--- WEB FUNCTIONS RELATED TO SYSTEM ADMINISTRATION --->
 	<cffunction name="saveSettings" access="remote" returntype="Struct" returnformat="JSON"
 		hint="Saves the system settings.">

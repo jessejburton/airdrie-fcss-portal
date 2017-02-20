@@ -15,6 +15,7 @@ $(document).ready(function(){
 });
 
 $(document).on("click", ".save", function(){
+	saveMidYear();
 	saveBudget();
 
 	var msg = new Object();
@@ -25,3 +26,26 @@ $(document).on("click", ".save", function(){
 
 	window.scrollTo(0, 0);
 });
+
+function saveMidYear(){
+	var pstr = new Object();
+	pstr.Method = "saveMidYear";
+	pstr.ProgramID = $("#program_id").val();
+	pstr.midyearvalue = $("#midyearvalue").val();
+	pstr.CSRF = $.cookie("CSRF");
+
+	$.ajax({
+		url: "assets/cfc/webservices.cfc",
+		data: pstr,
+		method: "POST",
+		success: function(response){
+			if(!response.SUCCESS){	
+				showAutoreply(response, $("#mid_year_form"));			
+				clearInterval(_AUTOSAVE);
+				_AUTOSAVE = null;
+				return false;
+			}
+			return true;
+		}
+	});
+}

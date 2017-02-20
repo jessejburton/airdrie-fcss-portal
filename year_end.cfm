@@ -38,9 +38,18 @@
 					<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#EncodeForHTML(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
 				</p>
 				
-			<cfoutput>				
+			<cfoutput>	
+				<cfset BUDGETTYPE = "Year-End Budget">			
 				<div class="accordion clearfix">	
-					<cfset BUDGETTYPE = "Year-End Budget">			
+					<h3>Year End Questions</h3>
+					<div class="form-group seen">
+						<p>
+							<label for="endyearvalue">Enter a Value</label><br />
+							<input type="text" id="endyearvalue" placeholder="Please enter a value" class="required value" 
+								value="#EncodeForHTML(PROGRAM.EndYearValue)#" />
+						</p>
+					</div>
+
 					<h3>Year End Financials</h3>
 					<div class="form-group">
 						<cfinclude template="shared/budget.cfm">

@@ -38,9 +38,19 @@
 					<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#EncodeForHTML(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
 				</p>
 				
-			<cfoutput>				
-				<div class="accordion clearfix">	
-					<cfset BUDGETTYPE = "Mid-Year Budget">			
+			<cfoutput>
+				<cfset BUDGETTYPE = "Mid-Year Budget">				
+				
+				<div class="accordion clearfix">					
+					<h3>Mid Year Questions</h3>
+					<div class="form-group seen">
+						<p>
+							<label for="midyearvalue">Enter a Value</label><br />
+							<input type="text" id="midyearvalue" placeholder="Please enter a value" class="required value" 
+								value="#EncodeForHTML(PROGRAM.MidYearValue)#" />
+						</p>
+					</div>
+
 					<h3>Mid Year Financials</h3>
 					<div class="form-group">
 						<cfinclude template="shared/budget.cfm">
@@ -54,7 +64,7 @@
 					<h3 class="ui-state-disabled">Review and Submit</h3>
 					<div>
 						<div id="application_review_display">	
-							<h2>Budget Summary</h2>
+							<h2>Mid Year Budget Summary</h2>
 							<div class="budget-summary"></div>								
 						</div>
 						
