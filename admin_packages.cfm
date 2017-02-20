@@ -11,14 +11,14 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<h1>Packages</h1>
+			<h1><i class="fa fa-sticky-note-o"></i> Packages</h1>
 
 			<form id="package_export_form" target="_blank" action="admin_create_package.cfm" method="post">
 				<p>
 					<select id="package_select" name="packageID">
 						<option value="0">--- Please select a package ---</option>
 						<cfoutput query="qPackages">
-							<option value="#EncodeForHTMLAttribute(qPackages.PackageID)#">#XMLFormat(qPackages.PackageName)#</option>
+							<option value="#EncodeForHTMLAttribute(qPackages.PackageID)#">#EncodeForHTML(qPackages.PackageName)#</option>
 						</cfoutput>
 					</select>
 				</p>
@@ -31,7 +31,7 @@
 					<div id="program_list">
 						<cfoutput>
 							<cfloop array="#aPrograms#" index="p">
-								<label for="program_#EncodeForHTMLAttribute(p.ProgramID)#"><input type="checkbox" name="programs" id="program_#EncodeForHTMLAttribute(p.ProgramID)#" value="#EncodeForHTMLAttribute(p.ProgramID)#" /> #XMLFormat(p.ProgramName)#</label><br />	
+								<label for="program_#EncodeForHTMLAttribute(p.ProgramID)#"><input type="checkbox" name="programs" id="program_#EncodeForHTMLAttribute(p.ProgramID)#" value="#EncodeForHTMLAttribute(p.ProgramID)#" /> #EncodeForHTML(p.ProgramName)#</label><br />	
 							</cfloop>
 						</cfoutput>
 					</div>

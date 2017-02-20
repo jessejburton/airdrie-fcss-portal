@@ -27,10 +27,10 @@
 		<tr class="revenue-item airdrie">
 			<td class="center-align"><strong>Airdrie FCSS</strong></td>
 			<td>
-				<span class="input-currency"><input type="number" id="previous_year_budget" class="prev-year" placeholder="Amount" value="<cfoutput>#IIF(BUDGET.PreviousYearBudget GT 0, 'XMLFormat(BUDGET.PreviousYearBudget)', DE(''))#</cfoutput>" /></span>
+				<span class="input-currency"><input type="number" id="previous_year_budget" class="prev-year" placeholder="Amount" value="<cfoutput>#IIF(BUDGET.PreviousYearBudget GT 0, 'EncodeForHTML(BUDGET.PreviousYearBudget)', DE(''))#</cfoutput>" /></span>
 			</td>
 			<td>
-				<span class="input-currency"><input type="number" id="requested_from_airdrie" class="revenue-amount revenue-add-value row-total" placeholder="Amount Requested" value="<cfoutput>#IIF(isNumeric(BUDGET.RequestedFromAirdrie) AND BUDGET.RequestedFromAirdrie GT 0, 'XMLFormat(BUDGET.RequestedFromAirdrie)', DE(''))#</cfoutput>" /></span>
+				<span class="input-currency"><input type="number" id="requested_from_airdrie" class="revenue-amount revenue-add-value row-total" placeholder="Amount Requested" value="<cfoutput>#IIF(isNumeric(BUDGET.RequestedFromAirdrie) AND BUDGET.RequestedFromAirdrie GT 0, 'EncodeForHTML(BUDGET.RequestedFromAirdrie)', DE(''))#</cfoutput>" /></span>
 			</td>
 		</tr>
 		<cfoutput>
@@ -50,10 +50,10 @@
 						</select>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="prev-year" placeholder="Amount" value="#XMLFormat(line.PreviousYearBudget)#" /></span>
+						<span class="input-currency"><input type="number" class="prev-year" placeholder="Amount" value="#EncodeForHTML(line.PreviousYearBudget)#" /></span>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="revenue-amount revenue-add-value row-total" placeholder="Amount" value="#XMLFormat(line.RevenueAmount)#" /></span>
+						<span class="input-currency"><input type="number" class="revenue-amount revenue-add-value row-total" placeholder="Amount" value="#EncodeForHTML(line.RevenueAmount)#" /></span>
 					</td>
 				</tr>
 			</cfloop>
@@ -93,7 +93,7 @@
 
 <p>
 	<label for="revenues_explanation">Revenues Explanation</label><br />						
-	<textarea id="revenues_explanation" placeholder="Please explain your revenues" class="textarea-large"><cfoutput>#XMLFormat(BUDGET.REVENUESEXPLANATION)#</cfoutput></textarea>		
+	<textarea id="revenues_explanation" placeholder="Please explain your revenues" class="textarea-large"><cfoutput>#EncodeForHTML(BUDGET.REVENUESEXPLANATION)#</cfoutput></textarea>		
 </p>
 
 <hr />
@@ -134,16 +134,16 @@
 						</select>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="prev-year" placeholder="Amount" value="#XMLFormat(line.PREVYEAR)#" /></span>
+						<span class="input-currency"><input type="number" class="prev-year" placeholder="Amount" value="#EncodeForHTML(line.PREVYEAR)#" /></span>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="funded-other expenditure-add-value" placeholder="Amount" value="#XMLFormat(line.FundedOther)#" /></span>
+						<span class="input-currency"><input type="number" class="funded-other expenditure-add-value" placeholder="Amount" value="#EncodeForHTML(line.FundedOther)#" /></span>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="funded-airdrie expenditure-add-value tab-add-row" placeholder="Amount" value="#XMLFormat(line.FundedAirdrie)#" /></span>
+						<span class="input-currency"><input type="number" class="funded-airdrie expenditure-add-value tab-add-row" placeholder="Amount" value="#EncodeForHTML(line.FundedAirdrie)#" /></span>
 					</td>
 					<td>
-						<span class="input-currency"><input type="number" class="row-total" disabled placeholder="Total" value="#XMLFormat(line.FundedOther + line.FundedAirdrie)#" /></span>								
+						<span class="input-currency"><input type="number" class="row-total" disabled placeholder="Total" value="#EncodeForHTML(line.FundedOther + line.FundedAirdrie)#" /></span>								
 					</td>
 				</tr>
 			</cfloop>
@@ -212,8 +212,8 @@
 			<cfoutput>
 				<cfloop array="#BUDGET.Staff#" index="line">
 					<tr class="staffing-row">
-						<td><i class="fa fa-minus-circle remove-item"></i><input type="text" class="staff-title" placeholder="Title" value="#XMLFormat(line.TITLE)#" /></td>
-						<td><span class="input-currency"><input type="number" class="staffing-add-value tab-add-row row-total" placeholder="Amount" value="#XMLFormat(line.Amount)#" /></span></td>
+						<td><i class="fa fa-minus-circle remove-item"></i><input type="text" class="staff-title" placeholder="Title" value="#EncodeForHTML(line.TITLE)#" /></td>
+						<td><span class="input-currency"><input type="number" class="staffing-add-value tab-add-row row-total" placeholder="Amount" value="#EncodeForHTML(line.Amount)#" /></span></td>
 					</tr>
 				</cfloop>
 			</cfoutput>
@@ -237,7 +237,7 @@
 
 <p>
 	<label for="expenditures_explanation">Expenditures Explanation</label><br />						
-	<textarea id="expenditures_explanation" placeholder="Please explain your expenditures" class="textarea-large"><cfoutput>#XMLFormat(BUDGET.EXPENDITURESEXPLANATION)#</cfoutput></textarea>		
+	<textarea id="expenditures_explanation" placeholder="Please explain your expenditures" class="textarea-large"><cfoutput>#EncodeForHTML(BUDGET.EXPENDITURESEXPLANATION)#</cfoutput></textarea>		
 </p>	
 
 <hr />

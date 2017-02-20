@@ -9,7 +9,7 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<h1>Surveys</h1>
+			<h1><i class="fa fa-pie-chart"></i> Outcome Measures</h1>
 			
 			<!--- TODO - Future Enhancement - ability to copy an existing survey --->
 			<p class="spaced border-bottom" style="padding-bottom: 25px;">

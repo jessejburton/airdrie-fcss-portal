@@ -4,7 +4,7 @@
 <cfinclude template="shared/header.cfm">
 
 <!--- Hidden Data --->
-<input type="hidden" id="document_path" value="<cfoutput>#XMLFormat(APPLICATION.documentpath)#</cfoutput>">
+<input type="hidden" id="document_path" value="<cfoutput>#EncodeForHTML(APPLICATION.documentpath)#</cfoutput>">
 
 <!--- Get Agency Data --->
 <cfinvoke component="#APPLICATION.cfcpath#agency" method="GetAgencyList" returnvariable="aAgencies" />
@@ -13,7 +13,7 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<h1>Agencies</h1>
+			<h1><i class="fa fa-group"></i> Agencies</h1>
 
 			<p>
 				<label for="agency_select">Select an Agency:</label><br />

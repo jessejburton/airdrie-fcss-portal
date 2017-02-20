@@ -29,13 +29,13 @@
 		<cfif showForm>
 			<form id="mid_year_form">
 				<!--- Hidden Form Fields --->
-				<input type="hidden" id="program_id" value="<cfoutput>#XMLFormat(PROGRAM.ProgramID)#</cfoutput>" />
-				<input type="hidden" id="program_status" value="<cfoutput>#XMLFormat(PROGRAM.Status)#</cfoutput>" />
+				<input type="hidden" id="program_id" value="<cfoutput>#EncodeForHTML(PROGRAM.ProgramID)#</cfoutput>" />
+				<input type="hidden" id="program_status" value="<cfoutput>#EncodeForHTML(PROGRAM.Status)#</cfoutput>" />
 
 				<p>
 					<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
 					<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-					<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#XMLFormat(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
+					<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#EncodeForHTML(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
 				</p>
 				
 			<cfoutput>				
@@ -70,7 +70,7 @@
 			<p>
 				<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
 				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-				<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#XMLFormat(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
+				<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#EncodeForHTML(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
 			</p>
 		</cfif>
 <!--- END FORM --->

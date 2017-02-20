@@ -49,15 +49,15 @@
 		<cfif showForm>
 			<form id="application_form">
 				<!--- Hidden Form Fields --->
-				<input type="hidden" id="program_id" value="<cfoutput>#XMLFormat(PROGRAM.ProgramID)#</cfoutput>" />
-				<input type="hidden" id="application_type" value="<cfoutput>#XMLFormat(PROGRAM.Type)#</cfoutput>" />
-				<input type="hidden" id="program_status" value="<cfoutput>#XMLFormat(PROGRAM.Status)#</cfoutput>" />
+				<input type="hidden" id="program_id" value="<cfoutput>#EncodeForHTML(PROGRAM.ProgramID)#</cfoutput>" />
+				<input type="hidden" id="application_type" value="<cfoutput>#EncodeForHTML(PROGRAM.Type)#</cfoutput>" />
+				<input type="hidden" id="program_status" value="<cfoutput>#EncodeForHTML(PROGRAM.Status)#</cfoutput>" />
 
 				<p>Please complete all of the following information. You can click on the heading for a section to jump directly to that section of the form</p> 
 				<p>
 					<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 					<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-					<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #XMLFormat(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
+					<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 				</p>
 				
 			<cfoutput>				
@@ -68,16 +68,16 @@
 						<p>
 							<label for="program_name">Program Name</label><br />
 							<input type="text" id="program_name" placeholder="Please enter the name of your program" class="required value" 
-								value="#XMLFormat(PROGRAM.ProgramName)#" />
+								value="#EncodeForHTML(PROGRAM.ProgramName)#" />
 						</p>
 						<p>
 							<label for="program_statement">Program Statement</label><br />						
-							<textarea data-maxlength="1000" id="program_statement" placeholder="Approximately 250 words" class="textarea-large required value">#XMLFormat(PROGRAM.ProgramStatement)#</textarea>		
+							<textarea data-maxlength="1000" id="program_statement" placeholder="Approximately 250 words" class="textarea-large required value">#EncodeForHTML(PROGRAM.ProgramStatement)#</textarea>		
 						</p>				
 						<p>
 							<label for="target_audience">Target Audience</label><br />		
 							<span class="label-sub">Please describe your target population for this program and estimate the number of people to be served. Why did you choose this population?</span>				
-							<textarea id="target_audience" placeholder="Please describe the target audience for your program" class="textarea-large required value">#XMLFormat(PROGRAM.TargetAudience)#</textarea>	
+							<textarea id="target_audience" placeholder="Please describe the target audience for your program" class="textarea-large required value">#EncodeForHTML(PROGRAM.TargetAudience)#</textarea>	
 						</p>
 						<p>
 							<label>Are the majority of clients served through this program Airdrie residents?</label><br /><br />
@@ -101,26 +101,26 @@
 						<p>Please update any of the program contact information that is not the same as your agency's contact information</p>
 						<p>
 							<label for="primary_contact_name">Primary Program Contact Name</label><br />
-							<input type="text" id="primary_contact_name" class="input-half required value" placeholder="Please enter the name of the program's primary contact person" value="#iif(LEN(PROGRAM.PrimaryContactName) GT 0, 'XMLFormat(PROGRAM.PrimaryContactName)', 'XMLFormat(REQUEST.USER.NAME)')#" />
+							<input type="text" id="primary_contact_name" class="input-half required value" placeholder="Please enter the name of the program's primary contact person" value="#iif(LEN(PROGRAM.PrimaryContactName) GT 0, 'EncodeForHTML(PROGRAM.PrimaryContactName)', 'EncodeForHTML(REQUEST.USER.NAME)')#" />
 						</p>
 						<p>
 							<label for="primary_phone">Primary Program Contact Phone</label><br />
-							<input type="text" id="primary_phone" class="input-half required value" placeholder="Please enter the phone number of the program's primary contact person" value="#iif(LEN(PROGRAM.PrimaryPhone) GT 0, 'XMLFormat(PROGRAM.PrimaryPhone)', 'XMLFormat(REQUEST.AGENCY.PHONE)')#" />
+							<input type="text" id="primary_phone" class="input-half required value" placeholder="Please enter the phone number of the program's primary contact person" value="#iif(LEN(PROGRAM.PrimaryPhone) GT 0, 'EncodeForHTML(PROGRAM.PrimaryPhone)', 'EncodeForHTML(REQUEST.AGENCY.PHONE)')#" />
 						</p>
 						<p>
 							<label for="primary_email">Primary Program Contact Email</label><br />
-							<input type="text" id="primary_email" class="input-half required value" placeholder="Please enter the email of the program's primary contact person" value="#iif(LEN(PROGRAM.PrimaryEmail) GT 0, 'XMLFormat(PROGRAM.PrimaryEmail)', 'XMLFormat(REQUEST.AGENCY.EMAIL)')#" />
+							<input type="text" id="primary_email" class="input-half required value" placeholder="Please enter the email of the program's primary contact person" value="#iif(LEN(PROGRAM.PrimaryEmail) GT 0, 'EncodeForHTML(PROGRAM.PrimaryEmail)', 'EncodeForHTML(REQUEST.AGENCY.EMAIL)')#" />
 						</p>
 						<hr />
 						<p>
 							<label for="program_address">Program Address </label><br />	
 							<span class="label-sub">If different from agency address.</span><br />			
-							<textarea data-maxlength="1000" id="program_address" placeholder="Please enter your physical address including the postal code" class="input-half required value">#iif(LEN(PROGRAM.ProgramAddress) GT 0, 'XMLFormat(PROGRAM.ProgramAddress)', 'XMLFormat(REQUEST.AGENCY.ADDRESS)')#</textarea>
+							<textarea data-maxlength="1000" id="program_address" placeholder="Please enter your physical address including the postal code" class="input-half required value">#iif(LEN(PROGRAM.ProgramAddress) GT 0, 'EncodeForHTML(PROGRAM.ProgramAddress)', 'EncodeForHTML(REQUEST.AGENCY.ADDRESS)')#</textarea>
 						</p>		
 						<p>
 							<label for="program_mailing_address">Program Mailing Address </label><br />	
 							<span class="label-sub">If different from agency mailing address.</span><br />				
-							<textarea data-maxlength="1000" id="program_mailing_address" placeholder="Please enter your mailing address including the postal code" class="input-half value">#iif(LEN(PROGRAM.ProgramMailingAddress) GT 0, 'XMLFormat(PROGRAM.ProgramMailingAddress)', '')#</textarea>		
+							<textarea data-maxlength="1000" id="program_mailing_address" placeholder="Please enter your mailing address including the postal code" class="input-half value">#iif(LEN(PROGRAM.ProgramMailingAddress) GT 0, 'EncodeForHTML(PROGRAM.ProgramMailingAddress)', '')#</textarea>		
 						</p>
 						
 						<!--- Panel Buttons --->
@@ -140,27 +140,27 @@
 						<p>
 							<label for="need">Need</label><br />
 							<span class="label-sub">The evidence that there is a need for the program in the Airdrie community. You may add footnotes below to cite complete references and data sources.</span>					
-							<textarea id="need" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.Need)#</textarea>		
+							<textarea id="need" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Need)#</textarea>		
 						</p>
 						<p>
 							<label for="goal">Goal</label><br />		
 							<span class="label-sub">The long-term outcomes that the program aims to achieve.</span>					
-							<textarea id="goal" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.Goal)#</textarea>		
+							<textarea id="goal" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Goal)#</textarea>		
 						</p>
 						<p>
 							<label for="strategies">Strategies</label><br />	
 							<span class="label-sub">The strategies or the steps/activities that will be undertaken to achieve the desired goal. Details include who the program is aimed at (target audience), what will be done (program content), where and how it will be delivered, and when. This should include information on frequency, duration, program cycle, and evaluation plan. </span>					
-							<textarea id="strategies" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.Strategies)#</textarea>		
+							<textarea id="strategies" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Strategies)#</textarea>		
 						</p>
 						<p>
 							<label for="rationale">Rationale</label><br />	
 							<span class="label-sub">What is the evidence that the activities selected are the best or most promising practices? A summary of key research findings that support why the strategy that is being used is a best or promising practice for achieving the program goal. </span>
-							<textarea id="rationale" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.Rationale)#</textarea>
+							<textarea id="rationale" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Rationale)#</textarea>
 						</p>
 						<p>
 							<label for="footnotes">Footnotes</label><br />
 							<span class="label-sub">Footnotes are used to provide complete references for the research that identifies the need and provides the rationale to support the program strategy. The intention is to facilitate learning among agencies that wish to explore particular program areas in more depth. </span>							
-							<textarea id="footnotes" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.Footnotes)#</textarea>
+							<textarea id="footnotes" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Footnotes)#</textarea>
 						</p>	
 
 						<div class="form_buttons clearfix">
@@ -174,7 +174,7 @@
 					<div class="form-group">
 						<p>
 							<label for="prevention_focus">How does the program meet the FCSS prevention focus?</label><br />					
-							<textarea id="prevention_focus" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.PreventionFocus)#</textarea>		
+							<textarea id="prevention_focus" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.PreventionFocus)#</textarea>		
 						</p>
 						<p>
 							<label for="alignment">How does your program align with City of Airdrie's interest in the following:</label><br />		
@@ -184,16 +184,16 @@
 								<li>Creating and strengthening a sense of community</li>
 								<li>The Provincial goal of poverty prevention</li>
 							</ul>					
-							<textarea id="alignment" placeholder="Approximately 250 words" class="textarea-large required value">#XMLFormat(PROGRAM.Alignment)#</textarea>		
+							<textarea id="alignment" placeholder="Approximately 250 words" class="textarea-large required value">#EncodeForHTML(PROGRAM.Alignment)#</textarea>		
 						</p>
 						<p>
 							<label for="mission_fit">How does this program fit with your agency mission and vision?</label><br />	
-							<textarea id="mission_fit" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.MissionFit)#</textarea>		
+							<textarea id="mission_fit" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.MissionFit)#</textarea>		
 						</p>
 						<p>
 							<label for="considered_partnerships">Have you considered partnerships to enhance program efficiency and sustainability?</label><br />		
 							<span class="label-sub">Please describe your considerations for partnerships </span>						
-							<textarea id="considered_partnerships" placeholder="Approximately 250 words" class="textarea-large value">#XMLFormat(PROGRAM.ConsideredPartnerships)#</textarea>
+							<textarea id="considered_partnerships" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.ConsideredPartnerships)#</textarea>
 						</p>
 
 						<div class="form_buttons clearfix">
@@ -212,8 +212,8 @@
 							<cfset atLeastOneRequired = true> <!--- Need to make the first one required in case the delete all of the members --->
 							<cfloop array="#REQUEST.AGENCY.BOARDMEMBERS#" index="member">
 								<div class="two-cols board-member">
-									<p><input type="text" name="board_name" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's name" value="#XMLFormat(member.NAME)#" /></p>
-									<p><input type="text" name="board_title" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's title" value="#XMLFormat(member.TITLE)#" /></p>
+									<p><input type="text" name="board_name" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's name" value="#EncodeForHTML(member.NAME)#" /></p>
+									<p><input type="text" name="board_title" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's title" value="#EncodeForHTML(member.TITLE)#" /></p>
 								</div>
 								<cfset atleastOneRequired = false>
 							</cfloop>
@@ -244,15 +244,15 @@
 					<div class="form-group">
 						<p>
 							<label for="short_term_goals">Short Term Goals</label><br />						
-							<textarea id="short_term_goals" placeholder="Please tell us about your program's short term goals" class="textarea-large required value">#XMLFormat(PROGRAM.ShortTermGoals)#</textarea>		
+							<textarea id="short_term_goals" placeholder="Please tell us about your program's short term goals" class="textarea-large required value">#EncodeForHTML(PROGRAM.ShortTermGoals)#</textarea>		
 						</p>
 						<p>
 							<label for="mid_term_goals">Mid Term Goals</label><br />						
-							<textarea id="mid_term_goals" placeholder="Please tell us about your program's mid term goals" class="textarea-large required value">#XMLFormat(PROGRAM.MidTermGoals)#</textarea>		
+							<textarea id="mid_term_goals" placeholder="Please tell us about your program's mid term goals" class="textarea-large required value">#EncodeForHTML(PROGRAM.MidTermGoals)#</textarea>		
 						</p>
 						<p>
 							<label for="long_term_goals">Long Term Goals</label><br />						
-							<textarea id="long_term_goals" placeholder="Please tell us about your program's long term goals" class="textarea-large required value">#XMLFormat(PROGRAM.LongTermGoals)#</textarea>		
+							<textarea id="long_term_goals" placeholder="Please tell us about your program's long term goals" class="textarea-large required value">#EncodeForHTML(PROGRAM.LongTermGoals)#</textarea>		
 						</p>			
 
 						<div class="form_buttons clearfix">
@@ -268,15 +268,15 @@
 					<div class="form-group">
 						<p>
 							<label for="estimated_from_airdrie">Amount Requested from the City of Airdrie</label><br />
-							<span class="input-currency"><input type="number" id="estimated_from_airdrie" class="input-half sum required value" placeholder="Amount requested from the City of Airdrie" value="#XMLFormat(PROGRAM.EstimatedFromAirdrie)#" /></span>
+							<span class="input-currency"><input type="number" id="estimated_from_airdrie" class="input-half sum required value" placeholder="Amount requested from the City of Airdrie" value="#EncodeForHTML(PROGRAM.EstimatedFromAirdrie)#" /></span>
 						</p>
 						<p>
 							<label for="estimated_from_other">Amount from Other Revenue Sources</label><br />
-							<span class="input-currency"><input type="number" id="estimated_from_other" class="input-half sum required value" placeholder="Amount from other revenue sources" value="#XMLFormat(PROGRAM.EstimatedFromOther)#" /></span>
+							<span class="input-currency"><input type="number" id="estimated_from_other" class="input-half sum required value" placeholder="Amount from other revenue sources" value="#EncodeForHTML(PROGRAM.EstimatedFromOther)#" /></span>
 						</p>
 						<p>
 							<label for="budget_total">Total #Year(DateAdd("yyyy", 1, Now()))# budget</label><br />
-							<span class="input-currency"><input type="number" id="budget_total" class="input-half sum-total value" disabled value="#XMLFormat(PROGRAM.EstimatedFromOther + PROGRAM.EstimatedFromAirdrie)#" /></span>
+							<span class="input-currency"><input type="number" id="budget_total" class="input-half sum-total value" disabled value="#EncodeForHTML(PROGRAM.EstimatedFromOther + PROGRAM.EstimatedFromAirdrie)#" /></span>
 						</p>
 
 						<div class="form_buttons clearfix"> 
@@ -378,7 +378,7 @@
 			<p>
 				<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-				<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #XMLFormat(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
+				<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 			</p>
 		</cfif>
 <!--- END FORM --->

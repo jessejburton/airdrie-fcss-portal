@@ -1,9 +1,10 @@
-function selectFile(){
+function selectFile(surveyID){
+	$("#import_survey_id").val(surveyID);
 	$("#import_file_select").trigger("click");
 }
 
 $(document).on("change", "#import_file_select", function(){
-	$("#imported_message").addClass("spaced").fadeIn("slow");
+	$("#survey_import_form").submit();
 });
 
 $(document).on("click", ".area li", function(){

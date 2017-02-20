@@ -7,7 +7,7 @@
 		<div class="pull-right">
 			<strong>Welcome</strong> 
 			<cfif isDefined('REQUEST.USER.Name')>
-				<cfoutput>#XMLFormat(REQUEST.USER.Name)#</cfoutput>
+				<cfoutput>#EncodeForHTML(REQUEST.USER.Name)#</cfoutput>
 			</cfif>
 		</div>
 	</section>
@@ -19,7 +19,7 @@
 				<a href="javascript:;" class="menu" data-menu="#navigation"><i class="fa fa-menu"></i> menu</a>
 			</div>
 			<ul id="navigation">
-				<li><a href="index.cfm"><i class="fa fa-users"></i> Dashboard</a></li>
+				<li><a href="index.cfm"><i class="fa fa-bar-chart"></i> Dashboard</a></li>
 			<!--- Admin or Agency --->
 			<cfif isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS true>	
 				<li><a href="admin_programs.cfm"><i class="fa fa-circle"></i> Programs</a></li>
@@ -27,6 +27,7 @@
 				<li><a href="admin_outcome_measures.cfm"><i class="fa fa-pie-chart"></i> Outcome Measures</a>
 				<li><a href="admin_packages.cfm"><i class="fa fa-sticky-note-o"></i> Packages</a></li>			
 				<li><a href="admin_package_builder.cfm"><i class="fa fa-pencil-square-o"></i> Package Builder</a></li>
+				<li><a href="admin_messages.cfm"><i class="fa fa-envelope-o"></i> Messaging</a></li>
 				<li><a href="admin_settings.cfm"><i class="fa fa-cogs"></i> Settings</a></li>
 			<cfelse>
 			   	<li><a href="programs.cfm"><i class="fa fa-check-circle"></i> Programs </a></li>

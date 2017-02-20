@@ -15,43 +15,43 @@
 				<form id="agency_information_form">		
 					<p>
 						<label for="agency_name">Agency Name</label><br />
-						<input type="text" id="agency_name" placeholder="Please enter the name of your agency." value="#XMLFormat(REQUEST.AGENCY.Name)#" />
+						<input type="text" id="agency_name" placeholder="Please enter the name of your agency." value="#EncodeForHTML(REQUEST.AGENCY.Name)#" />
 					</p>
 					<p>
 						<label for="agency_mission">Mission</label><br />						
-						<textarea id="agency_mission" placeholder="Please enter the mission for your agency" class="textarea-large">#XMLFormat(REQUEST.AGENCY.Mission)#</textarea>						
+						<textarea id="agency_mission" placeholder="Please enter the mission for your agency" class="textarea-large">#EncodeForHTML(REQUEST.AGENCY.Mission)#</textarea>						
 					</p>
 					<p>
 						<label for="agency_vision">Vision</label><br />						
-						<textarea id="agency_vision" placeholder="Please enter the vision for your agency" class="textarea-large">#XMLFormat(REQUEST.AGENCY.Vision)#</textarea>						
+						<textarea id="agency_vision" placeholder="Please enter the vision for your agency" class="textarea-large">#EncodeForHTML(REQUEST.AGENCY.Vision)#</textarea>						
 					</p>		
 
 					<div class="spaced"></div>
 
 					<p>
 						<label for="agency_phone">Agency Phone Number</label><br />
-						<input type="text" id="agency_phone" class="input-half required" placeholder="Please enter the phone number of your agency." value="#XMLFormat(REQUEST.AGENCY.Phone)#"/>
+						<input type="text" id="agency_phone" class="input-half required" placeholder="Please enter the phone number of your agency." value="#EncodeForHTML(REQUEST.AGENCY.Phone)#"/>
 					</p>
 					<p>
 						<label for="agency_fax">Agency Fax Number</label><br />
-						<input type="text" id="agency_fax" class="input-half" placeholder="Please enter the fax number of your agency." value="#XMLFormat(REQUEST.AGENCY.Fax)#" />
+						<input type="text" id="agency_fax" class="input-half" placeholder="Please enter the fax number of your agency." value="#EncodeForHTML(REQUEST.AGENCY.Fax)#" />
 					</p>
 					<p>
 						<label for="agency_email">Agency Email</label><br />
-						<input type="text" id="agency_email" class="input-half required" placeholder="Please enter the primary email of your agency." value="#XMLFormat(REQUEST.AGENCY.Email)#" />
+						<input type="text" id="agency_email" class="input-half required" placeholder="Please enter the primary email of your agency." value="#EncodeForHTML(REQUEST.AGENCY.Email)#" />
 					</p>
 					<p>
 						<label for="agency_address">Agency Address</label><br />
-						<textarea data-maxlength="1000" id="agency_address" placeholder="Please enter your agencies physical address. Please include the postal code." class="input-half required">#XMLFormat(REQUEST.AGENCY.Address)#</textarea>
+						<textarea data-maxlength="1000" id="agency_address" placeholder="Please enter your agencies physical address. Please include the postal code." class="input-half required">#EncodeForHTML(REQUEST.AGENCY.Address)#</textarea>
 					</p>
 					<p>
 						<label for="agency_mailing">Agency Mailing Address</label><br />
 						<span class="label-sub">if different from your physical address</span><br />	
-						<textarea data-maxlength="1000" id="agency_mailing" placeholder="Please enter your agencies mailing address. Please include the postal code." class="input-half">#XMLFormat(REQUEST.AGENCY.MailingAddress)#</textarea>
+						<textarea data-maxlength="1000" id="agency_mailing" placeholder="Please enter your agencies mailing address. Please include the postal code." class="input-half">#EncodeForHTML(REQUEST.AGENCY.MailingAddress)#</textarea>
 					</p>
 					<p>
 						<label for="agency_website">Website</label><br />
-						<input type="text" id="agency_website" class="input-half" placeholder="Please enter your agencies website." value="#XMLFormat(REQUEST.AGENCY.Website)#" />
+						<input type="text" id="agency_website" class="input-half" placeholder="Please enter your agencies website." value="#EncodeForHTML(REQUEST.AGENCY.Website)#" />
 					</p>				
 					
 					<div class="form_buttons clearfix">
@@ -69,8 +69,8 @@
 					<cfset atLeastOneRequired = true> <!--- Need to make the first one required in case the delete all of the members --->
 					<cfloop array="#REQUEST.AGENCY.BOARDMEMBERS#" index="member">
 						<div class="two-cols board-member">
-							<p><input type="text" name="board_name" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's name" value="#XMLFormat(member.NAME)#" /></p>
-							<p><input type="text" name="board_title" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's title" value="#XMLFormat(member.TITLE)#" /></p>
+							<p><input type="text" name="board_name" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's name" value="#EncodeForHTML(member.NAME)#" /></p>
+							<p><input type="text" name="board_title" class="inline #iif(atLeastOneRequired, DE('required'), DE(''))#" placeholder="Board member's title" value="#EncodeForHTML(member.TITLE)#" /></p>
 						</div>
 						<cfset atleastOneRequired = false>
 					</cfloop>
@@ -109,20 +109,22 @@
 				<table class="table" id="account_table">
 					<thead>
 						<tr>
-							<th>Name</th><th>Email</th><th>Actions</th>
+							<th>Verified</th><th>Name</th><th>Email</th><th>Actions</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
+							<td></td>
 							<td><input type="text" placeholder="Name" id="new_account_name" /></td>
 							<td><input type="text" placeholder="Email" id="new_account_email" /></td>
 							<td><button class="btn btn-primary" id="add_account"><i class="fa fa-plus"></i> Add Account</button></td>
 						</tr>
 
 						<cfloop array="#REQUEST.ACCOUNTS#" index="account">
-							<tr class="account-row" data-id="#encodeForHTMLAttribute(account.ACCOUNTID)#">
-								<td><input type="text" placeholder="Name" class="account-name" value="#XMLFormat(account.NAME)#" /></td>
-								<td><input type="text" placeholder="Email address" class="account-email" value="<cfoutput>#XMLFormat(account.EMAIL)#</cfoutput>" /></td>
+							<tr class="account-row" data-id="#encodeForHTMLAttribute(account.ACCOUNTID)#" data-email="#EncodeForHTMLAttribute(account.EMAIL)#" >
+								<td>#EncodeForHTML(DateFormat(account.DATEVERIFIED, "MM-DD-YYYY"))#</td>
+								<td><input type="text" placeholder="Name" class="account-name" value="#EncodeForHTML(account.NAME)#" /></td>
+								<td><input type="text" placeholder="Email address" class="account-email" value="<cfoutput>#EncodeForHTML(account.EMAIL)#</cfoutput>" /></td>
 								<td>
 									<button class="btn btn-primary save-account"><i class="fa fa-check"></i> Save Account</button>
 									<button class="btn btn-primary password-reset"><i class="fa fa-check"></i> Reset Password</button>
@@ -135,6 +137,7 @@
 					</tbody>
 					<tfoot>
 						<tr class="account-row template">
+							<td></td>
 							<td><input type="text" placeholder="Name" class="account-name" /></td>
 							<td><input type="text" placeholder="Email address" class="account-email" /></td>
 							<td>

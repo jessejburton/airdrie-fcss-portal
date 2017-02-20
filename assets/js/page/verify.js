@@ -1,3 +1,11 @@
+$(document).ready(function(){
+	$("#verify_password").on("keyup", function(e){
+		if(e.which == 13) {
+	        $("#verify_submit").trigger("click");
+	    }
+	});
+});
+
 $(document).on("click", "#verify_submit", function(){
 	// Validate password
 	var pword = $("#password").val(),
@@ -9,7 +17,7 @@ $(document).on("click", "#verify_submit", function(){
 	}
 
 	if(!validatePass(pword)){
-		showAutoreply({"TYPE":"error","MESSAGE":"Please ensure your password is at least 8 characters and contains at least one of each of the following: uppercase letter, lowercase letter, special character, number"}, $("#password_verify_group"));
+		showAutoreply({"TYPE":"error","MESSAGE":"Please ensure your password is between 8 and 16 characters and contains at least one of each of the following: uppercase letter, lowercase letter, special character, number"}, $("#password_verify_group"));
 		return false;		
 	}
 
@@ -43,7 +51,7 @@ function validatePass(p){
     var aNumber = /[0-9]/;
     var aSpecial = /[!|@|#|$|%|^|&|*|(|)|-|_]/;
 
-    if(p.length < 8){
+    if(p.length < 8 || p.length > 16){
         return false;
     }
 

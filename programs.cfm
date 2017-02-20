@@ -26,7 +26,7 @@
 				<cfoutput>
 					<cfloop array="#PROGRAMS#" index="program">
 						<div class="program">
-							<h3 class="spaced" title="Program ID #encodeForHTMLAttribute(program.ProgramID)#">#XMLFormat(program.ProgramName)#</h3>
+							<h3 class="spaced" title="Program ID #encodeForHTMLAttribute(program.ProgramID)#">#EncodeForHTML(program.ProgramName)#</h3>
 							<cfif ListFind(program.StatusList, "PROGRAM - Funded") IS 0>
 								<div>	
 									<cfif ListFind(PROGRAM.StatusList, 'LOI - Approved') IS 0>

@@ -14,8 +14,8 @@
 					<input type="password" placeholder="verify password" id="verify_password" name="verify_password" />
 				</p>
 
-				<input type="hidden" id="guid" value="<cfoutput>#XMLFormat(URL.accountverify)#</cfoutput>" />
-				<input type="hidden" id="emailhash" value="<cfoutput>#XMLFormat(URL.email)#</cfoutput>" />
+				<input type="hidden" id="guid" value="<cfoutput>#EncodeForHTML(URL.accountverify)#</cfoutput>" />
+				<input type="hidden" id="emailhash" value="<cfoutput>#EncodeForHTML(URL.email)#</cfoutput>" />
 				<input type="button" id="verify_submit" name="verify_submit" value="Set Password" class="btn btn-primary btn-lg btn-block" />
 			</div>
 		</form>

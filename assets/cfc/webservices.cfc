@@ -30,7 +30,7 @@
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
-			<cfinvoke component="#APPLICATION.cfcpath#account" method="Insert" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" AgencyID="#REQUEST.AGENCY.AGENCYID#" returnvariable="LOCAL.account" />
+			<cfinvoke component="#APPLICATION.cfcpath#account" method="Insert" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" AgencyID="#REQUEST.USER.AGENCYID#" returnvariable="LOCAL.account" />
 
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Account has been created. An email will be sent to the address provided for the user to setup their account.")>
 			<cfset LOCAL.response.DATA = LOCAL.account>
@@ -136,7 +136,7 @@
 	</cffunction>	
 
 	<cffunction name="resetPassword" returntype="struct" returnformat="JSON" access="remote"
-		hint="Sends the user an email that they can be used to set their password.">
+		hint="Sends the user an email that can be used to set their password.">
 		<cfargument name="AccountEmail" type="string" required="true">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
@@ -184,7 +184,7 @@
 				</cfmail>
 			</cfif>
 
-			<cfreturn getSuccessResponse("<strong>Success!</strong> Account reset email has been sent to #XMLFormat(ARGUMENTS.AccountEmail)#.")>
+			<cfreturn getSuccessResponse("<strong>Success!</strong> Account reset email has been sent to #EncodeForHTML(ARGUMENTS.AccountEmail)#.")>
 		<cfelse>
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>

@@ -10,38 +10,40 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<div id="program_alerts">
-				<h1><i class="fa fa-exclamation-circle"></i> Notice!</h1>
-				<p>The following programs require your attention:</p>
-				<cfoutput>
-					<cfloop array="#Alerts#" index="alert">
-						<div class="program program-alert" data-programid="#alert.PROGRAMID#">
-							<cfif alert.STATUS IS 'LOI - Submitted to Airdrie'>
-								<p>
-									<strong>#alert.PROGRAMNAME#</strong><br />
-									LOI has been submitted and is ready for your review and approval.
-								</p>
-								<div class="clearfix">
-									<button type="button" class="btn btn-secondary pull-left program-review"><i class="fa fa-file-text"></i> Review Program</button>
-									<button type="button" class="btn btn-primary pull-right program-approve"><i class="fa fa-check-circle"></i> Approve LOI</button>
-								</div>	
-							</cfif>
-							<cfif alert.STATUS IS 'APPLICATION - Submitted to Airdrie'>
-								<p>
-									<strong>#alert.PROGRAMNAME#</strong><br />
-									Application has been submitted and is ready for your review and approval.
-								</p>
-								<div class="clearfix">
-									<button type="button" class="btn btn-secondary pull-left program-review"><i class="fa fa-file-text"></i> Review Program</button>
-									<button type="button" class="btn btn-primary pull-right program-approve"><i class="fa fa-check-circle"></i> Approve Application</button>
-								</div>								
-							</cfif>
-						</div>	
-					</cfloop>
-				</cfoutput>
-			</div>
+			<cfif ArrayLen(Alerts) GT 0>
+				<div id="program_alerts">
+					<h1><i class="fa fa-exclamation-circle"></i> Notice!</h1>
+					<p>The following programs require your attention:</p>
+					<cfoutput>
+						<cfloop array="#Alerts#" index="alert">
+							<div class="program program-alert" data-programid="#alert.PROGRAMID#">
+								<cfif alert.STATUS IS 'LOI - Submitted to Airdrie'>
+									<p>
+										<strong>#alert.PROGRAMNAME#</strong><br />
+										LOI has been submitted and is ready for your review and approval.
+									</p>
+									<div class="clearfix">
+										<button type="button" class="btn btn-secondary pull-left program-review"><i class="fa fa-file-text"></i> Review Program</button>
+										<button type="button" class="btn btn-primary pull-right program-approve"><i class="fa fa-check-circle"></i> Approve LOI</button>
+									</div>	
+								</cfif>
+								<cfif alert.STATUS IS 'APPLICATION - Submitted to Airdrie'>
+									<p>
+										<strong>#alert.PROGRAMNAME#</strong><br />
+										Application has been submitted and is ready for your review and approval.
+									</p>
+									<div class="clearfix">
+										<button type="button" class="btn btn-secondary pull-left program-review"><i class="fa fa-file-text"></i> Review Program</button>
+										<button type="button" class="btn btn-primary pull-right program-approve"><i class="fa fa-check-circle"></i> Approve Application</button>
+									</div>								
+								</cfif>
+							</div>	
+						</cfloop>
+					</cfoutput>
+				</div>
+			</cfif>
 
-			<h1>Programs</h1>
+			<h1><i class="fa fa-circle"></i> Programs</h1>
 
 			<div id="current_programs">
 				<cfoutput>
@@ -49,20 +51,20 @@
 						<div class="program" data-programid="#program.ProgramID#">
 							<table class="table">
 								<thead>
-									<tr><th colspan="2"><h1>#XMLFormat(program.ProgramName)#</h1></th></tr>
-									<tr><td colspan="2">#XMLFormat(program.ProgramStatement)#</td></tr>
+									<tr><th colspan="2"><h1>#EncodeForHTML(program.ProgramName)#</h1></th></tr>
+									<tr><td colspan="2">#EncodeForHTML(program.ProgramStatement)#</td></tr>
 								</thead>
 								<tbody>
-									<tr><th style="width: 200px;">Status:</th><td>#XMLFormat(program.CURRENTSTATUS)#</td></tr>
-									<tr><th>Contact Name:</th><td>#XMLFormat(program.PRIMARYCONTACTNAME)#</td></tr>
-									<tr><th>Email:</th><td>#XMLFormat(program.PRIMARYEMAIL)#</td></tr>
-									<tr><th>Phone:</th><td>#XMLFormat(program.PRIMARYPHONE)#</td></tr>
-									<tr><th>Address:</th><td>#XMLFormat(program.PROGRAMADDRESS)#</td></tr>
+									<tr><th style="width: 200px;">Status:</th><td>#EncodeForHTML(program.CURRENTSTATUS)#</td></tr>
+									<tr><th>Contact Name:</th><td>#EncodeForHTML(program.PRIMARYCONTACTNAME)#</td></tr>
+									<tr><th>Email:</th><td>#EncodeForHTML(program.PRIMARYEMAIL)#</td></tr>
+									<tr><th>Phone:</th><td>#EncodeForHTML(program.PRIMARYPHONE)#</td></tr>
+									<tr><th>Address:</th><td>#EncodeForHTML(program.PROGRAMADDRESS)#</td></tr>
 									<cfif program.PROGRAMADDRESS NEQ program.PROGRAMMAILINGADDRESS AND LEN(program.PROGRAMMAILINGADDRESS) GT 0>
-										<tr><th>Mailing Address:</th><td>#XMLFormat(program.PROGRAMMAILINGADDRESS)#</td></tr>
+										<tr><th>Mailing Address:</th><td>#EncodeForHTML(program.PROGRAMMAILINGADDRESS)#</td></tr>
 									</cfif>
-									<tr><th>Agency:</th><td>#XMLFormat(program.AGENCY)#</td></tr>
-									<tr><th>Estimated Budget:</th><td>#XMLFormat(DollarFormat(program.ESTIMATEDFROMAIRDRIE))#</td></tr>
+									<tr><th>Agency:</th><td>#EncodeForHTML(program.AGENCY)#</td></tr>
+									<tr><th>Estimated Budget:</th><td>#EncodeForHTML(DollarFormat(program.ESTIMATEDFROMAIRDRIE))#</td></tr>
 								</tbody>
 								<tfoot>
 									<tr>

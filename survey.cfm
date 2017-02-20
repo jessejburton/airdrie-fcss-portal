@@ -65,16 +65,16 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<h1><cfoutput>#XMLFormat(REQUEST.SURVEY.Name)#</cfoutput></h1>
-			<p><cfoutput>#XMLFormat(REQUEST.SURVEY.Description)#</cfoutput></p>
+			<h1><cfoutput>#EncodeForHTML(REQUEST.SURVEY.Name)#</cfoutput></h1>
+			<p><cfoutput>#EncodeForHTML(REQUEST.SURVEY.Description)#</cfoutput></p>
 
 			<p><a href="outcome_measures.cfm?ProgramID=<cfoutput>#URLEncodedFormat(URL.ProgramID)#</cfoutput>" class="link"><i class="fa fa-arrow-circle-o-left"></i> Back to Surveys</a></p>
 
 			<form id="survey">
 			<!--- HIDDEN FIELDS --->
 				<cfoutput>
-					<input type="hidden" id="SurveyID" value="#XMLFormat(URL.SurveyID)#" />
-					<input type="hidden" id="ProgramID" value="#XMLFormat(URL.ProgramID)#" />
+					<input type="hidden" id="SurveyID" value="#EncodeForHTML(URL.SurveyID)#" />
+					<input type="hidden" id="ProgramID" value="#EncodeForHTML(URL.ProgramID)#" />
 					<input type="hidden" id="client_id" value="" />
 				</cfoutput>
 
@@ -178,7 +178,7 @@
 					</div>
 
 <!--- SURVEY QUESTIONS --->
-					<h3 id="pre_survey_data" class="ui-state-disabled">Pre Survey</h3>
+					<h3 id="pre_survey_data" class="ui-state-disabled" style="display: none;">Pre Survey</h3>
 					<div class="form-group">
 						<cfoutput>
 							<cfloop array="#REQUEST.SURVEY.Questions#" index="question"> 

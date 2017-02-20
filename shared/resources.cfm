@@ -6,7 +6,7 @@
 	<ul id="agency_resource_list">
 		<cfoutput>
 			<cfloop array="#RESOURCES.AGENCY#" index="r">
-				<li class="resource-link" data-id="#r.ResourceID#"><a href="#r.URL#" target="#iif(LEFT(r.URL, 4) IS "http", DE('_blank'), DE('_self'))#">#r.Title#</a> <i class="fa fa-close remove-resource" title="Remove this resource link."></i></li>
+				<li class="resource-link" data-id="#r.ResourceID#"><a href="#EncodeForHTML(r.URL)#" target="#iif(LEFT(r.URL, 4) IS "http", DE('_blank'), DE('_self'))#">#EncodeForHTML(r.Title)#</a> <i class="fa fa-close remove-resource" title="Remove this resource link."></i></li>
 			</cfloop>
 		</cfoutput>
 	</ul>
@@ -38,7 +38,7 @@
 	<ul id="internal_resource_list">
 		<cfoutput>
 			<cfloop array="#RESOURCES.INTERNAL#" index="r">
-				<li class="resource-link" data-id="#r.ResourceID#"><a href="#r.URL#" target="#iif(LEFT(r.URL, 4) IS "http", DE('_blank'), DE('_self'))#">#r.Title#</a> <i class="fa fa-close remove-resource" title="Remove this resource link."></i></li>
+				<li class="resource-link" data-id="#r.ResourceID#"><a href="#EncodeForHTML(r.URL)#" target="#iif(LEFT(r.URL, 4) IS "http", DE('_blank'), DE('_self'))#">#EncodeForHTML(r.Title)#</a> <i class="fa fa-close remove-resource" title="Remove this resource link."></i></li>
 			</cfloop>
 		</cfoutput>
 	</ul>
@@ -68,7 +68,7 @@
 	<ul>
 		<cfoutput>
 			<cfloop array="#RESOURCES.AGENCY#" index="r">
-				<li><a href="#r.URL#" target="#iif(LEFT(r.URL, 4) IS "http", DE('_blank'), DE('_self'))#">#r.Title#</a></li>
+				<li><a href="#EncodeForHTML(r.URL)#" target="#iif(LEFT(r.URL, 4) IS "http", DE('_blank'), DE('_self'))#">#EncodeForHTML(r.Title)#</a></li>
 			</cfloop>
 		</cfoutput>
 	</ul>	

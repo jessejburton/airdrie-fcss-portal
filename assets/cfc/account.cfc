@@ -24,7 +24,7 @@
 		<cfargument name="AgencyID" type="string" required="true">
 
 		<cfquery name="LOCAL.qAccounts">
-			SELECT	AccountID, Name, Email, isActive
+			SELECT	AccountID, Name, Email, isActive, DateVerified
 			FROM 	Account_tbl
 			WHERE	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">
 			ORDER BY Name ASC, isActive DESC
@@ -37,13 +37,40 @@
 			<cfset LOCAL.account.ACCOUNTID = LOCAL.qAccounts.AccountID>
 			<cfset LOCAL.account.NAME = LOCAL.qAccounts.Name>
 			<cfset LOCAL.account.EMAIL = LOCAL.qAccounts.Email>
+			<cfset LOCAL.account.DATEVERIFIED = LOCAL.qAccounts.DateVerified>
 			<cfset LOCAL.account.ISACTIVE = LOCAL.qAccounts.isActive>
 
 			<cfset ArrayAppend(LOCAL.ACCOUNTS, LOCAL.account)>
 		</cfloop>
 
 		<cfreturn LOCAL.ACCOUNTS>
-	</cffunction>			
+	</cffunction>
+
+	<cffunction name="getAdminAccounts" returnformat="JSON" returntype="Array" access="public"
+		hint="Returns an array of admin accounts (Agency 0).">
+
+		<cfquery name="LOCAL.qAccounts">
+			SELECT	AccountID, Name, Email, isActive, DateVerified
+			FROM 	Account_tbl
+			WHERE	AgencyID = 0
+			ORDER BY Name ASC, isActive DESC
+		</cfquery>
+
+		<cfset LOCAL.ACCOUNTS = ArrayNew(1)>
+
+		<cfloop query="LOCAL.qAccounts">
+			<cfset LOCAL.account = StructNew()>
+			<cfset LOCAL.account.ACCOUNTID = LOCAL.qAccounts.AccountID>
+			<cfset LOCAL.account.NAME = LOCAL.qAccounts.Name>
+			<cfset LOCAL.account.EMAIL = LOCAL.qAccounts.Email>
+			<cfset LOCAL.account.DATEVERIFIED = LOCAL.qAccounts.DateVerified>
+			<cfset LOCAL.account.ISACTIVE = LOCAL.qAccounts.isActive>
+
+			<cfset ArrayAppend(LOCAL.ACCOUNTS, LOCAL.account)>
+		</cfloop>
+
+		<cfreturn LOCAL.ACCOUNTS>
+	</cffunction>				
 
 <!--- VERIFY ACCOUNT --->
 	<cffunction name="verifyAccount" returntype="boolean" returnformat="JSON" access="public"
@@ -111,7 +138,6 @@
 			SELECT	AccountID 
 			FROM 	Account_tbl
 			WHERE	Email = <cfqueryparam value="#ARGUMENTS.AccountEmail#" cfsqltype="cf_sql_varchar">
-			AND 	AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">
 		</cfquery>
 
 		<cfif LOCAL.qCheck.recordcount GT 0>
@@ -186,13 +212,23 @@
 			FROM 	Account_tbl
 			WHERE	(Email = <cfqueryparam value="#ARGUMENTS.AccountEmail#" cfsqltype="cf_sql_varchar">
 			OR 		(Name = <cfqueryparam value="#ARGUMENTS.AccountName#" cfsqltype="cf_sql_varchar">
-					AND AgencyID = <cfqueryparam value="#REQUEST.AGENCY.AgencyID#" cfsqltype="cf_sql_integer">))
+					AND AgencyID = <cfqueryparam value="#REQUEST.USER.AgencyID#" cfsqltype="cf_sql_integer">))
 			AND AccountID <> <cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">
 		</cfquery>
 
 		<cfif LOCAL.qCheck.recordcount GT 0>
 			<cfthrow message="<strong>Sorry!</strong> an account with this name or email address already exists.">
 		<cfelse>
+			<!--- Check to see if the email address has changed --->
+			<cfquery name="LOCAL.qCheck">
+				SELECT 	Email 
+				FROM 	Account_tbl
+				WHERE 	AccountID = <cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">	
+			</cfquery>
+
+			<!--- If the email address has changed the account will need to be re-verified --->
+			<cfset LOCAL.EmailChanged = (LOCAL.qCheck.Email NEQ ARGUMENTS.AccountEmail)>
+
 			<cfquery result="LOCAL.qAccount">
 				UPDATE Account_tbl
 				SET
@@ -200,11 +236,19 @@
 					Email = <cfqueryparam value="#ARGUMENTS.AccountEmail#" cfsqltype="cf_sql_varchar">,
 					DateUpdated = getDate(),
 					isActive = <cfqueryparam value="#ARGUMENTS.isActive#" cfsqltype="cf_sql_bit">
-					<cfif NOT ARGUMENTS.isActive>
+					<cfif NOT ARGUMENTS.isActive OR LOCAL.EmailChanged>
 						,GUID = <cfqueryparam value="#CreateUUID()#" cfsqltype="varchar"> <!--- Update the GUID so any active sessions are killed. --->
+					</cfif>
+					<cfif LOCAL.EmailChanged>
+						,DateVerified = NULL
 					</cfif>
 				WHERE AccountID = <cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">
 			</cfquery>
+
+			<!--- Send the verification email if needed --->
+			<cfif LOCAL.EmailChanged>
+				<cfset sendVerificationEmail(ARGUMENTS.AccountID)>
+			</cfif>
 
 			<cfset LOCAL.Account = StructNew()>
 			<cfset LOCAL.Account.AccountID = ARGUMENTS.AccountID>
@@ -214,4 +258,54 @@
 			<cfreturn LOCAL.Account>
 		</cfif>
 	</cffunction>	
+
+<!--- SEND VERIFICATION EMAIL --->
+	<cffunction name="sendVerificationEmail" access="private" returntype="struct" returnformat="JSON"
+		hint="Send a verification email to an account">
+		<cfargument name="AccountID" type="numeric" required="true">
+
+			<!--- Get Account Details --->
+			<cfquery name="LOCAL.qAccount">
+				SELECT	Email, GUID
+				FROM 	Account_tbl
+				WHERE 	AccountID = <cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+
+			<!--- Now send the verification email --->
+			<cfmail to="#LOCAL.qAccount.Email#"
+					from="#APPLICATION.fromemail#"
+					type="html"
+					subject="#APPLICATION.Name# - Account Verification">
+				
+				<h1>Account Verification</h1>
+
+				<p>Please confirm your #APPLICATION.Name# account. </p>
+				<!--- This code should be supported in all major e-mail clients at the time this was written --->
+				<div>
+					<!--[if mso]>
+					<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#APPLICATION.url#?accountverify=#LOCAL.qAccount.GUID#&email=#hashString(LOCAL.qAccount.Email)#" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="10%" stroke="f" fillcolor="##005596">
+					<w:anchorlock/>
+					<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
+					  Verify Account
+					</center>
+					</v:roundrect>
+					<![endif]-->
+					<![if !mso]>
+					<table cellspacing="0" cellpadding="0"> <tr> 
+					<td align="center" width="150" height="40" bgcolor="##005596" style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color: ##ffffff; display: block;">
+						<a href="#APPLICATION.url#?accountverify=#LOCAL.qAccount.GUID#&email=#hashString(LOCAL.qAccount.Email)#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
+					<span style="color: ##ffffff;">
+					  Verify Account
+					</span>
+					</a>
+					</td> 
+					</tr> </table> 
+					<![endif]>
+				</div>				
+				<p style="color: ##474747">If you did not expect this email, please disregard it.</p>
+				<p style="color: ##474747; font-style: italic;">Having trouble with the link? Please contact City of Airdrie Social Planning at 403.948.8800 or <a href="mailto:social.planning@airdrie.ca">social.planning@airdrie.ca</a></p>
+			</cfmail>
+
+		<cfreturn getSuccessResponse("Account verification sent.")>
+	</cffunction>
 </cfcomponent>

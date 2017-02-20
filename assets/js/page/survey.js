@@ -211,7 +211,8 @@ function savePersonData(silent){
 						$("#participant").prev().addClass("heading-success");
 						$("#client_id").val(response.DATA.CLIENTID);
 						$(".accordion .ui-state-disabled").removeClass("ui-state-disabled");
-						$('.accordion').accordion('option', 'active', 1);
+						var activeAccordion = $('.accordion').accordion('option', 'active');
+						$('.accordion').accordion('option', 'active', activeAccordion + 1);
 					}
 				}
 			}

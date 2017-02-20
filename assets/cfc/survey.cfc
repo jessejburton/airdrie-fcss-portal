@@ -9,7 +9,7 @@
 
 <!--- GET THE SURVEY DETAILS --->
 		<cfquery name="LOCAL.qSurvey">
-			SELECT	Name, Description, Citation
+			SELECT	Name, Description, Citation, isPostOnly
 			FROM Survey_tbl
 			WHERE SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
 			AND isActive = 1
@@ -19,6 +19,7 @@
 		<cfset LOCAL.response.Name = LOCAL.qSurvey.Name>
 		<cfset LOCAL.response.Description = LOCAL.qSurvey.Description>
 		<cfset LOCAL.response.Citation = LOCAL.qSurvey.Citation>
+		<cfset LOCAL.response.isPostOnly = LOCAL.qSurvey.isPostOnly>
 		<cfset LOCAL.response.Questions = getQuestionsBySurveyID(ARGUMENTS.SurveyID)>
 
 		<cfreturn LOCAL.response>

@@ -62,8 +62,8 @@ $(document).ready(function(){
 		pstr.isActive = $(row).find(".account-active").is(":checked");
 		pstr.CSRF = $.cookie("CSRF");
 
-		// Validation TODO - validate email
-		if(pstr.Name.length == 0 || pstr.Email.length == 0){
+		// Validation
+		if(pstr.Name.length == 0 || pstr.Email.length == 0 || !validateEmail(pstr.Email)){
 			var autoreply = new Object();
 			autoreply.TYPE = "error";
 			autoreply.SUCCESS = false;
@@ -74,6 +74,13 @@ $(document).ready(function(){
 			return false;
 		} 
 
+		// If the email has changed get the user to confirm
+		if(pstr.Email != $(row).data("email")){
+			if(!confirm("Changing the email address will initiate a password reset and verification, is this ok?")){
+				return false;
+			}
+		}		
+
 		// Update Account
 		$.ajax({
 			url: "assets/cfc/webservices.cfc",
@@ -83,6 +90,9 @@ $(document).ready(function(){
 				showAutoreply(response, $("#account_tab"));
 				if(!response.SUCCESS){
 					$(row).addClass("input-error");
+				} else {
+					// Update the email data value (this is just for the js confirmation, it also validates CF side)
+					$(row).data("email", pstr.Email); 
 				}
 			}
 		});
@@ -91,39 +101,41 @@ $(document).ready(function(){
 
 // RESET PASSWORD
 	$(document).on("click", ".password-reset", function(e){
-		var row = $(this).closest(".account-row");
-		$(row).removeClass("input-error"); // If there were any previous errors
+		if(confirm("Are you sure you would like to reset this users password?")){
+			var row = $(this).closest(".account-row");
+			$(row).removeClass("input-error"); // If there were any previous errors
 
-		var pstr = new Object();
-		pstr.method = "resetPassword";
-		pstr.AccountEmail = $(row).find(".account-email").val();
-		pstr.CSRF = $.cookie("CSRF");
+			var pstr = new Object();
+			pstr.method = "resetPassword";
+			pstr.AccountEmail = $(row).find(".account-email").val();
+			pstr.CSRF = $.cookie("CSRF");
 
-		// Validation TODO - validate email
-		if(pstr.AccountEmail.length == 0){
-			var autoreply = new Object();
-			autoreply.TYPE = "error";
-			autoreply.SUCCESS = false;
-			autoreply.MESSAGE = "Please make sure to enter a valid email address.";
+			// Validation TODO - validate email
+			if(pstr.AccountEmail.length == 0){
+				var autoreply = new Object();
+				autoreply.TYPE = "error";
+				autoreply.SUCCESS = false;
+				autoreply.MESSAGE = "Please make sure to enter a valid email address.";
 
-			$(row).addClass("input-error");
-			showAutoreply(autoreply, $("#account_tab"));
-			return false;
-		} 
-		
-		// Update Account
-		$.ajax({
-			url: "assets/cfc/webservices.cfc",
-			data: pstr,
-			success: function(response){
-				$("#account_tab").find(".input-error").removeClass("input-error");
-				showAutoreply(response, $("#account_tab"));
-				if(!response.SUCCESS){
-					$(row).addClass("input-error");
+				$(row).addClass("input-error");
+				showAutoreply(autoreply, $("#account_tab"));
+				return false;
+			} 
+			
+			// Update Account
+			$.ajax({
+				url: "assets/cfc/webservices.cfc",
+				data: pstr,
+				success: function(response){
+					$("#account_tab").find(".input-error").removeClass("input-error");
+					showAutoreply(response, $("#account_tab"));
+					if(!response.SUCCESS){
+						$(row).addClass("input-error");
+					}
 				}
-			}
-		});
-		return false;
+			});
+			return false;
+		}
 	});	
 });
 

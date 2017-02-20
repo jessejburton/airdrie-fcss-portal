@@ -1,4 +1,4 @@
-<!--- Admin only page --->
+<i class="fa fa-pencil-square-o"></i> <!--- Admin only page --->
 <cfinvoke component="#APPLICATION.cfcpath#core" method="adminOnly" />
 
 <cfinclude template="shared/header.cfm">
@@ -6,7 +6,7 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<h1>Package Builder</h1>
+			<h1><i class="fa fa-pencil-square-o"></i> Package Builder</h1>
 
 			<p class="spaced border-bottom" style="padding-bottom: 25px;">
 				<button type="button" id="new_package" class="btn btn-secondary"><i class="fa fa-plus"></i> Create New Package</button>
@@ -21,7 +21,7 @@
 					<select id="package_select" name="packageID" class="input-half">
 						<option value="">--- Please select a package to edit ---</option>
 						<cfoutput query="qPackages">
-							<option value="#EncodeForHTMLAttribute(qPackages.PackageID)#">#XMLFormat(qPackages.PackageName)#</option>
+							<option value="#EncodeForHTMLAttribute(qPackages.PackageID)#">#EncodeForHTML(qPackages.PackageName)#</option>
 						</cfoutput>
 					</select>
 					
