@@ -31,7 +31,19 @@ function saveMidYear(){
 	var pstr = new Object();
 	pstr.Method = "saveMidYear";
 	pstr.ProgramID = $("#program_id").val();
-	pstr.midyearvalue = $("#midyearvalue").val();
+	pstr.isOnlyFunder = $("input[name=is_only_funder]").is(":checked");
+	pstr.sustainFunding = $("#sustain_funding").val();
+	pstr.isSurplus = $("input[name=is_surplus]").is(":checked");
+	pstr.isDeficit = $("input[name=is_deficit]").is(":checked");
+	pstr.howDeal = $("#how_deal").val();
+	pstr.programActivities = $("#program_activities").val();
+	pstr.notYetStarted = $("#not_yet_started").val();
+	pstr.programChallenges = $("#program_challenges").val();
+	pstr.requireReportAssistance = $("#require_report_assistance").val();
+	pstr.evaluationActivities = $("#evaluation_activities").val();
+	pstr.noActivities = $("#no_activities").val();
+	pstr.evaluationChallenges = $("#evaluation_challenges").val();
+	pstr.requireResearchAssistance = $("#require_research_assistance").val();
 	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({

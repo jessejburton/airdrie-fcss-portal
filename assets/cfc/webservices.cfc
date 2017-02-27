@@ -1193,7 +1193,20 @@
 	<cffunction name="saveMidYear" access="remote" returntype="struct" returnformat="JSON"
 		hint="Update the Mid Year values for a program.">
 		<cfargument name="ProgramID" type="numeric" required="true" hint="The ID of the program to be updated.">
-		<cfargument name="MidYearValue" type="string" required="true" hint="value to be updated.">
+		<cfargument name="isOnlyFunder" type="string" required="true" hint="is Airdrie the only funder?">
+		<cfargument name="sustainFunding" type="string" required="true" hint="How do you intend to sustain your program in the longer-term?">
+		<cfargument name="isSurplus" type="boolean" required="true" hint="Does your program have a surplus of funds?">
+		<cfargument name="isDeficit" type="boolean" required="true" hint="Does your program have a deficit of funds?">
+		<cfargument name="howDeal" type="string" required="true" hint="How will you deal with the deficit?">
+		<cfargument name="programActivities" type="string" required="true" hint="What program activities have taken place?">
+		<cfargument name="notYetStarted" type="string" required="true" hint="What activities scheduled to begin by June 30?">
+		<cfargument name="programChallenges" type="string" required="true" hint="Have you run into any challenges implementing your program?">
+		<cfargument name="requireReportAssistance" type="string" required="true" hint="Do you require any assistance from Airdrie FCSS to help you report on program activities?">
+		<cfargument name="evaluationActivities" type="string" required="true" hint="What evaluation activities have you implemented to measure the impact of your program? ">
+		<cfargument name="noActivities" type="string" required="true" hint="If you have NOT yet undertaken any of the above activities, please explain.">
+		<cfargument name="evaluationChallenges" type="string" required="true" hint="Have you run into any challenges implementing program evaluation activities?">
+		<cfargument name="requireResearchAssistance" type="string" required="true" hint="Do you require any assistance from Airdrie FCSS Researcher?">
+
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfset LOCAL.hasAccess = checkProgramAccessByAccountID(ARGUMENTS.ProgramID)>
@@ -1201,7 +1214,19 @@
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND LOCAL.hasAccess>
 			<cfquery>
 				UPDATE 	Program_tbl
-				SET 	midyearvalue = <cfqueryparam value="#ARGUMENTS.MidYearValue#" cfsqltype="cf_sql_varchar">
+				SET 	isOnlyFunder = <cfqueryparam value="#ARGUMENTS.isOnlyFunder#" cfsqltype="cf_sql_varchar">
+						,sustainFunding = <cfqueryparam value="#ARGUMENTS.sustainFunding#" cfsqltype="cf_sql_varchar">
+						,isSurplus = <cfqueryparam value="#ARGUMENTS.isSurplus#" cfsqltype="cf_sql_bit">
+						,isDeficit = <cfqueryparam value="#ARGUMENTS.isDeficit#" cfsqltype="cf_sql_bit">
+						,howDeal = <cfqueryparam value="#ARGUMENTS.howDeal#" cfsqltype="cf_sql_varchar">
+						,programActivities = <cfqueryparam value="#ARGUMENTS.programActivities#" cfsqltype="cf_sql_varchar">
+						,notYetStarted = <cfqueryparam value="#ARGUMENTS.notYetStarted#" cfsqltype="cf_sql_varchar">
+						,programChallenges = <cfqueryparam value="#ARGUMENTS.programChallenges#" cfsqltype="cf_sql_varchar">
+						,requireReportAssistance = <cfqueryparam value="#ARGUMENTS.requireReportAssistance#" cfsqltype="cf_sql_varchar">
+						,evaluationActivities = <cfqueryparam value="#ARGUMENTS.evaluationActivities#" cfsqltype="cf_sql_varchar">
+						,noActivities = <cfqueryparam value="#ARGUMENTS.noActivities#" cfsqltype="cf_sql_varchar">
+						,evaluationChallenges = <cfqueryparam value="#ARGUMENTS.evaluationChallenges#" cfsqltype="cf_sql_varchar">
+						,requireResearchAssistance = <cfqueryparam value="#ARGUMENTS.requireResearchAssistance#" cfsqltype="cf_sql_varchar">
 				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
 			</cfquery>
 
