@@ -59,7 +59,7 @@
 				<p>
 					<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 					<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-					<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NEW NEQ FALSE, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
+					<!---<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NEW NEQ FALSE, DE('Last Saved: ' & EncodeForHTML(PROGRAM.FormattedDateUpdated)), DE(''))#</cfoutput></em>--->
 				</p>
 				
 			<cfoutput>				
@@ -380,7 +380,7 @@
 			<p>
 				<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-				<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NEW NEQ FALSE, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
+				<!---<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NEW NEQ FALSE, DE('Last Saved: ' & EncodeForHTML(PROGRAM.FormattedDateUpdated)), DE(''))#</cfoutput></em>--->
 			</p>
 		</cfif>
 <!--- END FORM --->
