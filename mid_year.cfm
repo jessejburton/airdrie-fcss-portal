@@ -18,7 +18,7 @@
 			<h1>Midyear Progress Report</h1>
 
 <!--- Decide whether or not to show the form --->
-<cfif ListFindNoCase(PROGRAM.StatusList, 'Mid-Year Submitted') IS 1>
+<cfif ListFindNoCase(PROGRAM.StatusList, 'MIDYEAR - Submitted') IS 1>
 	<cfset showForm = false>
 	<div class="autoreply autoreply-info autoreply-visible">
 		<p><strong>Submitted!</strong> You have already completed and sent in your mid-year report for this program.
@@ -47,7 +47,7 @@
 						<p>
 							<label for="is_only_funder">Is Airdrie FCSS the only funder for this program?</label><br /><br />
 							<label for="is_only_funder_yes">
-								<input type="radio" id="is_only_funder_yes" name="is_only_funder" class="required" #IIF(PROGRAM.isOnlyFunder IS true, DE('checked'), DE(''))# />#PROGRAM.isOnlyFunder# Yes
+								<input type="radio" id="is_only_funder_yes" name="is_only_funder" class="required" #IIF(PROGRAM.isOnlyFunder IS true, DE('checked'), DE(''))# /> Yes
 							</label>
 							<label for="is_only_funder_no">
 								<input type="radio" id="is_only_funder_no" name="is_only_funder" class="required" #IIF(PROGRAM.isOnlyFunder IS false, DE('checked'), DE(''))# /> No
@@ -165,24 +165,10 @@
 						</p>
 
 						<div class="form_buttons clearfix">
-							<button type="button" id="application_review" class="btn btn-primary pull-right">Review</button> 
+							<button type="button" id="midyear_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button> 
+							<!---<a href="javascript:;" class="pull-right small-text link inline" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> Printable Version</a>--->
 						</div>
 					</div>														
-
-				<!--- REVIEW --->
-					<h3 class="ui-state-disabled">Review and Submit</h3>
-					<div>
-						<div id="application_review_display">	
-							<h2>Mid Year Budget Summary</h2>
-							<div class="budget-summary"></div>								
-						</div>
-						
-						<div class="form-buttons clearfix"> 
-							<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
-							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
-							<a href="javascript:;" class="pull-right small-text link inline" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
-						</div>
-					</div>	
 				</div>
 			</cfoutput>				
 

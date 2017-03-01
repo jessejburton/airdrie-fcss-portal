@@ -12,6 +12,15 @@ var _AUTOSAVE_DURATION = 30000; // Autosave every 30 seconds
 $(document).ready(function(){
 	$('.accordion').accordion('option', 'active', 0);
 	_AUTOSAVE = setInterval(saveBudget, _AUTOSAVE_DURATION);
+
+// Enable the review panel once the form is valid
+	$("#midyear_submit_to_airdrie").on("click", function(){
+		$(".form-group").addClass("seen");
+		if(validateForm($("#mid_year_form"), submitMidYear)){
+			$('.accordion').accordion('option', 'active', -1); // Open the review panel.
+		};
+	});	
+
 });
 
 $(document).on("click", ".save", function(){
@@ -58,6 +67,29 @@ function saveMidYear(){
 				return false;
 			}
 			return true;
+		}
+	});
+}
+
+// Submit the Mid Year report to Airdrie
+function submitMidYear(){
+	saveMidYear();
+	var pstr = new Object();
+	pstr.ProgramID = $("#program_id").val();
+	pstr.Method = "submitMidYear";
+	pstr.CSRF = $.cookie("CSRF");
+
+	$.ajax({
+		url: "assets/cfc/webservices.cfc",
+		data: pstr,
+		success: function(response){
+			$(".accordion").accordion({active: false});
+			showAutoreply(response, $(".wrapper"));
+			clearInterval(_AUTOSAVE);
+			_AUTOSAVE = null;
+			if(response.SUCCESS){
+				$("#mid_year_form").hide();
+			}
 		}
 	});
 }

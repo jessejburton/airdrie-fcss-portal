@@ -411,4 +411,33 @@
 		<cfreturn true>
 	</cffunction>
 
+<!--- Submits a Mid Year report to Airdrie --->
+	<cffunction name="markMidYearSubmitted" access="public" returnformat="JSON" returntype="boolean"
+		hint="Submits a Mid Year report to the City of Airdrie">
+		<cfargument name="ProgramID" type="numeric" required="true">
+
+			<cfset LOCAL.Program = getProgramByID(ARGUMENTS.ProgramID)>
+
+			<!--- Insert the Status record --->
+			<cfquery>
+				INSERT INTO ProgramStatus_tbl
+				( ProgramID, StatusID, AccountID )
+				VALUES 
+				(
+					<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+					(SELECT StatusID FROM Status_tbl WHERE Status = <cfqueryparam value="MIDYEAR - Submitted" cfsqltype="cf_sql_varchar">),
+					<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_integer">
+				)
+			</cfquery>
+
+			<cfmail to="#REQUEST.SETTINGS.adminemail#"
+					from="#APPLICATION.fromemail#"
+					subject="Program Mid Year Report has been submitted"
+					type="html">
+				<p>The following program: <strong>#LOCAL.PROGRAM.PROGRAMNAME#</strong> has marked their mid-year report as complete.</p>
+			</cfmail>
+
+		<cfreturn true>
+	</cffunction>		
+
 </cfcomponent>

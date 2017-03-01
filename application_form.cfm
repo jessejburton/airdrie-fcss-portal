@@ -5,9 +5,11 @@
 <cfif StructKeyExists(URL, 'ID')>
 	<cfset NEW = false>
 	<cfinvoke component="#APPLICATION.cfcpath#program" method="getProgramByID" programID="#URL.ID#" returnvariable="PROGRAM" />
+	<cfset ProgramID = URL.ID>
 <cfelse>
 	<cfset NEW = true>
 	<cfinvoke component="#APPLICATION.cfcpath#program" method="getBlankProgram" returnvariable="PROGRAM" />
+	<cfset ProgramID = PROGRAM.ProgramID>
 </cfif>
 
 <cfif ListFindNoCase(PROGRAM.StatusList, 'LOI - Approved') GT 0>
@@ -57,7 +59,7 @@
 				<p>
 					<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 					<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-					<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
+					<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NEW NEQ FALSE, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 				</p>
 				
 			<cfoutput>				
@@ -369,7 +371,7 @@
 								<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
 							</cfif>
 							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
-							<a href="admin_create_package.cfm?programID=#encodeForHTMLAttribute(URL.ID)#" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
+							<a href="admin_create_package.cfm?programID=#encodeForHTMLAttribute(ProgramID)#" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
 						</div>
 					</div>	
 				</div>
@@ -378,7 +380,7 @@
 			<p>
 				<a href="javascript:;" class="save btn btn-primary inline disabled"><i class="fa fa-save"></i> Save</a>
 				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
-				<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NOT NEW, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
+				<em class="pull-right small-text" id="last_saved"><cfoutput>#IIF(NEW NEQ FALSE, DE('Last Saved: #EncodeForHTML(PROGRAM.FormattedDateUpdated)#'), DE(''))#</cfoutput></em>
 			</p>
 		</cfif>
 <!--- END FORM --->

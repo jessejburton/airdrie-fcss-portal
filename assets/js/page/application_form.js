@@ -78,29 +78,30 @@ $(document).ready(function(){
 /*** Save the Application at whatever state it is in ***/
 function saveApplication(){
 	reviewApplication(); // Update the review tab to make sure it has all of the most recent information 
-	if($("#program_name").val().length > 0){ // Make sure there is atleast a program name
+	if($("#program_name").val().length > 0){ // Make sure there is atleast a program name		
 		$("#save").removeClass("disabled");
-		$("#saving").fadeIn("slow", function(){
-			var pstr = updateProgram();
-			pstr.method = "saveProgram";
-			pstr.CSRF = $.cookie("CSRF");
+		$("#saving").fadeIn("slow")
 
-			$.ajax({
-				url: "assets/cfc/webservices.cfc",
-				data: pstr,
-				method: "POST",
-				success: function(response){
-					if(!response.SUCCESS){
-						showAutoreply(response, $("#application_form"));
-						clearInterval(_AUTOSAVE);
-						_AUTOSAVE = null;
-					}
-					$("#last_saved").html("Last Saved: " + currentTime());
-					$("#program_id").val(response.DATA.PROGRAMID);
-					$("#saving").fadeOut("slow");
+		var pstr = updateProgram();
+		pstr.method = "saveProgram";
+		pstr.CSRF = $.cookie("CSRF");
+
+		$.ajax({
+			url: "assets/cfc/webservices.cfc",
+			data: pstr,
+			method: "POST",
+			success: function(response){
+				if(!response.SUCCESS){
+					showAutoreply(response, $("#application_form"));
+					clearInterval(_AUTOSAVE);
+					_AUTOSAVE = null;
 				}
-			});
+				$("#last_saved").html("Last Saved: " + currentTime());
+				$("#program_id").val(response.DATA.PROGRAMID);
+				$("#saving").fadeOut("slow");
+			}
 		});
+
 		if(_APPLICATION_TYPE == "Application Form") {
 			updateBoardMembers(true);
 			saveBudget();

@@ -1236,6 +1236,22 @@
 		</cfif>
 	</cffunction>
 
+<!--- SUBMIT MIDYEAR --->
+	<cffunction name="submitMidYear" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Notifies Airdrie that the Mid Year report is complete.">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif (ARGUMENTS.csrf EQ COOKIE.csrf) AND checkProgramAccessByAccountID(ARGUMENTS.PROGRAMID)>
+			<cfinvoke component="#APPLICATION.cfcpath#program" method="markMidYearSubmitted" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been submitted to the City of Airdrie.")>
+
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>	
+
 <!--- SAVE ENDYEAR --->
 	<cffunction name="saveEndYear" access="remote" returntype="struct" returnformat="JSON"
 		hint="Update the End Year values for a program.">
