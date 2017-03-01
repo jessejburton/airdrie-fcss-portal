@@ -41,7 +41,7 @@ $(document).on("click", ".program-fund", function(){
     	amount = program.find(".allocate-fund-amount").val();
 
 	// Make sure they have entered a value	
-	if(amount == 0 || amount.length == 0){
+	if(amount.length == 0){
 		showAutoreply({"SUCCESS":false,"TYPE":"error","MESSAGE":"Please enter an amount to allocate"}, program.find(".fund-section"));
 		return false;
 	}
@@ -50,9 +50,9 @@ $(document).on("click", ".program-fund", function(){
 	$("#message").find("#fund_amount").html(program.find(".allocate-fund-amount").val());
 	$("#message").find("#confirm_fund_program").on("click", function(){
 			var pstr = new Object();
-				pstr.method = "checkPassword";
-				pstr.pword = $("#your_account_password").val();
-				pstr.spword = $("#super_account_password").val();
+				pstr.method = "checkAccountAndSuperPassword";
+				pstr.pword = $("#message #your_account_password").val();
+				pstr.spword = $("#message #super_account_password").val();
 				pstr.CSRF = $.cookie("CSRF");
 
 			$.ajax({
@@ -61,8 +61,7 @@ $(document).on("click", ".program-fund", function(){
 				async: true,
 				success: function(response){
 					if(response.SUCCESS){
-						alert("good");
-						//fundProgram(program);
+						fundProgram(program);
 					} else {
 						showAutoreply(response, $("#message"));
 					}

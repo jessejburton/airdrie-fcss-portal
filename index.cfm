@@ -10,7 +10,6 @@
 			</div>
 		</cfif>
 
-<!--- TODO - Add dashboard items --->
 		<cfif isDefined('REQUEST.Agency.ADMIN') AND REQUEST.Agency.ADMIN IS true>
 			<cfset STATS = createObject("component", "#APPLICATION.cfcpath#Dashboard")>
 

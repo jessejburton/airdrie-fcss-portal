@@ -30,7 +30,7 @@ $(document).on("click", "#verify_submit", function(){
 	pstr.CSRF = $.cookie("CSRF");
 
 	$.ajax({
-		url: "assets/cfc/webservices.cfc",
+		url: "assets/cfc/webservicesnoauth.cfc",
 		data: pstr,
 		success: function(response){
 			$(".autoreply").remove();

@@ -33,7 +33,7 @@ $(document).ready(function(){
 		} else {
 			// Update Account
 			$.ajax({
-				url: "assets/cfc/webservices.cfc",
+				url: "assets/cfc/webservicesnoauth.cfc",
 				data: pstr,
 				success: function(response){
 					clearAutoreply();
@@ -61,7 +61,7 @@ function login(){
 	$("#login_form_group").find(".autoreply").remove();
 
 	$.ajax({
-		url: "assets/cfc/webservices.cfc",
+		url: "assets/cfc/webservicesnoauth.cfc",
 		data: pstr,
 		method: "POST",
 		success: function(response){

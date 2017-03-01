@@ -45,7 +45,7 @@
 										<a href="outcome_measures.cfm?ProgramID=#URLEncodedFormat(program.ProgramID)#" class="btn btn-primary">
 											<i class="fa fa-pie-chart"></i> Outcome Measures
 										</a>
-										<a href="mid_year.cfm?ID=#program.ProgramID#" class="btn btn-primary">
+										<a href="mid_year.cfm?ID=#program.ProgramID#" class="btn btn-primary #IIF(ListFindNoCase(PROGRAM.StatusList, 'MIDYEAR - Submitted') IS 1, DE('submitted'), DE(''))#">
 											<i class="fa fa-file-o"></i> Mid-Year Report
 										</a>
 										<a href="year_end.cfm?ID=#program.ProgramID#" class="btn btn-primary">

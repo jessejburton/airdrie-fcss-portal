@@ -54,7 +54,7 @@ function saveMidYear(){
 	pstr.evaluationChallenges = $("#evaluation_challenges").val();
 	pstr.requireResearchAssistance = $("#require_research_assistance").val();
 	pstr.CSRF = $.cookie("CSRF");
-
+alert(pstr.isOnlyFunder);return false;
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",
 		data: pstr,

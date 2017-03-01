@@ -30,7 +30,7 @@
 </head>
 <body>
 
-<cfif NOT isDefined('REQUEST.loggedin')>
+<cfif NOT StructKeyExists(REQUEST, "loggedin")>
 	<link href="assets/css/login.css?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" rel="stylesheet" type="text/css" />
 	<script src="assets/js/page/login.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
 
