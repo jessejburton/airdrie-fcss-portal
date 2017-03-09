@@ -80,7 +80,7 @@
 								<a class="btn btn-primary pull-right" href="survey.cfm?SurveyID=#URLEncodedFormat(survey.ID)#&ProgramID=#URLEncodedFormat(URL.ProgramID)#">Begin Survey</a>
 							</div>
 
-							<p class="small-text"><a href="survey_import_template.cfm?ProgramID=#URLEncodedFormat(URL.ProgramID)#&SurveyID=#URLEncodedFormat(survey.ID)#" class="link underlined" target="_blank">download</a> the import template for this survey.</p>
+							<p class="small-text"><a href="assets/documents/outcome_measures_import.xlsx" class="link underlined" target="_blank">download</a> the import template for this survey.</p>
 						</div>
 					</cfloop>
 				</cfoutput>
