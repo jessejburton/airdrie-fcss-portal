@@ -33,15 +33,7 @@ $(document).ready(function(){
 	}
 
 	$(".save").on("click", function(){
-		saveApplication();
-
-		var msg = new Object();
-		msg.SUCCESS = true;
-		msg.TYPE = "success";
-		msg.MESSAGE = "<strong>Success!</strong> your " + _APPLICATION_TYPE + " has been saved.";
-		showAutoreply(msg, $("#application_form"));
-
-		window.scrollTo(0, 0);
+		saveApplication(false);
 	});
 	
 	// Enable saving once something has been added to the Program Name
@@ -76,7 +68,7 @@ $(document).ready(function(){
 });
 
 /*** Save the Application at whatever state it is in ***/
-function saveApplication(){
+function saveApplication(silent){
 	reviewApplication(); // Update the review tab to make sure it has all of the most recent information 
 	if($("#program_name").val().length > 0){ // Make sure there is atleast a program name		
 		$("#save").removeClass("disabled");
@@ -95,10 +87,20 @@ function saveApplication(){
 					showAutoreply(response, $("#application_form"));
 					clearInterval(_AUTOSAVE);
 					_AUTOSAVE = null;
+				} else {
+					if(silent == false){
+						var msg = new Object();
+						msg.SUCCESS = true;
+						msg.TYPE = "success";
+						msg.MESSAGE = "<strong>Success!</strong> your " + _APPLICATION_TYPE + " has been saved.";
+						showAutoreply(msg, $("#application_form"));
+					}
 				}
 				$("#last_saved").html("Last Saved: " + currentTime());
 				$("#program_id").val(response.DATA.PROGRAMID);
 				$("#saving").fadeOut("slow");
+
+				window.scrollTo(0, 0);
 			}
 		});
 

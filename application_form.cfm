@@ -142,27 +142,27 @@
 						<p>
 							<label for="need">Need</label><br />
 							<span class="label-sub">The evidence that there is a need for the program in the Airdrie community. You may add footnotes below to cite complete references and data sources.</span>					
-							<textarea id="need" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Need)#</textarea>		
+							<textarea id="need" placeholder="Approximately 250 words" class="textarea-large value required">#EncodeForHTML(PROGRAM.Need)#</textarea>		
 						</p>
 						<p>
 							<label for="goal">Goal</label><br />		
 							<span class="label-sub">The long-term outcomes that the program aims to achieve.</span>					
-							<textarea id="goal" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Goal)#</textarea>		
+							<textarea id="goal" placeholder="Approximately 250 words" class="textarea-large value required">#EncodeForHTML(PROGRAM.Goal)#</textarea>		
 						</p>
 						<p>
 							<label for="strategies">Strategies</label><br />	
 							<span class="label-sub">The strategies or the steps/activities that will be undertaken to achieve the desired goal. Details include who the program is aimed at (target audience), what will be done (program content), where and how it will be delivered, and when. This should include information on frequency, duration, program cycle, and evaluation plan. </span>					
-							<textarea id="strategies" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Strategies)#</textarea>		
+							<textarea id="strategies" placeholder="Approximately 250 words" class="textarea-large value required">#EncodeForHTML(PROGRAM.Strategies)#</textarea>		
 						</p>
 						<p>
 							<label for="rationale">Rationale</label><br />	
 							<span class="label-sub">What is the evidence that the activities selected are the best or most promising practices? A summary of key research findings that support why the strategy that is being used is a best or promising practice for achieving the program goal. </span>
-							<textarea id="rationale" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Rationale)#</textarea>
+							<textarea id="rationale" placeholder="Approximately 250 words" class="textarea-large value required">#EncodeForHTML(PROGRAM.Rationale)#</textarea>
 						</p>
 						<p>
 							<label for="footnotes">Footnotes</label><br />
 							<span class="label-sub">Footnotes are used to provide complete references for the research that identifies the need and provides the rationale to support the program strategy. The intention is to facilitate learning among agencies that wish to explore particular program areas in more depth. </span>							
-							<textarea id="footnotes" placeholder="Approximately 250 words" class="textarea-large value">#EncodeForHTML(PROGRAM.Footnotes)#</textarea>
+							<textarea id="footnotes" placeholder="Approximately 250 words" class="textarea-large value required">#EncodeForHTML(PROGRAM.Footnotes)#</textarea>
 						</p>	
 
 						<div class="form_buttons clearfix">

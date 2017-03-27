@@ -47,10 +47,10 @@
 						<p>
 							<label for="is_only_funder">Is Airdrie FCSS the only funder for this program?</label><br /><br />
 							<label for="is_only_funder_yes">
-								<input type="radio" id="is_only_funder_yes" name="is_only_funder" class="required" #IIF(PROGRAM.isOnlyFunder IS true, DE('checked'), DE(''))# /> Yes
+								<input type="radio" id="is_only_funder_yes" name="is_only_funder" class="required" #IIF(PROGRAM.isOnlyFunder IS true, DE('checked'), DE(''))# value="1" /> Yes
 							</label>
 							<label for="is_only_funder_no">
-								<input type="radio" id="is_only_funder_no" name="is_only_funder" class="required" #IIF(PROGRAM.isOnlyFunder IS false, DE('checked'), DE(''))# /> No
+								<input type="radio" id="is_only_funder_no" name="is_only_funder" class="required" #IIF(PROGRAM.isOnlyFunder IS false, DE('checked'), DE(''))# value="0" /> No
 							</label>
 						</p>
 
@@ -72,20 +72,20 @@
 							<label for="is_surplus">Do you anticipate a surplus at the end of the year? </label><br /><span class="label-sub">Please notify Social Planning Unit by September 1, #Year(Now())#. All surplus funds must be returned to Airdrie FCSS.
 </span><br /><br />
 							<label for="is_surplus_yes">
-								<input type="radio" id="is_surplus_yes" name="is_surplus" class="required" #IIF(PROGRAM.isSurplus IS true, DE('checked'), DE(''))# />#PROGRAM.isSurplus# Yes
+								<input type="radio" id="is_surplus_yes" name="is_surplus" class="required" #IIF(PROGRAM.isSurplus IS true, DE('checked'), DE(''))# value="1" /> Yes
 							</label>
 							<label for="is_surplus_no">
-								<input type="radio" id="is_surplus_no" name="is_surplus" class="required" #IIF(PROGRAM.isSurplus IS false, DE('checked'), DE(''))# /> No
+								<input type="radio" id="is_surplus_no" name="is_surplus" class="required" #IIF(PROGRAM.isSurplus IS false, DE('checked'), DE(''))# value="0" /> No
 							</label>	
 						</p>	
 
 						<p id="isDeficit">
 							<label for="is_deficit">Do you anticipate a deficit at the end of the year? </label><br /><br />
 							<label for="is_deficit_yes">
-								<input type="radio" id="is_deficit_yes" name="is_deficit" class="required" #IIF(PROGRAM.isDeficit IS true, DE('checked'), DE(''))# />#PROGRAM.isDeficit# Yes
+								<input type="radio" id="is_deficit_yes" name="is_deficit" class="required" #IIF(PROGRAM.isDeficit IS true, DE('checked'), DE(''))# value="1" /> Yes
 							</label>
 							<label for="is_deficit_no">
-								<input type="radio" id="is_deficit_no" name="is_deficit" class="required" #IIF(PROGRAM.isDeficit IS false, DE('checked'), DE(''))# /> No
+								<input type="radio" id="is_deficit_no" name="is_deficit" class="required" #IIF(PROGRAM.isDeficit IS false, DE('checked'), DE(''))# value="0" /> No
 							</label>	
 						</p>	
 

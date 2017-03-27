@@ -20,7 +20,6 @@ $(document).ready(function(){
 			$('.accordion').accordion('option', 'active', -1); // Open the review panel.
 		};
 	});	
-
 });
 
 $(document).on("click", ".save", function(){
@@ -40,10 +39,10 @@ function saveMidYear(){
 	var pstr = new Object();
 	pstr.Method = "saveMidYear";
 	pstr.ProgramID = $("#program_id").val();
-	pstr.isOnlyFunder = $("input[name=is_only_funder]").is(":checked");
+	pstr.isOnlyFunder = $("input[name=is_only_funder]:checked").val();
 	pstr.sustainFunding = $("#sustain_funding").val();
-	pstr.isSurplus = $("input[name=is_surplus]").is(":checked");
-	pstr.isDeficit = $("input[name=is_deficit]").is(":checked");
+	pstr.isSurplus = $("input[name=is_surplus]:checked").val();
+	pstr.isDeficit = $("input[name=is_deficit]:checked").val();
 	pstr.howDeal = $("#how_deal").val();
 	pstr.programActivities = $("#program_activities").val();
 	pstr.notYetStarted = $("#not_yet_started").val();
@@ -54,7 +53,7 @@ function saveMidYear(){
 	pstr.evaluationChallenges = $("#evaluation_challenges").val();
 	pstr.requireResearchAssistance = $("#require_research_assistance").val();
 	pstr.CSRF = $.cookie("CSRF");
-alert(pstr.isOnlyFunder);return false;
+	
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",
 		data: pstr,

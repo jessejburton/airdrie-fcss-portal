@@ -29,6 +29,7 @@
 
         <!--- If they log out, kill the session vars and cookies --->
 		<cfif isDefined('URL.logout')>
+            <cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Logout for account ID: #SESSION.AccountID#" />
             <cfset StructDelete(SESSION, "LOGGEDIN")>
             <cfset StructDelete(SESSION, "ACCOUNTID")>
         </cfif>      

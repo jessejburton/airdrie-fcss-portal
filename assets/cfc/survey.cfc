@@ -172,6 +172,7 @@
 			    	FROM 	Indicator_tbl 
 			    	WHERE 	isActive = 1
 			    	AND 	OutcomeID = <cfqueryparam value="#LOCAL.qOutcomes.OutcomeID#" cfsqltype="cf_sql_integer">
+			    	AND		IndicatorID IN (SELECT IndicatorID FROM Survey_tbl)
 			    	ORDER BY Indicator
 			    </cfquery>
 

@@ -134,4 +134,36 @@
 		<cfreturn LOCAL.qProgram.recordcount IS 1>
 	</cffunction>	
 
+<!--- Get an array of Values by lookup type --->
+	<cffunction name="getLookupValuesByType" returntype="array" returnformat="JSON" access="public"
+		hint="Returns an array of lookup values from the Value Lookup table.">
+		<cfargument name="Type" type="string" required="true">
+
+		<cfquery name="LOCAL.qLookup">
+			SELECT	Value FROM ValueLookup_tbl
+			WHERE 	ValueType = <cfqueryparam value="#ARGUMENTS.Type#" cfsqltype="cf_sql_varchar">
+			AND 	isActive = 1
+		</cfquery>
+
+		<cfset LOCAL.arr = ArrayNew(1)>
+		<cfoutput query="LOCAL.qLookup">
+			<cfset ArrayAppend(LOCAL.arr, LOCAL.qLookup.Value)>
+		</cfoutput>
+
+		<cfreturn LOCAL.arr>
+	</cffunction>
+
+	<cffunction name="writeLog" returntype="void" access="public"
+		hint="Writes information to the coldfusion logs">
+		<cfargument name="Details" type="string" required="true">
+		<cfargument name="Type" default="information" hint="The type of message that will be added to the log information | warning | error | fatal ">
+
+		<cfif StructKeyExists(REQUEST, "USER")>
+			<cfset LOCAL.Message = REQUEST.USER.name & " - ">
+		<cfelse>
+			<cfset LOCAL.Message = "Not Logged In - "> 
+		</cfif>
+		<cfset LOCAL.Message = LOCAL.Message & ARGUMENTS.Details>
+		<cflog text="#LOCAL.Message#" type="#ARGUMENTS.Type#" file="#REPLACENOCASE(APPLICATION.Name, " ", "_", "all")#" />
+	</cffunction>
 </cfcomponent>

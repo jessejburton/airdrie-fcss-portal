@@ -14,48 +14,12 @@
 	<cfset REQUEST.SURVEY = response.DATA>
 </cfif>
 
-<!--- Get lookup values (TODO - It might be a good idea to switch these to lookup tables but because I am not sure if they are going to be changing the questions I wanted to wait until I get more information before putting in the time) They do not appear to be clear as to what they want specifically for surveys as it seems to change. I did ask Jessie if it is ok to assume that for now at least all questions will be answered 1 - 5 --->
-<cfset GENDER = ArrayNew(1)>
-	<cfset ArrayAppend(GENDER, "Male")>
-	<cfset ArrayAppend(GENDER, "Female")>
-<cfset AGE = ArrayNew(1)>
-	<cfset ArrayAppend(AGE, "0-4")>
-	<cfset ArrayAppend(AGE, "5-9")>
-	<cfset ArrayAppend(AGE, "10-14")>
-	<cfset ArrayAppend(AGE, "15-19")>
-	<cfset ArrayAppend(AGE, "20-24")>
-	<cfset ArrayAppend(AGE, "25-29")>
-	<cfset ArrayAppend(AGE, "30-34")>
-	<cfset ArrayAppend(AGE, "35-39")>
-	<cfset ArrayAppend(AGE, "40-44")>
-	<cfset ArrayAppend(AGE, "45-49")>
-	<cfset ArrayAppend(AGE, "50-54")>
-	<cfset ArrayAppend(AGE, "55-59")>
-	<cfset ArrayAppend(AGE, "60-64")>
-	<cfset ArrayAppend(AGE, "65-69")>
-	<cfset ArrayAppend(AGE, "70-74")>
-	<cfset ArrayAppend(AGE, "75+")>
-<cfset RESIDENCE = ArrayNew(1)>
-	<cfset ArrayAppend(RESIDENCE, "Airdrie")>
-	<cfset ArrayAppend(RESIDENCE, "Rocky View & County Area")>
-	<cfset ArrayAppend(RESIDENCE, "Another Province/Country")>
-	<cfset ArrayAppend(RESIDENCE, "Other (specify)")>
-<cfset LANGUAGE = ArrayNew(1)>
-	<cfset ArrayAppend(LANGUAGE, "English")>
-	<cfset ArrayAppend(LANGUAGE, "German")>
-	<cfset ArrayAppend(LANGUAGE, "Spanish")>
-	<cfset ArrayAppend(LANGUAGE, "Punjabi")>
-	<cfset ArrayAppend(LANGUAGE, "Tagalog (Pilipino)")>
-	<cfset ArrayAppend(LANGUAGE, "Vietnamese")>
-	<cfset ArrayAppend(LANGUAGE, "Other (specify)")>
-<cfset INCOME = ArrayNew(1)>
-	<cfset ArrayAppend(INCOME, "Under $39,999")>
-	<cfset ArrayAppend(INCOME, "$40,000 - $79,999")>
-	<cfset ArrayAppend(INCOME, "$80,000 - $119,999")>
-	<cfset ArrayAppend(INCOME, "$120,000 - $159,999")>
-	<cfset ArrayAppend(INCOME, "$160,000 - $199,999")>
-	<cfset ArrayAppend(INCOME, "$200,000 +")>
-	<cfset ArrayAppend(INCOME, "I don't want to say")>
+<!--- Get lookup values --->
+<cfinvoke component="#APPLICATION.cfcpath#core" method="getLookupValuesByType" Type="Gender" returnvariable="GENDER" />
+<cfinvoke component="#APPLICATION.cfcpath#core" method="getLookupValuesByType" Type="Age" returnvariable="AGE" />
+<cfinvoke component="#APPLICATION.cfcpath#core" method="getLookupValuesByType" Type="Residence" returnvariable="RESIDENCE" />
+<cfinvoke component="#APPLICATION.cfcpath#core" method="getLookupValuesByType" Type="Language" returnvariable="LANGUAGE" />
+<cfinvoke component="#APPLICATION.cfcpath#core" method="getLookupValuesByType" Type="Income" returnvariable="INCOME" />
 
 <cfinclude template="shared/header.cfm">
 

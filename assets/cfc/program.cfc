@@ -37,7 +37,19 @@
 		</cfif>
 
 		<!--- New Program, create a record for it --->
-		<cfif NOT isDefined('ARGUMENTS.ProgramID')>	
+		<cfif NOT isDefined('ARGUMENTS.ProgramID')>
+			<!--- Check the name --->
+			<cfquery name="LOCAL.qCheck">
+				SELECT ProgramName 
+				FROM Program_tbl 
+				WHERE ProgramName = <cfqueryparam value="#ARGUMENTS.ProgramName#" cfsqltype="cf_sql_varchar">
+				AND isActive = 1
+				AND AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+			<cfif LOCAL.qCheck.recordcount GT 0>
+				<cfreturn getErrorResponse("A program with this name already exists.")>
+			</cfif>
+
 			<cfquery result="LOCAL.qProgram">
 				INSERT INTO Program_tbl
 				(
@@ -418,17 +430,25 @@
 
 			<cfset LOCAL.Program = getProgramByID(ARGUMENTS.ProgramID)>
 
-			<!--- Insert the Status record --->
-			<cfquery>
-				INSERT INTO ProgramStatus_tbl
-				( ProgramID, StatusID, AccountID )
-				VALUES 
-				(
-					<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
-					(SELECT StatusID FROM Status_tbl WHERE Status = <cfqueryparam value="MIDYEAR - Submitted" cfsqltype="cf_sql_varchar">),
-					<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_integer">
-				)
+			<!--- Insert the Status record if it isn't there already --->
+			<cfquery name="LOCAL.qCheck">
+				SELECT 	StatusID FROM ProgramStatus_tbl
+				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+				AND 	StatusID = (SELECT StatusID FROM Status_tbl WHERE Status = <cfqueryparam value="MIDYEAR - Submitted" cfsqltype="cf_sql_varchar">)
 			</cfquery>
+
+			<cfif LOCAL.qCheck.recordcount IS 0>
+				<cfquery>
+					INSERT INTO ProgramStatus_tbl
+					( ProgramID, StatusID, AccountID )
+					VALUES 
+					(
+						<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+						(SELECT StatusID FROM Status_tbl WHERE Status = <cfqueryparam value="MIDYEAR - Submitted" cfsqltype="cf_sql_varchar">),
+						<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_integer">
+					)
+				</cfquery>
+			</cfif>
 
 			<cfmail to="#REQUEST.SETTINGS.adminemail#"
 					from="#APPLICATION.fromemail#"
@@ -438,6 +458,43 @@
 			</cfmail>
 
 		<cfreturn true>
-	</cffunction>		
+	</cffunction>
+
+<!--- Submits an End Year report to Airdrie --->
+	<cffunction name="markEndYearSubmitted" access="public" returnformat="JSON" returntype="boolean"
+		hint="Submits an End Year report to the City of Airdrie">
+		<cfargument name="ProgramID" type="numeric" required="true">
+
+			<cfset LOCAL.Program = getProgramByID(ARGUMENTS.ProgramID)>
+
+			<!--- Insert the Status record if it isn't there already --->
+			<cfquery name="LOCAL.qCheck">
+				SELECT 	StatusID FROM ProgramStatus_tbl
+				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+				AND 	StatusID = (SELECT StatusID FROM Status_tbl WHERE Status = <cfqueryparam value="ENDYEAR - Submitted" cfsqltype="cf_sql_varchar">)
+			</cfquery>
+
+			<cfif LOCAL.qCheck.recordcount IS 0>
+				<cfquery>
+					INSERT INTO ProgramStatus_tbl
+					( ProgramID, StatusID, AccountID )
+					VALUES 
+					(
+						<cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">,
+						(SELECT StatusID FROM Status_tbl WHERE Status = <cfqueryparam value="ENDYEAR - Submitted" cfsqltype="cf_sql_varchar">),
+						<cfqueryparam value="#REQUEST.USER.ACCOUNTID#" cfsqltype="cf_sql_integer">
+					)
+				</cfquery>
+			</cfif>
+
+			<cfmail to="#REQUEST.SETTINGS.adminemail#"
+					from="#APPLICATION.fromemail#"
+					subject="Program Mid Year Report has been submitted"
+					type="html">
+				<p>The following program: <strong>#LOCAL.PROGRAM.PROGRAMNAME#</strong> has marked their mid-year report as complete.</p>
+			</cfmail>
+
+		<cfreturn true>
+	</cffunction>			
 
 </cfcomponent>

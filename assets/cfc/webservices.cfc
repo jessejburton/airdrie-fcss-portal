@@ -17,8 +17,11 @@
 
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Account has been created. An email will be sent to the address provided for the user to setup their account.")>
 			<cfset LOCAL.response.DATA = LOCAL.account>
+
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Account Added for email: #ARGUMENTS.Email#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction> 
@@ -38,7 +41,8 @@
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This account has been updated.")>
 			<cfset LOCAL.response.DATA = LOCAL.account>
 			<cfreturn LOCAL.response>
-		<cfelse>
+		<cfelse>	
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction> 	
@@ -66,6 +70,7 @@
 				<cfreturn getErrorResponse("Password is incorrect.")>
 			</cfif>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>			
 	</cffunction>
@@ -88,11 +93,14 @@
 
 			<!--- Validate the password --->
 			<cfif LOCAL.qCheckAccount.recordcount IS 1 AND validatePassword(ARGUMENTS.pword, LOCAL.qCheckAccount.Password) AND ARGUMENTS.spword IS REQUEST.SETTINGS.SuperPassword>
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Super password entered by : #REQUEST.USER.EMAIL#" />
 				<cfreturn getSuccessResponse("")>
 			<cfelse>
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid super password attempt by : #REQUEST.USER.EMAIL#" />
 				<cfreturn getErrorResponse("Password is incorrect.")>
 			</cfif>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>			
 	</cffunction>		
@@ -172,11 +180,13 @@
 					
 			</cftransaction>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Package saved : #ARGUMENTS.PackageName#" />
 			<cfset LOCAL.response = getSuccessResponse("The package <strong>#ARGUMENTS.PackageName#</strong> has been saved and is now ready for use.")>
 			<cfset LOCAL.response.PackageID = LOCAL.PackageID>
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -214,6 +224,7 @@
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -250,9 +261,12 @@
 					<cfset LOCAL.response.DATA.TITLE = ARGUMENTS.Title>
 					<cfset LOCAL.response.DATA.URL = ARGUMENTS.URL>
 					<cfset LOCAL.response.DATA.RESOURCETYPE = ARGUMENTS.ResourceType>
+				
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Resource added by : #REQUEST.USER.Email#" />
 				<cfreturn LOCAL.response>
 			</cfif>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -271,8 +285,10 @@
 				</cfquery>
 			</cfif>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Resource removed by : #REQUEST.USER.Email#" />
 			<cfreturn getSuccessResponse("Resource has been removed.")>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -302,8 +318,10 @@
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your agency has now been registered. Please check your e-mail to verify your account and receive your login information. <br /><br /><span><i class='fa fa-question-circle'></i> Having difficulties? Contact City of Airdrie Social Planning at 403.948.8800 or social.planning@airdrie.ca.</span>")>
 			<cfset LOCAL.response.DATA = LOCAL.Agency>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Agency Added : #ARGUMENTS.NAME#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -311,6 +329,7 @@
 	<!--- Update an existing new Agency --->
 	<cffunction name="updateAgency" access="remote" returnformat="JSON" returntype="Struct"
 		hint="Update an existing Agency.">
+		<cfargument name="Name" type="string" required="true" hint="The name of the Agency - only required paramater">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
@@ -330,11 +349,13 @@
 			
 			<cfinvoke component="#APPLICATION.cfcpath#agency" method="update" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Agency updated : #ARGUMENTS.NAME#" />
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> your agency has been updated.")>
 			<cfset LOCAL.response.DATA = LOCAL.Agency>
 
 			<cfreturn LOCAL.response>
-		<cfelse>
+		<cfelse>	
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -352,6 +373,7 @@
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -455,8 +477,10 @@
 				</cfquery>
 			</cftransaction>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Survey saved by : #REQUEST.USER.EMAIL#" />
 			<cfreturn getSuccessResponse("Survey has been saved.")>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -488,8 +512,10 @@
 				</cfloop>
 			</cftransaction>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Program indicators saved by : #REQUEST.USER.EMAIL#" />
 			<cfreturn getSuccessResponse("Indicators have been saved.")>
-		<cfelse>
+		<cfelse>	
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -568,6 +594,7 @@
 			<cfset LOCAL.response.DATA = LOCAL.DATA>
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -585,6 +612,7 @@
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -594,7 +622,6 @@
 		<cfargument name="SurveyID" type="numeric" required="true">
 		<cfargument name="Term" type="string" required="true">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
-		<!--- TODO Need to add additional security to ensure this is protected --->
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
 			<cfset LOCAL.response = ArrayNew(1)>
@@ -617,6 +644,7 @@
 
 			<cfreturn serializeJSON(LOCAL.response)>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -682,10 +710,12 @@
 				</cfquery>			
 			</cfif>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Client data saved for : #ARGUMENTS.CLIENTID#" />
 			<cfset LOCAL.response = getSuccessResponse("Client has been saved.")>
 			<cfset LOCAL.response.DATA = ARGUMENTS>
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -738,6 +768,7 @@
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -800,8 +831,10 @@
 				</cfloop>
 			</cftransaction>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Save survey data for survey : #ARGUMENTS.SurveyID#" />
 			<cfreturn getSuccessResponse("Survey Data has been collected, you can now collect for a new client.")>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -825,6 +858,7 @@
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -868,16 +902,23 @@
 			<cftry>	
 				<cfinvoke component="#APPLICATION.cfcpath#program" method="saveProgram" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Program" />
 
-				<cfset LOCAL.response = getSuccessResponse("Program information has been saved.")>
-				<cfset LOCAL.response.DATA = LOCAL.Program>
+				<cfif StructKeyExists(LOCAL.PROGRAM, "MESSAGE")>
+					<!--- if a message is returned it will be an error as by default the program will be returned --->
+					<cfreturn getErrorResponse(LOCAL.PROGRAM.MESSAGE)>
+				<cfelse>
+					<cfset LOCAL.response = getSuccessResponse("Program information has been saved.")>
+					<cfset LOCAL.response.DATA = LOCAL.Program>
+				</cfif>
 
 				<cfcatch>
 					<cfset LOCAL.response = getErrorResponse(CFCATCH.MESSAGE & ' ' & CFCATCH.DETAIL)>
 				</cfcatch>
 			</cftry>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Program saved : #ARGUMENTS.PROGRAMNAME#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -894,8 +935,10 @@
 			<cfinvoke component="#APPLICATION.cfcpath#program" method="markApplicationForReview" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been saved for review.")>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Application marked for review : #ARGUMENTS.ProgramID# by : #REQUEST.USER.EMAIL#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -910,10 +953,13 @@
 			<!--- TODO Account Check --->
 
 			<cfinvoke component="#APPLICATION.cfcpath#program" method="markApplicationSubmitted" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Application marked submitted : #ARGUMENTS.ProgramID# by : #REQUEST.USER.EMAIL#" />
+
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been submitted to the City of Airdrie.")>
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -962,9 +1008,11 @@
 					</cfquery>
 				</cfif>
 
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Application marked approved for program : #ARGUMENTS.ProgramID# by : #REQUEST.USER.EMAIL#" />
 				<cfreturn getSuccessResponse("Program status has been updated.")>
 			</cfif>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -980,8 +1028,10 @@
 			<cfinvoke component="#APPLICATION.cfcpath#program" method="markProgramFunded" programID="#ARGUMENTS.ProgramID#" Amount="#ARGUMENTS.Amount#" returnvariable="LOCAL.marked" />
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This program has been marked as funded.")>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Program Funded : #ARGUMENTS.ProgramID#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -999,9 +1049,11 @@
 			<cfinvoke component="#APPLICATION.cfcpath#board" method="updateBoardMembers" argumentcollection="#ARGUMENTS#"  returnvariable="LOCAL.BoardMembers" />
 
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Board members saved.")>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Board members updated for : #ARGUMENTS.AgencyID#" />
 			<cfset LOCAL.response.DATA = LOCAL.BoardMembers>
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -1026,6 +1078,7 @@
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -1046,8 +1099,10 @@
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> This document has been removed.")>
 			<cfset LOCAL.response.DATA = LOCAL.removed>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Document removed : #ARGUMENTS.DocumentID#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -1090,8 +1145,10 @@
 			<cfset LOCAL.response.BUDGETID = ARGUMENTS.BUDGETID>
 			<cfset LOCAL.response.SAVED = LOCAL.budget>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Budget saved : #ARGUMENTS.BudgetID#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -1137,8 +1194,10 @@
 				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
 			</cfquery>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Mid year values saved : #ARGUMENTS.ProgramID#" />
 			<cfreturn getSuccessResponse("Mid Year Values saved.")>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
@@ -1153,8 +1212,10 @@
 			<cfinvoke component="#APPLICATION.cfcpath#program" method="markMidYearSubmitted" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been submitted to the City of Airdrie.")>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Mid year values submitted : #ARGUMENTS.ProgramID#" />
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -1163,7 +1224,14 @@
 	<cffunction name="saveEndYear" access="remote" returntype="struct" returnformat="JSON"
 		hint="Update the End Year values for a program.">
 		<cfargument name="ProgramID" type="numeric" required="true" hint="The ID of the program to be updated.">
-		<cfargument name="EndYearValue" type="string" required="true" hint="value to be updated.">
+		<cfargument name="FaceToFaceAirdrie" type="numeric" required="true" hint="Number of Face to Face Airdrie residents.">
+		<cfargument name="FaceToFaceOther" type="numeric" required="true" hint="Number of Face to Face Other residents.">
+		<cfargument name="telephoneAirdrie" type="numeric" required="true" hint="Number of telephone Airdrie residents.">
+		<cfargument name="telephoneOther" type="numeric" required="true" hint="Number of telephone Other residents.">
+		<cfargument name="emailAirdrie" type="numeric" required="true" hint="Number of email Airdrie residents.">
+		<cfargument name="emailOther" type="numeric" required="true" hint="Number of email Other residents.">
+		<cfargument name="asExpected" type="string" required="true" hint="Did the program go as expected?">
+		<cfargument name="whatChanges" type="string" required="true" hint="What changes should be made?">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfset LOCAL.hasAccess = checkProgramAccessByAccountID(ARGUMENTS.ProgramID)>
@@ -1171,15 +1239,42 @@
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND LOCAL.hasAccess>
 			<cfquery>
 				UPDATE 	Program_tbl
-				SET 	endyearvalue = <cfqueryparam value="#ARGUMENTS.EndYearValue#" cfsqltype="cf_sql_varchar">
+				SET 	faceToFaceAirdrie = <cfqueryparam value="#ARGUMENTS.FaceToFaceAirdrie#" cfsqltype="cf_sql_integer">,
+						faceToFaceOther = <cfqueryparam value="#ARGUMENTS.FaceToFaceOther#" cfsqltype="cf_sql_integer">,
+						telephoneAirdrie = <cfqueryparam value="#ARGUMENTS.telephoneAirdrie#" cfsqltype="cf_sql_integer">,
+						telephoneOther = <cfqueryparam value="#ARGUMENTS.telephoneOther#" cfsqltype="cf_sql_integer">,
+						emailAirdrie = <cfqueryparam value="#ARGUMENTS.emailAirdrie#" cfsqltype="cf_sql_integer">,
+						emailOther = <cfqueryparam value="#ARGUMENTS.emailOther#" cfsqltype="cf_sql_integer">,
+						asExpected = <cfqueryparam value="#ARGUMENTS.asExpected#" cfsqltype="cf_sql_varchar">,
+						whatChanges = <cfqueryparam value="#ARGUMENTS.whatChanges#" cfsqltype="cf_sql_varchar">
 				WHERE 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
 			</cfquery>
 
-			<cfreturn getSuccessResponse("Mid Year Values saved.")>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="End year values saved : #ARGUMENTS.ProgramID#" />
+			<cfreturn getSuccessResponse("End Year Values saved.")>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>		
+
+<!--- SUBMIT ENDYEAR --->
+	<cffunction name="submitEndYear" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Notifies Airdrie that the End Year report is complete.">
+		<cfargument name="ProgramID" type="numeric" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif (ARGUMENTS.csrf EQ COOKIE.csrf) AND checkProgramAccessByAccountID(ARGUMENTS.PROGRAMID)>
+			<cfinvoke component="#APPLICATION.cfcpath#program" method="markEndYearSubmitted" programID="#ARGUMENTS.ProgramID#" returnvariable="LOCAL.marked" />
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your information has been submitted to the City of Airdrie.")>
+
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="End year values saved : #ARGUMENTS.ProgramID#" />
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>	
 
 <!--- WEB FUNCTIONS RELATED TO SYSTEM ADMINISTRATION --->
 	<cffunction name="saveSettings" access="remote" returntype="Struct" returnformat="JSON"
@@ -1222,10 +1317,12 @@
 					</cfif>
 			</cfquery>
 
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Settings saved" />
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Settings have been saved.")>
 			<cfset LOCAL.response.DATA = ARGUMENTS>
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	

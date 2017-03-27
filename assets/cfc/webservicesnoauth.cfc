@@ -13,11 +13,14 @@
 			<cfinvoke component="#APPLICATION.cfcpath#account" method="verifyAccount" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.AccountCheck" />
 
 			<cfif LOCAL.AccountCheck>
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Account verified for GUID: #ARGUMENTS.GUID#" />
 				<cfreturn getSuccessResponse("<strong>Thank You!</strong> your account has now been verified. You can now <a href='#APPLICATION.URL#'>visit</a> the portal.")>
 			<cfelse>
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid verification attempt for GUID: #ARGUMENTS.GUID#" />
 				<cfreturn getErrorResponse("<strong>Sorry!</strong> the information provided did not match our records for verification. If you feel that this is a mistake please contact #REQUEST.SETTINGS.SupportNumber#. We appologise for any inconveniences.")>
 			</cfif>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
@@ -51,6 +54,7 @@
 
 					<cfset SESSION.GUID = LOCAL.qCheckAccount.GUID>
 					<cfset SESSION.AccountID = LOCAL.qCheckAccount.AccountID>
+					<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Login success for email: #ARGUMENTS.EMAIl#" />
 					<cfreturn getSuccessResponse("Account logged in successfully")>
 				<cfelse>
 					<!--- Update the number of attempts --->
@@ -60,12 +64,18 @@
 						WHERE 	AccountID = <cfqueryparam value="#LOCAL.qCheckAccount.AccountID#" cfsqltype="cf_sql_integer">
 					</cfquery>
 
+					<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid login attempt" />
 					<cfreturn getErrorResponse("Invalid email or password. Please try again.")>
 				</cfif>
-			<cfelse>				
+			<cfelse>	
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid login attempt" />
+				<cfif LOCAL.qCheckAccount.NumAttempts GT 5>
+					<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Account locked for email: #ARGUMENTS.Email#" />
+				</cfif>
 				<cfreturn getErrorResponse("Invalid email or password. Please try again.")>
 			</cfif>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>			
 	</cffunction>
@@ -80,11 +90,14 @@
 			<cfquery name="LOCAL.qGUID">
 				SELECT	GUID 
 				FROM 	Account_tbl
-				WHERE	Email = <cfqueryparam value="#ARGUMENTS.AccountEmail#" cfsqltype="cf_sql_varchar">
+				WHERE	Email = <cfqueryparam value="#TRIM(ARGUMENTS.AccountEmail)#" cfsqltype="cf_sql_varchar">
+				AND 	isActive = 1
 			</cfquery>
 
 			<!--- Only send the email if the email is valid, but return success either way so as not to spill the beans about if the email is valid or not --->
 			<cfif LOCAL.qGUID.recordcount IS 1>
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Password reset for email: #ARGUMENTS.AccountEmail#" /> <!--- Log the reset --->
+
 				<!--- Now send the verification email --->
 				<cfmail to="#ARGUMENTS.AccountEmail#"
 						from="#APPLICATION.fromemail#"
@@ -121,6 +134,7 @@
 
 			<cfreturn getSuccessResponse("<strong>Success!</strong> Account reset email has been sent to #EncodeForHTML(ARGUMENTS.AccountEmail)#.")>
 		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid login attempt" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>
