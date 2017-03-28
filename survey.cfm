@@ -142,7 +142,7 @@
 					</div>
 
 <!--- SURVEY QUESTIONS --->
-					<h3 id="pre_survey_data" class="ui-state-disabled" style="display: none;">Pre Survey</h3>
+					<h3 id="pre_survey_data" class="ui-state-disabled">Pre Survey</h3>
 					<div class="form-group">
 						<cfoutput>
 							<cfloop array="#REQUEST.SURVEY.Questions#" index="question"> 

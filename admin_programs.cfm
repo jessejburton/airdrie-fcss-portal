@@ -72,11 +72,13 @@
 											<a class="btn btn-secondary" target="_blank" href="admin_create_package.cfm?programID=#EncodeForHTMLAttribute(program.PROGRAMID)#"><i class="fa fa-file-text"></i> View Full Details</a>
 										</th>
 										<th style="text-align: right;" class="fund-section">
-											<cfif LEN(program.FUNDSALLOCATED) IS 0>
+											<cfif LEN(program.FUNDSALLOCATED) IS 0 AND ListContainsNoCase(PROGRAM.StatusList, "APPLICATION - Approved") GT 0>
 												<input type="number" class="allocate-fund-amount input-currency" placeholder="Amount" style="width: 200px">
 												<button class="btn btn-primary program-fund" type="button"><i class="fa fa-check-circle"></i> Allocate Funds</button>
 											<cfelse>
-												Funded in the amount of #DollarFormat(program.FUNDSALLOCATED)#
+												<cfif LEN(program.FUNDSALLOCATED) NEQ 0>												
+													Funded in the amount of #DollarFormat(program.FUNDSALLOCATED)#
+												</cfif>
 											</cfif>
 										</th>
 									</tr>

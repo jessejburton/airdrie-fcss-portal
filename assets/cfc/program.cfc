@@ -266,6 +266,7 @@
 				<cfset ArrayAppend(LOCAL.program.StatusList, LOCAL.status)>
 			</cfloop>
 
+			<cfset LOCAL.PROGRAM.StatusList = ValueList(LOCAL.qProgramStatus.Status)>
 			<cfset ArrayAppend(LOCAL.PROGRAMS, LOCAL.program)>
 		</cfoutput>
 
