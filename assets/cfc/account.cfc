@@ -92,7 +92,7 @@
 				the GUID so that the verify/reset link is no longer valid. --->
 			<cfquery>
 				UPDATE 	Account_tbl
-				SET 	<!---GUID = <cfqueryparam value="#CreateUUID()#" cfsqltype="cf_sql_varchar">,--->
+				SET 	GUID = <cfqueryparam value="#CreateUUID()#" cfsqltype="cf_sql_varchar">,
 						NumAttempts = 0
 						<cfif LEN(LOCAL.qAccountCheck.DateVerified) IS 0>
 							,DateVerified = getDate()

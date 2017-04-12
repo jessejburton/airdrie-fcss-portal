@@ -110,7 +110,7 @@
 					<p>You recently requested to reset your password on your #APPLICATION.Name# account.</p>
 					<div>
 						<!--[if mso]>
-						<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
+						<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#TRIM(hashString(ARGUMENTS.AccountEmail))#" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
 						<w:anchorlock/>
 						<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
 						  Reset Your Password
@@ -120,7 +120,7 @@
 						<![if !mso]>
 						<table cellspacing="0" cellpadding="0"> <tr> 
 						<td align="center" width="200" height="40" bgcolor="##005596" style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color: ##ffffff; display: block;">
-							<a href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#hashString(ARGUMENTS.AccountEmail)#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
+							<a href="#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#TRIM(hashString(ARGUMENTS.AccountEmail))#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
 						<span style="color: ##ffffff;">
 						  Reset Your Password
 						</span>
