@@ -77,7 +77,8 @@
 												<button class="btn btn-primary program-fund" type="button"><i class="fa fa-check-circle"></i> Allocate Funds</button>
 											<cfelse>
 												<cfif LEN(program.FUNDSALLOCATED) NEQ 0>												
-													Funded in the amount of #DollarFormat(program.FUNDSALLOCATED)#
+													Funded in the amount of #DollarFormat(program.FUNDSALLOCATED)#<br />
+													
 												</cfif>
 											</cfif>
 										</th>

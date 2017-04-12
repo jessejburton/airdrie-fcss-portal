@@ -5,11 +5,12 @@
 	<cffunction name="verifyAccountAndSetPassword" access="remote" returntype="struct" returnformat="JSON"
 		hint="Checks to see if the values submitted match an account in the database that is ready for verification.">
 		<cfargument name="GUID" type="string" required="true" hint="The GUID to check against in the database passed from the verification email">
-		<cfargument name="EmailHash" type="string" required="true" hint="The has of the email address passed from the verification email">
+		<cfargument name="EmailHash" type="string" required="true" hint="The hash of the email address passed from the verification email">
 		<cfargument name="PlainPW" type="string" required="true" hint="The password to be set for the account">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+
 			<cfinvoke component="#APPLICATION.cfcpath#account" method="verifyAccount" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.AccountCheck" />
 
 			<cfif LOCAL.AccountCheck>

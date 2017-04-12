@@ -92,7 +92,7 @@
 				the GUID so that the verify/reset link is no longer valid. --->
 			<cfquery>
 				UPDATE 	Account_tbl
-				SET 	GUID = <cfqueryparam value="#CreateUUID()#" cfsqltype="cf_sql_varchar">,
+				SET 	<!---GUID = <cfqueryparam value="#CreateUUID()#" cfsqltype="cf_sql_varchar">,--->
 						NumAttempts = 0
 						<cfif LEN(LOCAL.qAccountCheck.DateVerified) IS 0>
 							,DateVerified = getDate()
@@ -102,7 +102,8 @@
 
 			<!--- Set the users password --->
 			<cfset updateAccountPassword(LOCAL.qAccountCheck.AccountID, ARGUMENTS.PlainPW)>
-			<cfinvoke component="#APPLICATION.cfcpath#webservices" method="loginAccount" email="#LOCAL.qAccountCheck.Email#" plainpw="#ARGUMENTS.PlainPW#" csrf="#COOKIE.CSRF#" />
+			<cfinvoke component="#APPLICATION.cfcpath#webservicesnoauth" method="loginAccount" email="#LOCAL.qAccountCheck.Email#" plainpw="#ARGUMENTS.PlainPW#" csrf="#COOKIE.CSRF#"  />
+
 			<cfreturn true>
 		<cfelse>
 			<cfreturn false>
@@ -115,13 +116,19 @@
 		<cfargument name="AccountID" type="numeric" required="true">
 		<cfargument name="PlainPW" type="string" required="true">
 
-		<cfquery>
-			UPDATE 	Account_tbl
-			SET 	Password = <cfqueryparam value="#hashPassword(ARGUMENTS.PlainPW)#" cfsqltype="varchar">
-			WHERE 	AccountID = <cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">
-		</cfquery>
+		<cftry>
+			<cfquery>
+				UPDATE 	Account_tbl
+				SET 	Password = <cfqueryparam value="#hashPassword(ARGUMENTS.PlainPW)#" cfsqltype="varchar">
+				WHERE 	AccountID = <cfqueryparam value="#ARGUMENTS.AccountID#" cfsqltype="cf_sql_integer">
+			</cfquery>
 
-		<cfreturn true>
+			<cfreturn true>
+		<cfcatch>
+			<cfthrow message="An error has occurred, please try again later.">
+			<cfreturn false>
+		</cfcatch>
+		</cftry>
 	</cffunction>
 
 	<cffunction name="Insert" returntype="struct" returnformat="JSON" access="public"
