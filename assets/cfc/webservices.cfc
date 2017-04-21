@@ -1326,4 +1326,55 @@
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
 	</cffunction>	
+
+	<cffunction name="sendMessages" access="remote" returntype="Struct" returnformat="JSON"
+		hint="Sends messages to the agencies passed in.">
+		<cfargument name="Subject" type="string" required="true" hint="The email subject to send">
+		<cfargument name="Message" type="string" required="true" hint="The message text to be sent to each agency.">
+		<cfargument name="AgencyIDs" type="string" required="true" hint="A comma seperated list of Agency IDs to send to.">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfset LOCAL.response = StructNew()>
+			<cfset LOCAL.messagesSent = 0>
+			<cfset LOCAL.messagesToSend = ListLen(ARGUMENTS.AgencyIDs)>
+
+			<cftry>
+				<!--- Loop through the agency IDs and send the messages --->
+				<cfloop list="#ARGUMENTS.AgencyIDs#" item="LOCAL.ID">				
+					<cfinvoke component="#APPLICATION.cfcpath#agency" method="GetAgencyByID" AgencyID="#LOCAL.ID#" returnvariable="LOCAL.Agency" />
+
+					<!--- replace placeholder text --->
+					<cfset LOCAL.MESSAGE = ReplaceNoCase(ARGUMENTS.Message, "{Agency Name}", LOCAL.Agency.Name, "all")>
+
+					<cfmail to="#LOCAL.Agency.Email#"
+							from="#APPLICATION.fromemail#"
+							type="html"
+							subject="#ARGUMENTS.Subject#">
+						#LOCAL.Message#
+					</cfmail>
+					<cfset LOCAL.messagesSent = LOCAL.messagesSent + 1>
+				</cfloop>
+
+			<cfset LOCAL.response.MESSAGE = "<strong>Success!</strong> messages have been sent to the selected agencies.">
+			<cfset LOCAL.response.SUCCESS = true>
+			<cfset LOCAL.response.TYPE = "success">
+
+			<cfcatch>
+				<cfset LOCAL.response.SUCCESS = false>
+				<cfset LOCAL.response.TYPE = "error">
+				<cfset LOCAL.response.DETAILS = CFCATCH.MESSAGE & " " & CFCATCH.DETAIL>
+				<cfif LOCAL.messagesSent GT 0>
+					<cfset LOCAL.response.MESSAGE = "<strong>Error!</strong> Only <strong>#LOCAL.messagesSent#</strong> messages out of <strong>#LOCAL.messagesToSend#</strong> messages were sent.">				
+				<cfelse>
+					<cfset LOCAL.response.MESSAGE = "<strong>Error!</strong> an error has occurred, no messages have been sent.">
+				</cfif>
+			</cfcatch>
+			</cftry>
+
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>
 </cfcomponent>

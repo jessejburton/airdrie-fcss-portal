@@ -630,6 +630,9 @@
 	.centered {
 		text-align: center;
 	}
+	.normal-labels label {
+		font-weight: normal;
+	}
 	.autoreply {
 		padding: 10px 15px;	
 		display: none; /* It will fade in */
@@ -1007,3 +1010,6 @@ ul.application-process a.complete i {
 	margin-bottom: 25px;
 }
 
+.tinyMCE {
+	height: 300px;
+}

@@ -12,7 +12,7 @@
  			through positive, caring interaction and mutual respect.
  		</p>		
 		<p>
-			&copy 2016 The City of Airdrie
+			&copy <cfoutput>#Year(Now())#</cfoutput> The City of Airdrie
 		</p>
 	</section>
 

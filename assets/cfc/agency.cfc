@@ -124,6 +124,7 @@
 		<cfquery name="LOCAL.qAgencies">
 			SELECT	AgencyID, Address, DateAdded, Email, Fax, isActive, MailingAddress, Mission, Vision, Name, Phone, Website
 			FROM	Agency_tbl
+			WHERE isActive = 1
 		</cfquery>
 
 		<cfset LOCAL.response = ArrayNew(1)>
@@ -157,6 +158,7 @@
 		<cfquery name="LOCAL.qAgencies">
 			SELECT	AgencyID, Name, isActive
 			FROM	Agency_tbl
+			WHERE isActive = 1
 		</cfquery>
 
 		<cfset LOCAL.response = ArrayNew(1)>
