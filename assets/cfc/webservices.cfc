@@ -1332,6 +1332,7 @@
 		<cfargument name="Subject" type="string" required="true" hint="The email subject to send">
 		<cfargument name="Message" type="string" required="true" hint="The message text to be sent to each agency.">
 		<cfargument name="AgencyIDs" type="string" required="true" hint="A comma seperated list of Agency IDs to send to.">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
 			<cfset LOCAL.response = StructNew()>
