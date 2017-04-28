@@ -1341,7 +1341,7 @@
 
 			<cftry>
 				<!--- Loop through the agency IDs and send the messages --->
-				<cfloop list="#ARGUMENTS.AgencyIDs#" item="LOCAL.ID">				
+				<cfloop list="#ARGUMENTS.AgencyIDs#" index="LOCAL.ID">				
 					<cfinvoke component="#APPLICATION.cfcpath#agency" method="GetAgencyByID" AgencyID="#LOCAL.ID#" returnvariable="LOCAL.Agency" />
 
 					<!--- replace placeholder text --->
@@ -1374,6 +1374,7 @@
 
 			<cfreturn LOCAL.response>
 		<cfelse>
+			<cfoutput>#ARGUMENTS.csrf EQ COOKIE.csrf#</cfoutput>
 			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />
 		</cfif>
