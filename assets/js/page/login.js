@@ -98,7 +98,7 @@ function register(){
 	pstr.CSRF = $.cookie("CSRF");
 	
 	$.ajax({
-		url: "assets/cfc/webservices.cfc",
+		url: "assets/cfc/webservicesnoauth.cfc",
 		data: pstr,
 		success: function(response){
 			$("#register").html(getFormattedAutoreply(response, true));

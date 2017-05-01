@@ -140,4 +140,36 @@
 		</cfif>
 	</cffunction>
 
+	<!--- Add a new Agency --->
+	<cffunction name="addAgency" access="remote" returnformat="JSON" returntype="Struct"
+		hint="Adds a new Agency.">
+		<cfargument name="Name" type="string" required="yes">
+		<cfargument name="Vision" type="string" default="">
+		<cfargument name="Mission" type="string" default="">
+		<cfargument name="Phone" type="string" default="">
+		<cfargument name="Email" type="string" default="">
+		<cfargument name="Fax" type="string" default="">
+		<cfargument name="Website" type="string" default="">
+		<cfargument name="Address" type="string" default="">
+		<cfargument name="MailingAddress" type="string" default="">
+		<cfargument name="AccountName" type="string" required="true">
+		<cfargument name="AccountEmail" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- TODO - make this a cftransaction --->
+			<cfinvoke component="#APPLICATION.cfcpath#agency" method="insert" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.Agency" />
+			<cfinvoke component="#APPLICATION.cfcpath#account" method="insert" AgencyID="#LOCAL.Agency.AgencyID#" AccountName="#ARGUMENTS.AccountName#" AccountEmail="#ARGUMENTS.AccountEmail#" returnvariable="LOCAL.Account" />
+
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Your agency has now been registered. Please check your e-mail to verify your account and receive your login information. <br /><br /><span><i class='fa fa-question-circle'></i> Having difficulties? Contact City of Airdrie Social Planning at 403.948.8800 or social.planning@airdrie.ca.</span>")>
+			<cfset LOCAL.response.DATA = LOCAL.Agency>
+
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Agency Added : #ARGUMENTS.NAME#" />
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>	
+
 </cfcomponent>
