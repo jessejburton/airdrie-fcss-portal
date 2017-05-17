@@ -245,15 +245,18 @@
 					<h3>Outcomes Plan</h3>
 					<div class="form-group">
 						<p>
-							<label for="short_term_goals">Short Term Goals</label><br />						
+							<label for="short_term_goals">Short Term Goals</label><br />	
+							<span class="label-sub">Please describe your short term goals. Short-term goals typically relate to changes in relation to knowledge and attitudes. It may be helpful to ask yourselves, "What direct changes do we wish participants to achieve through this program?"</span>
 							<textarea id="short_term_goals" placeholder="Please tell us about your program's short term goals" class="textarea-large required value">#EncodeForHTML(PROGRAM.ShortTermGoals)#</textarea>		
 						</p>
 						<p>
-							<label for="mid_term_goals">Mid Term Goals</label><br />						
+							<label for="mid_term_goals">Mid Term Goals</label><br />	
+							<span class="label-sub">Please describe your medium term goals. Medium term goals typically relate to changes in behaviour and actions taken. It may be helpful to ask yourselves: "Based on what we are offering, what behaviours and actions do we wish participants to achieve through this program?"</span>						
 							<textarea id="mid_term_goals" placeholder="Please tell us about your program's mid term goals" class="textarea-large required value">#EncodeForHTML(PROGRAM.MidTermGoals)#</textarea>		
 						</p>
 						<p>
-							<label for="long_term_goals">Long Term Goals</label><br />						
+							<label for="long_term_goals">Long Term Goals</label><br />	
+							<span class="label-sub">Please describe your long term goals. Long term goals are typically aspirational and involve contributions of more than just the program in question. It may be helpful to ask yourselves, "What ultimate goals do we aspire to achieve by offering this program?"</span>					
 							<textarea id="long_term_goals" placeholder="Please tell us about your program's long term goals" class="textarea-large required value">#EncodeForHTML(PROGRAM.LongTermGoals)#</textarea>		
 						</p>			
 
