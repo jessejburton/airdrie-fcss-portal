@@ -99,7 +99,7 @@
 			<cfif LOCAL.qGUID.recordcount IS 1>
 				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Password reset for email: #ARGUMENTS.AccountEmail#" /> <!--- Log the reset --->
 
-				<cfset LOCAL.URLString = ReplaceNoCase(TRIM(hashString(ARGUMENTS.AccountEmail)), '%20', 'all')>
+				<cfset LOCAL.URLString = "#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#ReplaceNoCase(TRIM(hashString(ARGUMENTS.AccountEmail)), '%20', 'all')#">
 
 				<!--- Now send the verification email --->
 				<cfmail to="#ARGUMENTS.AccountEmail#"
