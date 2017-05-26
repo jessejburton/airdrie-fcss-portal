@@ -170,7 +170,6 @@
                 <cfset ArrayAppend(EXCEPTIONS, ex)>
             </cfif>
         <cfcatch>
-            <cfdump var="#CFCATCH#">
             <cfset Errors ++>
             <cfset ex = StructNew()>
             <cfset ex.NAME = qImport["Name"][CurrentRow]>

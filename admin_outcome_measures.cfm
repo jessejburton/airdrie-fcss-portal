@@ -5,6 +5,7 @@
 
 <cfinvoke component="#APPLICATION.cfcpath#survey" method="getIndicators" returnvariable="qIndicators" />
 <cfinvoke component="#APPLICATION.cfcpath#survey" method="getAllSurveys" returnvariable="qSurveys" />
+<cfinvoke component="#APPLICATION.cfcpath#agency" method="GetAgencyList" returnvariable="aAgencies" />
 
 <!--- MAIN CONTENT --->
 	<section id="main_content">
@@ -50,6 +51,19 @@
 						<option value="">--- Select an indicator ---</option>
 						<cfoutput query="qIndicators">
 							<option value="#qIndicators.IndicatorID#">#qIndicators.Indicator#</option>
+						</cfoutput>
+					</select>
+				</p>
+
+				<h3>Survey Options</h3>
+				<p>
+					<label for="Agency">Is this survey for a specific Agency?</label>
+					<select id="Agency">
+						<option value="">All Agencies</option>
+						<cfoutput>
+							<cfloop array="aAgencies" index="agency">
+								<option value="#agency.AgencyID#">#agency.Name#</option>
+							</cfloop>
 						</cfoutput>
 					</select>
 				</p>
