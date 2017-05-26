@@ -99,7 +99,7 @@
 			<cfif LOCAL.qGUID.recordcount IS 1>
 				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Password reset for email: #ARGUMENTS.AccountEmail#" /> <!--- Log the reset --->
 
-				<cfset LOCAL.URLString = "#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#ReplaceNoCase(TRIM(hashString(ARGUMENTS.AccountEmail)), '%20', 'all')#">
+				<cfset LOCAL.URLString = "#APPLICATION.url#?accountverify=#LOCAL.qGUID.GUID#&email=#TRIM(hashString(ARGUMENTS.AccountEmail))#">
 
 				<!--- Now send the verification email --->
 				<cfmail to="#ARGUMENTS.AccountEmail#"
@@ -112,7 +112,7 @@
 					<p>You recently requested to reset your password on your #APPLICATION.Name# account.</p>
 					<div>
 						<!--[if mso]>
-						<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#LOCAL.URLString#" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
+						<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#ReplaceNoCase(LOCAL.URLString, "%20", "", "all")#" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="##005596">
 						<w:anchorlock/>
 						<center style="color:##ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
 						  Reset Your Password
