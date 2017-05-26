@@ -122,7 +122,7 @@
 						<![if !mso]>
 						<table cellspacing="0" cellpadding="0"> <tr> 
 						<td align="center" width="200" height="40" bgcolor="##005596" style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; color: ##ffffff; display: block;">
-							<a href="#LOCAL.URLString#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
+							<a href="#ReplaceNoCase(LOCAL.URLString, '%20', '', 'all')#" style="font-size:16px; font-weight: bold; font-family:sans-serif; text-decoration: none; line-height:40px; width:100%; display:inline-block">
 						<span style="color: ##ffffff;">
 						  Reset Your Password
 						</span>
