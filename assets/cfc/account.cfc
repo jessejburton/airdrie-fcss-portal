@@ -87,7 +87,7 @@
 		</cfquery>
 
 		<!--- Check if the emails match --->
-		<cfif hashString(LOCAL.qAccountCheck.Email) IS ARGUMENTS.EmailHash OR hashString(LOCAL.qAccountCheck.Email) IS "%20#ARGUMENTS.EmailHash#">
+		<cfif hashString(LOCAL.qAccountCheck.Email) IS TRIM(ARGUMENTS.EmailHash) OR hashString(LOCAL.qAccountCheck.Email) IS "%20#ARGUMENTS.EmailHash#" OR hashString(LOCAL.qAccountCheck.Email) IS " #ARGUMENTS.EmailHash#">
 			<!--- Update the Verification Date if this is a new account and always update 
 				the GUID so that the verify/reset link is no longer valid. --->
 			<cfquery>
