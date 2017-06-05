@@ -29,6 +29,14 @@ $(document).ready(function(){
     $( "input[name=board_title]" ).autocomplete({
       source: commonBoardTitles
     });	
+
+    $("textarea").on("keyup", function(){
+    	var val = $(this).val();
+    	var len = val.length;
+    	if(len > 1500){
+    		$(this).val(val.substring(0, 1500));
+    	}
+    });
 });
 
 // function to slide down the next sibling of a DOM element with a class of "show-next"
