@@ -24,7 +24,7 @@
         
         <!--- If they log out, kill the session vars and cookies --->
         <cfif isDefined('URL.init')>
-            <cfset onApplicationStart()>
+            <cfset onApplicationStart()> 
         </cfif> 
 
         <!--- If they log out, kill the session vars and cookies --->
@@ -51,7 +51,7 @@
         </cfif> 
 
         <cflock scope="Session" type="readonly" timeout="10">
-            <cfif StructKeyExists(SESSION, "AccountID")>
+            <cfif StructKeyExists(SESSION, "ACCOUNTID")>
                 <cfset REQUEST.LOGGEDIN = true>
                 <cfinvoke component="#APPLICATION.cfcpath#account" method="getAccountByID" accountID="#SESSION.AccountID#" returnvariable="REQUEST.USER" />
                 <cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#REQUEST.USER.AGENCYID#" returnvariable="REQUEST.AGENCY" />
