@@ -28,11 +28,14 @@
         </cfif> 
 
         <!--- If they log out, kill the session vars and cookies --->
-		<cfif isDefined('URL.logout')>
-            <cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Logout for account ID: #SESSION.AccountID#" />
-            <cfset StructDelete(SESSION, "LOGGEDIN")>
-            <cfset StructDelete(SESSION, "ACCOUNTID")>
-        </cfif>      
+        <cflock scope="Session" type="readonly" timeout="10">
+    		<cfif isDefined('URL.logout')>    
+                    <cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Logout for account ID: #SESSION.AccountID#" />
+                    <cfset StructDelete(SESSION, "LOGGEDIN")>
+                    <cfset StructDelete(SESSION, "ACCOUNTID")>
+                
+            </cfif> 
+        </cflock>     
 
         <!--- Cross Site Request Forgery --->
         <cfif NOT structKeyExists(COOKIE, 'csrf')>
@@ -47,14 +50,16 @@
             <cfcontent type="application/json">
         </cfif> 
 
-        <cfif isDefined('SESSION.AccountID')>
-            <cfset REQUEST.LOGGEDIN = true>
-            <cfinvoke component="#APPLICATION.cfcpath#account" method="getAccountByID" accountID="#SESSION.AccountID#" returnvariable="REQUEST.USER" />
-            <cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#REQUEST.USER.AGENCYID#" returnvariable="REQUEST.AGENCY" />
-            <cfif SESSION.GUID NEQ REQUEST.USER.GUID>
-                <cflocation url="index.cfm?logout" addtoken="false"> <!--- This user account has been disabled --->
+        <cflock scope="Session" type="readonly" timeout="10">
+            <cfif StructKeyExists(SESSION, "AccountID")>
+                <cfset REQUEST.LOGGEDIN = true>
+                <cfinvoke component="#APPLICATION.cfcpath#account" method="getAccountByID" accountID="#SESSION.AccountID#" returnvariable="REQUEST.USER" />
+                <cfinvoke component="#APPLICATION.cfcpath#agency" method="getAgencyByID" agencyID="#REQUEST.USER.AGENCYID#" returnvariable="REQUEST.AGENCY" />
+                <cfif SESSION.GUID NEQ REQUEST.USER.GUID>
+                    <cflocation url="index.cfm?logout" addtoken="false"> <!--- This user account has been disabled --->
+                </cfif>
             </cfif>
-        </cfif>
+        </cflock>
 
         <cfif APPLICATION.environment IS "development">
             <cfset REQUEST.CacheGUID = CreateUUID()>
