@@ -30,10 +30,14 @@
         <!--- If they log out, kill the session vars and cookies --->
         <cflock scope="Session" type="readonly" timeout="10">
     		<cfif isDefined('URL.logout')>    
+                <cfif StructKeyExists(SESSION, "ACCOUNTID")>
                     <cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Logout for account ID: #SESSION.AccountID#" />
                     <cfset StructDelete(SESSION, "LOGGEDIN")>
                     <cfset StructDelete(SESSION, "ACCOUNTID")>
-                
+                    <cflocation url="#application.home#" addtoken="false" />
+                <cfelse>
+                    <cflocation url="#application.home#" addtoken="false" />
+                </cfif>                
             </cfif> 
         </cflock>     
 
