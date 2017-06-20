@@ -59,13 +59,18 @@
 				<p>
 					<label for="Agency">Is this survey for a specific Agency?</label>
 					<select id="Agency">
-						<option value="">All Agencies</option>
+						<option value="0">All Agencies</option>
 						<cfoutput>
-							<cfloop array="aAgencies" index="agency">
+							<cfloop array="#aAgencies#" index="agency">
 								<option value="#agency.AgencyID#">#agency.Name#</option>
 							</cfloop>
 						</cfoutput>
 					</select>
+				</p>
+
+				<p>
+					<label for="PostOnly">
+					<input type="checkbox" id="PostOnly" value="true" /> Make this survey a Post Only survey</label>
 				</p>
 
 				<h3>Questions</h3>

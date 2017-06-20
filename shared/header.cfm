@@ -21,6 +21,11 @@
 	<script src="assets/js/common.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
 	<script src="assets/js/form.js?v=<cfoutput>#REQUEST.CacheGUID#</cfoutput>" type="text/javascript"></script>
 
+	<!--- Create Javascript variables from settings --->
+	<script>
+		var <cfoutput>#toScript(REQUEST.SETTINGS.MaxCharacterLength, "MaxCharacterLength")#</cfoutput>
+	</script>
+		
 	<!--- Include any page specific javascript --->
  	<cfset pagename = ReplaceNoCase(ListLast(cgi.script_name,"/"), ".cfm", "")>
  	<cfif FileExists(ExpandPath("assets/js/page/#pagename#.js"))>

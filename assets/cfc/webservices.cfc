@@ -354,6 +354,8 @@
 		<cfargument name="Description" type="string" default="">
 		<cfargument name="Citation" type="string" default="">
 		<cfargument name="IndicatorID" type="numeric" required="true">
+		<cfargument name="PostOnly" type="boolean" default="false">
+		<cfargument name="AgencyID" type="numeric" required="false">
 		<cfargument name="Questions" type="string" required="true">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
@@ -377,7 +379,9 @@
 					SET 	Name = <cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
 							Description = <cfqueryparam value="#ARGUMENTS.Description#" cfsqltype="cf_sql_varchar">,
 							Citation = <cfqueryparam value="#ARGUMENTS.Citation#" cfsqltype="cf_sql_varchar">,
-							IndicatorID = <cfqueryparam value="#ARGUMENTS.IndicatorID#" cfsqltype="cf_sql_integer">
+							IndicatorID = <cfqueryparam value="#ARGUMENTS.IndicatorID#" cfsqltype="cf_sql_integer">,
+							isPostOnly = <cfqueryparam value="#ARGUMENTS.PostOnly#" cfsqltype="cf_sql_bit">,
+							AgencyID = <cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">
 					WHERE 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
 				</cfquery>
 
@@ -387,12 +391,14 @@
 				<cfquery result="LOCAL.qSurvey">
 					INSERT INTO Survey_tbl
 					(
-						Name, Description, Citation, IndicatorID
+						Name, Description, Citation, IndicatorID, isPostOnly, AgencyID
 					) VALUES (
 						<cfqueryparam value="#ARGUMENTS.Name#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#ARGUMENTS.Description#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#ARGUMENTS.Citation#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#ARGUMENTS.IndicatorID#" cfsqltype="cf_sql_integer">
+						<cfqueryparam value="#ARGUMENTS.IndicatorID#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value="#ARGUMENTS.PostOnly#" cfsqltype="cf_sql_bit">,
+						<cfqueryparam value="#ARGUMENTS.AgencyID#" cfsqltype="cf_sql_integer">		
 					)
 				</cfquery>
 

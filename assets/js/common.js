@@ -33,8 +33,8 @@ $(document).ready(function(){
     $("textarea").on("keyup", function(){
     	var val = $(this).val();
     	var len = val.length;
-    	if(len > 1500){
-    		$(this).val(val.substring(0, 1500));
+    	if(len > MaxCharacterLength){
+    		$(this).val(val.substring(0, MaxCharacterLength));
     	}
     });
 });

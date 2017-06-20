@@ -80,6 +80,8 @@ function saveSurvey(){
 		pstr.Description = $("#survey_description").val();
 		pstr.Citation = $("#survey_citation").val();
 		pstr.IndicatorID = $("#indicatorID").val();
+		pstr.PostOnly = $("#PostOnly").is(":checked");
+		pstr.AgencyID = $("#Agency").val();
 		pstr.CSRF = $.cookie("CSRF");
 
 		pstr.Questions = [];

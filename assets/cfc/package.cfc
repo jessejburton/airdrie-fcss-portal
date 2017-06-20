@@ -34,7 +34,12 @@
 						<cfelse>
 							<cfquery name="LOCAL.qContent">
 								SELECT [#LOCAL.qPackage.ColumnName#] AS data FROM #LOCAL.qPackage.TableView#
-								WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+								<cfif LOCAL.qPackage.TableView IS "Agency_VW">
+									<!--- Need to get by Agency ID --->
+									WHERE AgencyID = (SELECT AgencyID FROM Program_tbl WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">)
+								<cfelse>
+									WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+								</cfif>
 							</cfquery>
 							
 							<cfif LEN(TRIM(LOCAL.qContent.data)) GT 0> 	<!--- Only display if it has content --->
