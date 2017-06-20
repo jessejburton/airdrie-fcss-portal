@@ -60,7 +60,8 @@ function clearForm(){
 	// Set values to blank
 	$("input").val("");
 	$("textarea").val("");
-	$("select").val("");
+	$("select").find('option:eq(0)').prop('selected', true);
+	$("#PostOnly").prop("checked", false);
 
 	// clear the questions then add just one empty one back.
 	var q = $(".question").first().clone();

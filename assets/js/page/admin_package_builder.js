@@ -89,10 +89,9 @@ $(document).ready(function(){
 		pstr.PackageContent = JSON.stringify(pstr.PackageContent); 	// Needs to be a string for Coldfusion
 		pstr.CSRF = $.cookie("CSRF");
 
-		$.ajax({
+		$.post({
 			url: "assets/cfc/webservices.cfc",
 			data: pstr,
-			Method: "POST",
 			success: function(response){	
 				showAutoreply(response, $(".wrapper"));
 				if(response.SUCCESS){

@@ -57,8 +57,8 @@
 
 				<h3>Survey Options</h3>
 				<p>
-					<label for="Agency">Is this survey for a specific Agency?</label>
-					<select id="Agency">
+					<label for="Agency">Is this survey for a specific Agency?</label><br />
+					<select id="Agency" class="input-half">
 						<option value="0">All Agencies</option>
 						<cfoutput>
 							<cfloop array="#aAgencies#" index="agency">
