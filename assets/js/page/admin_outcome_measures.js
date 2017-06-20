@@ -130,6 +130,8 @@ function loadSurvey(surveyid){
 			$("#survey_description").val(survey.DESCRIPTION);
 			$("#survey_citation").val(survey.CITATION);
 			$("#indicatorID").val(survey.INDICATORID);
+			$("#PostOnly").prop("checked", survey.POSTONLY);
+			$("#Agency").val(survey.AGENCYID);
 			$("#survey_form").fadeIn("slow");
 
 			// Display Questions

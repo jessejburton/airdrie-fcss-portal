@@ -536,7 +536,7 @@
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf AND isAdminAccount()>
 			<cfquery name="LOCAL.qSurvey">
-				SELECT 	Name, Description, IndicatorID, Citation 
+				SELECT 	Name, Description, IndicatorID, Citation, isPostOnly, AgencyID
 				FROM 	Survey_tbl
 				WHERE 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
 			</cfquery>
@@ -546,6 +546,8 @@
 			<cfset LOCAL.DATA.Description = LOCAL.qSurvey.Description>
 			<cfset LOCAL.DATA.IndicatorID = LOCAL.qSurvey.IndicatorID>
 			<cfset LOCAL.DATA.Citation = LOCAL.qSurvey.Citation>
+			<cfset LOCAL.DATA.PostOnly = LOCAL.qSurvey.isPostOnly>
+			<cfset LOCAL.DATA.AgencyID = LOCAL.qSurvey.AgencyID>
 
 			<!--- Questions --->
 			<cfquery name="LOCAL.qQuestions">
