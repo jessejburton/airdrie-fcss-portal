@@ -46,8 +46,8 @@
 								<cfif LOCAL.qPackage.isSectionHeading>
 									<h1 class="section-heading">#LOCAL.qContent.data#</h1>
 								<cfelse>
-									<h1>#LOCAL.qPackage.SectionTitle#</h1>
-									<p>#LOCAL.qContent.data#</p>
+									<h1>#EncodeForHTML(LOCAL.qPackage.SectionTitle)#</h1>
+									<p>#EncodeForHtml(LOCAL.qContent.data)#</p>
 								</cfif>
 							</cfif>
 						</cfif>

@@ -16,7 +16,7 @@
 		</p>
 	</section>
 
-	<cfif APPLICATION.environment IS "development" OR isDefined('URL.debug')>
+	<cfif APPLICATION.environment IS "development" OR APPLICATION.URL IS "http://fcssdev.airdrie.ca">
 		<cfdump var="#APPLICATION#">
 		<cfdump var="#SESSION#">
 		<cfdump var="#REQUEST#">
