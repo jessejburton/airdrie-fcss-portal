@@ -74,7 +74,7 @@
 						</p>
 						<p>
 							<label for="program_statement">Program Statement</label><br />						
-							<textarea data-maxlength="1000" id="program_statement" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large required value">#EncodeForHTML(PROGRAM.ProgramStatement)#</textarea>		
+							<textarea data-maxlength="1000" id="program_statement" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large required value">#EncodeForHTML(PROGRAM.ProgramStatement)#</textarea>		
 						</p>				
 						<p>
 							<label for="target_audience">Target Audience</label><br />		
@@ -142,27 +142,27 @@
 						<p>
 							<label for="need">Need</label><br />
 							<span class="label-sub">The evidence that there is a need for the program in the Airdrie community. You may add footnotes below to cite complete references and data sources.</span>					
-							<textarea id="need" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Need)#</textarea>		
+							<textarea id="need" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Need)#</textarea>		
 						</p>
 						<p>
 							<label for="goal">Goal</label><br />		
 							<span class="label-sub">The long-term outcomes that the program aims to achieve.</span>					
-							<textarea id="goal" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Goal)#</textarea>		
+							<textarea id="goal" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Goal)#</textarea>		
 						</p>
 						<p>
 							<label for="strategies">Strategies</label><br />	
 							<span class="label-sub">The strategies or the steps/activities that will be undertaken to achieve the desired goal. Details include who the program is aimed at (target audience), what will be done (program content), where and how it will be delivered, and when. This should include information on frequency, duration, program cycle, and evaluation plan. </span>					
-							<textarea id="strategies" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Strategies)#</textarea>		
+							<textarea id="strategies" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Strategies)#</textarea>		
 						</p>
 						<p>
 							<label for="rationale">Rationale</label><br />	
 							<span class="label-sub">What is the evidence that the activities selected are the best or most promising practices? A summary of key research findings that support why the strategy that is being used is a best or promising practice for achieving the program goal. </span>
-							<textarea id="rationale" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Rationale)#</textarea>
+							<textarea id="rationale" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Rationale)#</textarea>
 						</p>
 						<p>
 							<label for="footnotes">Footnotes</label><br />
 							<span class="label-sub">Footnotes are used to provide complete references for the research that identifies the need and provides the rationale to support the program strategy. The intention is to facilitate learning among agencies that wish to explore particular program areas in more depth. </span>							
-							<textarea id="footnotes" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Footnotes)#</textarea>
+							<textarea id="footnotes" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value required">#EncodeForHTML(PROGRAM.Footnotes)#</textarea>
 						</p>	
 
 						<div class="form_buttons clearfix">
@@ -176,7 +176,7 @@
 					<div class="form-group">
 						<p>
 							<label for="prevention_focus">How does the program meet the FCSS prevention focus?</label><br />					
-							<textarea id="prevention_focus" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value">#EncodeForHTML(PROGRAM.PreventionFocus)#</textarea>		
+							<textarea id="prevention_focus" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value">#EncodeForHTML(PROGRAM.PreventionFocus)#</textarea>		
 						</p>
 						<p>
 							<label for="alignment">How does your program align with City of Airdrie's interest in the following:</label><br />		
@@ -186,16 +186,16 @@
 								<li>Creating and strengthening a sense of community</li>
 								<li>The Provincial goal of poverty prevention</li>
 							</ul>					
-							<textarea id="alignment" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large required value">#EncodeForHTML(PROGRAM.Alignment)#</textarea>		
+							<textarea id="alignment" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large required value">#EncodeForHTML(PROGRAM.Alignment)#</textarea>		
 						</p>
 						<p>
 							<label for="mission_fit">How does this program fit with your agency mission and vision?</label><br />	
-							<textarea id="mission_fit" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value">#EncodeForHTML(PROGRAM.MissionFit)#</textarea>		
+							<textarea id="mission_fit" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value">#EncodeForHTML(PROGRAM.MissionFit)#</textarea>		
 						</p>
 						<p>
 							<label for="considered_partnerships">Have you considered partnerships to enhance program efficiency and sustainability?</label><br />		
 							<span class="label-sub">Please describe your considerations for partnerships </span>						
-							<textarea id="considered_partnerships" placeholder="Maximum 1500 Charactes (app. 230-250 words)" class="textarea-large value">#EncodeForHTML(PROGRAM.ConsideredPartnerships)#</textarea>
+							<textarea id="considered_partnerships" placeholder="Maximum 1,500 characters (approx. 230-250 words)" class="textarea-large value">#EncodeForHTML(PROGRAM.ConsideredPartnerships)#</textarea>
 						</p>
 
 						<div class="form_buttons clearfix">
