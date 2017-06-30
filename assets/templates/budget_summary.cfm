@@ -143,11 +143,11 @@
 				<h3>Target Groups</h3>
 				<cfoutput>
 				<ul>
-					<li><strong>Adults</strong> <i>#EncodeForHtml(BUDGET.PERCENTADULT)#%</i></li>
-					<li><strong>Children</strong> <i>#EncodeForHtml(BUDGET.PERCENTCHILD)#%</i></li>
-					<li><strong>Family</strong> <i>#EncodeForHtml(BUDGET.PERCENTFAMILY)#%</i></li>
-					<li><strong>Seniors</strong> <i>#EncodeForHtml(BUDGET.PERCENTSENIORS)#%</i></li>
-					<li><strong>Volunteers</strong> <i>#EncodeForHtml(BUDGET.PERCENTVOLUNTEERS)#%</i></li>
+					<li><strong>Adults</strong> <i class="target-group-1">#EncodeForHtml(BUDGET.PERCENTADULT)#%</i></li>
+					<li><strong>Children</strong> <i class="target-group-2">#EncodeForHtml(BUDGET.PERCENTCHILD)#%</i></li>
+					<li><strong>Family</strong> <i class="target-group-3">#EncodeForHtml(BUDGET.PERCENTFAMILY)#%</i></li>
+					<li><strong>Seniors</strong> <i class="target-group-4">#EncodeForHtml(BUDGET.PERCENTSENIORS)#%</i></li>
+					<li><strong>Volunteers</strong> <i class="target-group-5">#EncodeForHtml(BUDGET.PERCENTVOLUNTEERS)#%</i></li>
 				</ul>
 				</cfoutput>
 			</div>

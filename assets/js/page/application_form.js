@@ -100,7 +100,9 @@ function saveApplication(silent){
 				$("#program_id").val(response.DATA.PROGRAMID);
 				$("#saving").fadeOut("slow");
 
-				window.scrollTo(0, 0);
+				if(silent == false){
+					window.scrollTo(0, 0);
+				}
 			}
 		});
 
@@ -266,7 +268,6 @@ function updateProgram(){
 	program.MidTermGoals = (typeof $("#mid_term_goals").val() === 'undefined') ? "" : $("#mid_term_goals").val();
 	program.LongTermGoals = (typeof $("#long_term_goals").val() === 'undefined') ? "" : $("#long_term_goals").val();
 
-	console.log(JSON.stringify(program));
 	return program;
 }
 

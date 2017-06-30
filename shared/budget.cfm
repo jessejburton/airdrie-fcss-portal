@@ -248,27 +248,27 @@
 	<span class="label-sub">Please try to be as accurate as possible but estimates are ok.</span>
 	<ul id="#sliders" class="list-no-style">
 		<cfoutput>
-			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTCHILD)#">
+			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTCHILD)#" id="target_group_1">
 				Children / Youth
 				<div class="slider input-half" id="percent_child"></div>
 				<span class="value">0%</span>
 			</li>
-			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTFAMILY)#">
+			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTFAMILY)#" id="target_group_2">
 				Family
 				<div class="slider input-half" id="percent_family"></div>
 				<span class="value">0%</span>
 			</li>
-			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTADULT)#">
+			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTADULT)#" id="target_group_3">
 				Adult
 				<div class="slider input-half" id="percent_adult"></div>
 				<span class="value">0%</span>							
 			</li>
-			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTSENIORS)#">
+			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTSENIORS)#" id="target_group_4">
 				Seniors
 				<div class="slider input-half" id="percent_seniors"></div>
 				<span class="value">0%</span>
 			</li>
-			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTVOLUNTEERS)#">
+			<li data-value="#EncodeForHTMLAttribute(BUDGET.PERCENTVOLUNTEERS)#" id="target_group_5">
 				Volunteers
 				<div class="slider input-half" id="percent_volunteers"></div>
 				<span class="value">0%</span>							
