@@ -118,12 +118,16 @@
 		hint="Gets the details of an application by ID">
 		<cfargument name="ProgramID" type="numeric" required="true">
 
+		<cfinvoke component="#APPLICATION.cfcpath#core" method="isAdminAccount" returnvariable="LOCAL.isAdmin" />
+
 		<!--- Get the program data but make sure the user has access to it --->
 		<cfquery name="LOCAL.qProgram">
 			SELECT 	*
 			FROM 	Program_vw
 			WHERE	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
-			AND 	AgencyID = <cfqueryparam value="#REQUEST.AGENCY.AGENCYID#" cfsqltype="cf_sql_integer">
+			<cfif NOT LOCAL.isAdmin>
+				AND 	AgencyID = <cfqueryparam value="#REQUEST.AGENCY.AGENCYID#" cfsqltype="cf_sql_integer">
+			</cfif>
 		</cfquery>
 
 		<cfset LOCAL.PROGRAM = StructNew()>
