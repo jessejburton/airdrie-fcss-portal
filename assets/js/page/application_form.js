@@ -61,6 +61,17 @@ $(document).ready(function(){
 
 	// Submit the Application to Airdrie
 	$("#application_submit_to_airdrie").on("click", function(){
+		// Ensure checkboxes are checked if needed
+		if($("#auth1").length > 0){
+			if(!$("#auth1").is(":checked") || !$("#auth2").is(":checked")){
+				$(".auth-group").addClass("error");
+				alert("Please make sure to read and check the agreements");
+				return false;
+			} else {
+				$(".auth-group").removeClass("error");
+			}
+		}
+
 		$(".form-group").addClass("seen");
 		validateForm($("#application_form"), markApplicationSubmitted);
 	});

@@ -451,8 +451,11 @@
 	.input-error {
 		border: 1px solid #c42424;		
 	}
-	tr.error {
+	p.error, tr.error {
 		background-color: #F4A7A7!important;
+	}
+	p.error {
+		padding: 10px;
 	}
 
 	span.error-details {
