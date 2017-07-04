@@ -370,19 +370,17 @@
 						</div>
 						
 						<div class="form-buttons clearfix"> 
-							<cfif PROGRAM.TYPE IS "Application Form" AND REQUEST.SETTINGS.ISENABLEDAPPLICATIONS>
-								<hr />
-								<h3>Agreements</h3>
-								<p class="auth-group">
-									<label for="auth1"><input type="checkbox" id="auth1" class="required" />
-									I have the authority to submit this report on behalf of my non-profit organization, and I confirm that the information contained herein is true and correct to the best of my knowledge, information, and belief.
-								</p>
-								<p class="auth-group">
-									<label for="auth2"><input type="checkbox" id="auth2" class="required" />
-									I acknowledge and understand that the information contained herein will be made public.
-								</p>
-								<hr />
-							</cfif>
+							<hr />
+							<h3>Agreements</h3>
+							<p class="auth-group">
+								<label for="auth1"><input type="checkbox" id="auth1" class="required" />
+								I have the authority to submit this report on behalf of my non-profit organization, and I confirm that the information contained herein is true and correct to the best of my knowledge, information, and belief.
+							</p>
+							<p class="auth-group">
+								<label for="auth2"><input type="checkbox" id="auth2" class="required" />
+								I acknowledge and understand that the information contained herein will be made public.
+							</p>
+							<hr />
 							<cfif (PROGRAM.TYPE IS "Letter Of Intent" AND REQUEST.SETTINGS.ISENABLEDLETTEROFINTENT) OR (PROGRAM.TYPE IS "Application Form" AND REQUEST.SETTINGS.ISENABLEDAPPLICATIONS)>
 								<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
 							</cfif>
