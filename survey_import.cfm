@@ -40,7 +40,7 @@
         <cftry>
             <!--- VALIDATE LOOKUP VALUES --->
             <cfset validationCheck = "">
-            <cfif ListFindNoCase("Pre,Post", TRIM(qImport["PrePost"][CurrentRow])) IS 0>
+            <cfif ListFindNoCase("Pre,Post", TRIM(qImport["Pre/Post"][CurrentRow])) IS 0>
                 <cfset validationCheck = "Invalid value from PrePost">
             </cfif>
             <cfif ArrayFindNoCase(LOOKUPS.GENDER, TRIM(qImport["Gender"][CurrentRow])) IS 0 AND LEN(validationCheck) IS 0>
@@ -116,7 +116,7 @@
                     <cfquery name="qCheck">
                         SELECT  ClientID FROM SurveyResponse_tbl
                         WHERE   ClientID = <cfqueryparam value="#ClientID#" cfsqltype="cf_sql_integer">
-                        AND     PrePost = <cfqueryparam value="#qImport["PrePost"][CurrentRow]#" cfsqltype="cf_sql_varchar">  
+                        AND     PrePost = <cfqueryparam value="#qImport["Pre/Post"][CurrentRow]#" cfsqltype="cf_sql_varchar">  
                     </cfquery>
 
                     <cfif qCheck.recordcount IS 0>
@@ -137,7 +137,7 @@
                                 ) VALUES (
                                     <cfqueryparam value="#qAnswer.AnswerID#" cfsqltype="cf_sql_integer">,
                                     <cfqueryparam value="#REQUEST.SURVEY.SURVEYID#" cfsqltype="cf_sql_integer">,
-                                    <cfqueryparam value="#qImport["PrePost"][CurrentRow]#" cfsqltype="cf_sql_varchar">,
+                                    <cfqueryparam value="#qImport["Pre/Post"][CurrentRow]#" cfsqltype="cf_sql_varchar">,
                                     <cfqueryparam value="#ClientID#" cfsqltype="cf_sql_integer">
                                 )
                             </cfquery>
@@ -148,9 +148,9 @@
                             <cfset SURVEYDATA[qImport["Name"][CurrentRow]] = StructNew()>
                         </cfif>
 
-                        <cfif qImport["PrePost"][CurrentRow] IS "Pre">
+                        <cfif qImport["Pre/Post"][CurrentRow] IS "Pre">
                             <cfset SURVEYDATA[qImport["Name"][CurrentRow]].Pre = true>
-                        <cfelseif qImport["PrePost"][CurrentRow] IS "Post">
+                        <cfelseif qImport["Pre/Post"][CurrentRow] IS "Post">
                             <cfset SURVEYDATA[qImport["Name"][CurrentRow]].Post = true>
                         </cfif>
 
@@ -158,7 +158,7 @@
                     <cfelse>
                         <cfset ex = StructNew()>
                         <cfset ex.NAME = "">
-                        <cfset ex.MESSAGE = "#qImport["PrePost"][CurrentRow]# data for #qImport["Name"][CurrentRow]# has already been collected.">
+                        <cfset ex.MESSAGE = "#qImport["Pre/Post"][CurrentRow]# data for #qImport["Name"][CurrentRow]# has already been collected.">
                         <cfset ArrayAppend(EXCEPTIONS, ex)>
                     </cfif>
                 </cfif>

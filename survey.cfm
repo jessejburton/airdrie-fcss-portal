@@ -142,7 +142,7 @@
 					</div>
 
 <!--- SURVEY QUESTIONS --->
-					<h3 id="pre_survey_data" class="ui-state-disabled">Pre Survey</h3>
+					<h3 id="pre_survey_data" class="ui-state-disabled"><cfoutput>#iif(REQUEST.SURVEY.ISPOSTONLY, DE('Survey'), DE('Pre Survey'))#</cfoutput></h3>
 					<div class="form-group">
 						<cfoutput>
 							<cfloop array="#REQUEST.SURVEY.Questions#" index="question"> 
@@ -181,6 +181,7 @@
 						</cfoutput>
 
 						<div class="form_buttons clearfix">
+							<input type="hidden" id="is_post_only" value="<cfoutput>#EncodeForHTML(REQUEST.SURVEY.ISPOSTONLY)#</cfoutput>" />
 							<button type="button" class="btn btn-primary pull-right complete-survey"><i class="fa fa-save"></i> Save Survey</button> 
 						</div>																									
 					</div>								

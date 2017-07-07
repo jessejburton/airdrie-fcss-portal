@@ -35,6 +35,11 @@
 				</p>
 
 				<p>
+					<label for="PostOnly">
+					<input type="checkbox" id="PostOnly" value="true" /> Make this survey a Post Only survey</label>
+				</p>				
+
+				<p>
 					<label for="survey_description">Survey Description (optional)</label><br />
 					<textarea id="survey_description" placeholder="Enter a description for the survey" style="height: 80px;"></textarea>
 				</p>
@@ -66,11 +71,6 @@
 							</cfloop>
 						</cfoutput>
 					</select>
-				</p>
-
-				<p>
-					<label for="PostOnly">
-					<input type="checkbox" id="PostOnly" value="true" /> Make this survey a Post Only survey</label>
 				</p>
 
 				<h3>Questions</h3>

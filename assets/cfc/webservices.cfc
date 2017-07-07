@@ -758,6 +758,10 @@
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- Get the survey information, need to find out if it is a POST ONLY survey --->
+			<cfinvoke component="#APPLICATION.cfcpath#webservices" method="getSurveyByID" csrf="#ARGUMENTS.CSRF#" SurveyID="#ARGUMENTS.SurveyID#" returnvariable="LOCAL.SurveyResponse" />
+			<cfset LOCAL.SURVEY = LOCAL.SurveyResponse.data>
+			
 			<!--- check to make sure that this client has access to this survey --->
 			<cfquery name="LOCAL.qCheck">
 				SELECT 	ClientID, SurveyID
@@ -778,33 +782,50 @@
 					AND 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
 				</cfquery>
 
-				<cfloop list="#ARGUMENTS.PREDATA#" index="p">
-					<cfquery>
-						INSERT INTO SurveyResponse_tbl
-						( 
-							ClientID, SurveyID, AnswerID, PrePost 
-						) VALUES (
-							<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
-							'Pre'
-						)
-					</cfquery>
-				</cfloop>
+				<cfif LOCAL.SURVEY.ISPOSTONLY IS false>
+					<cfloop list="#ARGUMENTS.PREDATA#" index="p">
+						<cfquery>
+							INSERT INTO SurveyResponse_tbl
+							( 
+								ClientID, SurveyID, AnswerID, PrePost 
+							) VALUES (
+								<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
+								'Pre'
+							)
+						</cfquery>
+					</cfloop>
 
-				<cfloop list="#ARGUMENTS.POSTDATA#" index="p">
-					<cfquery>
-						INSERT INTO SurveyResponse_tbl
-						( 
-							ClientID, SurveyID, AnswerID, PrePost 
-						) VALUES (
-							<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
-							'Post'
-						)
-					</cfquery>
-				</cfloop>
+					<cfloop list="#ARGUMENTS.POSTDATA#" index="p">
+						<cfquery>
+							INSERT INTO SurveyResponse_tbl
+							( 
+								ClientID, SurveyID, AnswerID, PrePost 
+							) VALUES (
+								<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
+								'Post'
+							)
+						</cfquery>
+					</cfloop>
+				<cfelse>
+					<!--- Record the pre data as post as it is the ONLY data collected --->
+					<cfloop list="#ARGUMENTS.PREDATA#" index="p">
+						<cfquery>
+							INSERT INTO SurveyResponse_tbl
+							( 
+								ClientID, SurveyID, AnswerID, PrePost 
+							) VALUES (
+								<cfqueryparam value="#ARGUMENTS.ClientID#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#p#" cfsqltype="cf_sql_integer">,
+								'Post'
+							)
+						</cfquery>
+					</cfloop>
+				</cfif>
 			</cftransaction>
 
 			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Save survey data for survey : #ARGUMENTS.SurveyID#" />

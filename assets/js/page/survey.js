@@ -14,8 +14,14 @@ $(document).ready(function(){
 	    select: function(event, ui) {
 	        loadClientSurveyData($("#SurveyID").val(), ui.item.id);
 	    }
-	});	
-})
+	});
+
+	// Post Only Survey
+	if($("#is_post_only").val() == 1){
+		$(".post-survey").css("display", "none");
+		$("#post_survey_data").css("display", "none");
+	};
+});
 
 $(document).on("change", ".specify", function(){
 	var val = $(this).val();
