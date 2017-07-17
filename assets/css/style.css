@@ -547,7 +547,7 @@
 		display: inline-block;
 		width: 40%;
 	}
-	.radio-column label {
+	.radio-column label, .nobold label {
 		font-weight: normal!important;
 	}
 	.radio-column span {

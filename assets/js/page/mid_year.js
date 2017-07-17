@@ -20,6 +20,92 @@ $(document).ready(function(){
 			$('.accordion').accordion('option', 'active', -1); // Open the review panel.
 		};
 	});	
+
+	$(".show-other").on("click", function(){
+		var checked = $(this).is(":checked");
+		if(checked){
+			$("#evaluation_activities_other").slideDown();
+		} else {
+			$("#evaluation_activities_other").slideUp();
+		}
+	});
+
+	// Show if the Other is checked
+	if($(".show-other").is(":checked")){
+		$("#evaluation_activities_other").show();
+	}
+
+	// UPLOAD DOCUMENT
+	$(document).on("change", ".upload-logic", function(e) {
+        var sender = this;
+        var n = $(sender).parents("#upload_logic_model_form").clone(false);
+        $("#logic_upload_select").append(n);
+        $(sender).hide();
+        var status = $(".progress.template").clone(false);
+        $(status).removeClass("template").appendTo("#current_documents");
+        var bar = $(status).find(".bar");
+        var percent = $(status).find(".percent");
+        var display = $(status).find(".display-progress");
+        var n = $(sender).val().lastIndexOf('\\');
+        var file = $(sender).val().substring(n + 1);
+
+        // Validate file type. This also gets checked Coldfusion side in document_upload.cfm 
+        // so if you ever need to add any valid types it needs to be changed there.
+        var ext = file.substr(file.lastIndexOf('.') + 1);
+        var valid = "pdf, doc, docx";
+
+        if(valid.indexOf(ext) == -1){
+            showAutoreply({"TYPE":"error","MESSAGE":"Document must be one of the following types: " + valid.toString()}, $("#program_logic_model"));
+            return false;            
+        }
+
+        $("#no_documents").remove();
+
+        $("#upload_logic_model_form").ajaxSubmit({
+            beforeSend: function() {
+                var percentVal = '0%';
+                bar.width(percentVal);
+                percent.html(percentVal + " (" + file + ")");
+            },
+            uploadProgress: function(event, position, total, percentComplete){
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal);
+                percent.html(percentVal + " (" + file + ")");
+            },
+            error: function(response){
+				alert(reseponse);
+			},
+            success: function(response){
+                if(response.SUCCESS == false){
+                    showAutoreply(response, $("#program_logic_model").closest(".form-group"));
+                } else {
+                    var d = $(".document.template").clone(false);
+                    $(d).removeClass("template");
+                    $(status).replaceWith(d);
+                    $(d).find(".document-filename").html(response.FILENAME);
+                    $(d).find(".document-filename").attr("href", $(d).find(".document-filename").attr("href") + response.FILENAME);
+                    $(d).data("id", response.DOCUMENTID);
+
+                    // Update Document Type
+                    var pstr = new Object();
+			        pstr.method = "setDocumentType";
+			        pstr.documentID = response.DOCUMENTID;
+			        pstr.documentType = "Program Logic Model";
+			        pstr.CSRF = $.cookie("CSRF");
+
+			        $.ajax({
+			            url: "assets/cfc/webservices.cfc",
+			            data: pstr,
+			            success: function(response){
+			                if(!response.SUCCESS){
+			                    showAutoreply(response, $("#program_logic_model"));
+			                }
+			            }
+			        });
+                }
+            }
+        });
+    });
 });
 
 $(document).on("click", ".save", function(){
@@ -48,11 +134,19 @@ function saveMidYear(){
 	pstr.notYetStarted = $("#not_yet_started").val();
 	pstr.programChallenges = $("#program_challenges").val();
 	pstr.requireReportAssistance = $("#require_report_assistance").val();
-	pstr.evaluationActivities = $("#evaluation_activities").val();
 	pstr.noActivities = $("#no_activities").val();
 	pstr.evaluationChallenges = $("#evaluation_challenges").val();
 	pstr.requireResearchAssistance = $("#require_research_assistance").val();
 	pstr.CSRF = $.cookie("CSRF");
+
+	// Get evaluation activities 
+	pstr.evaluationActivities = "";
+	$("input[name=evaluation_activities").each(function(){
+		if($(this).is(":checked")){
+			pstr.evaluationActivities += $(this).val() + ",";
+		}
+	});
+	pstr.evaluationActivities = pstr.evaluationActivities + $("#evaluation_activities_other").val();
 	
 	$.ajax({
 		url: "assets/cfc/webservices.cfc",

@@ -1080,6 +1080,38 @@
 		</cfif>
 	</cffunction>	
 
+	<cffunction name="setDocumentType" access="remote" returnformat="JSON" returntype="struct"
+		hint="Update the type of document to label it as a specific required document">
+		<cfargument name="DocumentID" type="numeric" required="true">
+		<cfargument name="DocumentType" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<!--- Get the Document Type ID --->
+			<cfquery name="LOCAL.qType">
+				SELECT 	DocumentTypeID 
+				FROM 	DocumentType_tbl 
+				WHERE 	DocumentType = <cfqueryparam value="#ARGUMENTS.DocumentType#" cfsqltype="cf_sql_varchar">
+			</cfquery>
+			<cfset ARGUMENTS.DocumentTypeID = LOCAL.qType.DocumentTypeID>
+
+		<!--- Set accountID and AgencyID to defaults even if they are passed in through the web services which restricts creating with accounts or agency's 
+			  you don't have permission to, you CAN however do it through coldfusion in the program.cfc --->
+			<cfset ARGUMENTS.AccountID = REQUEST.USER.AccountID>
+			<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
+
+			<cfinvoke component="#APPLICATION.cfcpath#document" method="setDocumentTypeByDocumentID" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.document" />
+
+			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Document type has been updated.")>
+			<cfset LOCAL.response.DATA = LOCAL.document>
+
+			<cfreturn LOCAL.response>
+		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>
+	</cffunction>		
+
 	<cffunction name="removeDocument" access="remote" returnformat="JSON" returntype="struct"
 		hint="Remove a document from an Agency.">
 		<cfargument name="DocumentID" type="numeric" required="true">

@@ -212,13 +212,13 @@
 			<cfoutput>
 				<cfloop array="#BUDGET.Staff#" index="line">
 					<tr class="staffing-row">
-						<td><i class="fa fa-minus-circle remove-item"></i><input type="text" class="staff-title" placeholder="Title" value="#EncodeForHTML(line.TITLE)#" /></td>
+						<td><i class="fa fa-minus-circle remove-item"></i><input type="text" class="staff-title" placeholder="Title" value="#EncodeForHTML(line.TITLE)#" maxlength="200" /></td>
 						<td><span class="input-currency"><input type="number" class="staffing-add-value tab-add-row row-total" placeholder="Amount" value="#EncodeForHTML(line.Amount)#" /></span></td>
 					</tr>
 				</cfloop>
 			</cfoutput>
 			<tr class="staffing-row row-template">
-				<td><i class="fa fa-minus-circle remove-item"></i><input type="text" class="staff-title" placeholder="Title" /></td>
+				<td><i class="fa fa-minus-circle remove-item"></i><input type="text" class="staff-title" placeholder="Title" maxlength="200" /></td>
 				<td><span class="input-currency"><input type="number" class="staffing-add-value tab-add-row row-total" placeholder="Amount" /></span></td>
 			</tr>
 		</tbody>
