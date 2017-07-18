@@ -50,6 +50,7 @@
 				<div class="accordion clearfix">					
 					<h3>Sustainability</h3>
 					<div class="form-group seen">
+						<em>* Provide information for funded portion of the Program only</em>
 						<p>
 							<label for="is_only_funder">Is Airdrie FCSS the only funder for this program?</label><br /><br />
 							<label for="is_only_funder_yes">
@@ -61,7 +62,7 @@
 						</p>
 
 						<p id="if_only_funder">
-							<label for="sustain_funding">How do you intend to sustain your program in the longer-term? Will you be seeking other sources of funding?</label><br />
+							<label for="sustain_funding">If you answered 'Yes', How do you intend to sustain your program in the longer-term? Will you be seeking other sources of funding?</label><br />
 							<textarea data-maxlength="1000" id="sustain_funding" placeholder="Please describe" class="input-half value">#iif(LEN(PROGRAM.sustainFunding) GT 0, 'EncodeForHTML(PROGRAM.sustainFunding)', '')#</textarea>	
 						</p>
 
@@ -74,15 +75,17 @@
 
 					<h3>Surplus <span class="small-text">(funds exceed expenses)</span> / Deficit <span class="small-text">(expenses exceed funds)</span></h3>
 					<div class="form-group">
+						<em>* Provide information for funded portion of the Program only</em>
 						<p id="isSurplus">
-							<label for="is_surplus">Do you anticipate a surplus at the end of the year? </label><br /><span class="label-sub">Please notify Social Planning Unit by September 1, #Year(Now())#. All surplus funds must be returned to Airdrie FCSS.
-</span><br /><br />
+							<label for="is_surplus">Do you anticipate a surplus at the end of the year? </label><br />
 							<label for="is_surplus_yes">
 								<input type="radio" id="is_surplus_yes" name="is_surplus" class="required" #IIF(PROGRAM.isSurplus IS true, DE('checked'), DE(''))# value="1" /> Yes
 							</label>
 							<label for="is_surplus_no">
 								<input type="radio" id="is_surplus_no" name="is_surplus" class="required" #IIF(PROGRAM.isSurplus IS false, DE('checked'), DE(''))# value="0" /> No
-							</label>	
+							</label><br />
+							<span class="label-sub">Please notify Social Planning Unit by September 1, #Year(Now())#. All surplus funds must be returned to Airdrie FCSS.
+</span><br />
 						</p>	
 
 						<p id="isDeficit">
@@ -96,7 +99,7 @@
 						</p>	
 
 						<p id="if_deficit">
-							<label for="how_deal">Please describe how you will deal with the deficit.</label><br />
+							<label for="how_deal">If Yes, Please describe how you will manage this deficit.</label><br />
 							<textarea data-maxlength="1000" id="how_deal" placeholder="Please describe" class="input-half value">#iif(LEN(PROGRAM.howDeal) GT 0, 'EncodeForHTML(PROGRAM.howDeal)', '')#</textarea>	
 						</p>
 
@@ -109,6 +112,7 @@
 
 					<h3>Mid Year Financials</h3>
 					<div class="form-group">
+						<em>* Provide information for funded portion of the Program only</em>
 						<cfinclude template="shared/budget.cfm">
 
 						<!--- Panel Buttons --->
@@ -120,6 +124,7 @@
 
 					<h3>Program Activities Progress</h3>
 					<div class="form-group">
+						<em>* Provide information only for program activities funded by Airdrie FCSS #Year(Now())# grant funding.</em>
 						<p>
 							<label for="program_activities">What program activities have taken place (completed or currently underway)?</label><br /><span class="label-sub">Please list each separately, with an estimate of the number of individuals served from January 1 to June 30, #Year(Now())#.</span><br />
 							<textarea data-maxlength="1000" id="program_activities" placeholder="Please list" class="input-half value">#iif(LEN(PROGRAM.programActivities) GT 0, 'EncodeForHTML(PROGRAM.programActivities)', '')#</textarea>	
@@ -150,6 +155,7 @@
 
 					<h3>Program Evaluation Plan</h3>
 					<div class="form-group">
+						<em>* Provide information only for program activities funded by Airdrie FCSS #Year(Now())# grant funding.</em>
 						<div class="clearfix">
 							<p>
 								<label for="evaluation_activities">What evaluation activities have you implemented to measure the impact of your program?</label><br /><span class="label-sub">(Check all that apply, and add others not listed).</span><br />

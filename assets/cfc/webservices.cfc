@@ -13,13 +13,18 @@
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
 		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
-			<cfinvoke component="#APPLICATION.cfcpath#account" method="Insert" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" AgencyID="#REQUEST.USER.AGENCYID#" returnvariable="LOCAL.account" />
+			<cfinvoke component="#APPLICATION.cfcpath#account" method="Insert" accountname="#ARGUMENTS.Name#" accountemail="#ARGUMENTS.Email#" AgencyID="#REQUEST.USER.AGENCYID#" returnvariable="LOCAL.accountresponse" />
 
-			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Account has been created. An email will be sent to the address provided for the user to setup their account.")>
-			<cfset LOCAL.response.DATA = LOCAL.account>
+			<cfif LOCAL.accountresponse.SUCCESS IS true>
+				<cfset LOCAL.account = LOCAL.accountresponse.ACCOUNT>
+				<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Account has been created. An email will be sent to the address provided for the user to setup their account.")>
+				<cfset LOCAL.response.DATA = LOCAL.account>
 
-			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Account Added for email: #ARGUMENTS.Email#" />
-			<cfreturn LOCAL.response>
+				<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Account Added for email: #ARGUMENTS.Email#" />
+				<cfreturn LOCAL.response>
+			<cfelse>
+				<cfreturn getErrorResponse(LOCAL.accountresponse.MESSAGE)>
+			</cfif>
 		<cfelse>
 			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
 			<cfthrow message="An error has occurred, please try again later." />

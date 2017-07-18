@@ -14,6 +14,7 @@
 			<cfset STATS = createObject("component", "#APPLICATION.cfcpath#Dashboard")>
 
 			<h1><i class="fa fa-bar-chart"></i> City of Airdrie Dashboard</h1>
+
 			<div class="dashboard-panel dashboard-panel-small">
 				<div class="dashboard-shadow">
 					<h1 class="green-background">Active Programs</h1>

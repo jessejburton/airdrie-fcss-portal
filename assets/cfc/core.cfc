@@ -102,12 +102,16 @@
 			<cfreturn true>
 		</cfif>
 
-		<cfquery name="LOCAL.qCheck">
-			SELECT 	AgencyID 
-			FROM 	Program_tbl 
-			WHERE   ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
-			AND 	AgencyID = <cfqueryparam value="#REQUEST.USER.AgencyID#" cfsqltype="cf_sql_integer">
-		</cfquery>
+		<cfif StructKeyExists(REQUEST.USER, "AgencyID")>
+			<cfquery name="LOCAL.qCheck">
+				SELECT 	AgencyID 
+				FROM 	Program_tbl 
+				WHERE   ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+				AND 	AgencyID = <cfqueryparam value="#REQUEST.USER.AgencyID#" cfsqltype="cf_sql_integer">
+			</cfquery>
+		<cfelse>
+			<cfreturn false>
+		</cfif>
 
 		<cfreturn LOCAL.qCheck.recordcount IS 1>
 	</cffunction>
@@ -159,7 +163,9 @@
 		<cfargument name="Type" default="information" hint="The type of message that will be added to the log information | warning | error | fatal ">
 
 		<cfif StructKeyExists(REQUEST, "USER")>
-			<cfset LOCAL.Message = REQUEST.USER.name & " - ">
+			<cfif StructKeyExists(REQUEST.USER, "Name")>
+				<cfset LOCAL.Message = REQUEST.USER.name & " - ">
+			</cfif>
 		<cfelse>
 			<cfset LOCAL.Message = "Not Logged In - "> 
 		</cfif>

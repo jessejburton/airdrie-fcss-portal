@@ -105,12 +105,13 @@
         <cfelse>
             <cfoutput>
                 <cfif APPLICATION.environment IS "production" OR (isDefined('REQUEST.isAjax') AND REQUEST.isAjax)>                    
-                    <cfinvoke component="#APPLICATION.cfcpath#core" error="#EXCEPT#" session="#SESSION#" request="#REQUEST#" form="#FORM#" method="sendErrorEmail" />
+                    <cfinvoke component="#APPLICATION.cfcpath#core" error="#EXCEPT#" session="#SESSION#" CGI="#CGI#" request="#REQUEST#" form="#FORM#" method="sendErrorEmail" />
                 <cfelseif APPLICATION.environment IS "development" OR APPLICATION.environment IS "testing">
                     <cfdump var="#EXCEPT#">
                     <cfdump var="#REQUEST#">
                     <cfdump var="#FORM#">
                     <cfdump var="#SESSION#">
+                    <cfdump var="#CGI#">
                 </cfif>
             </cfoutput>
         </cfif>

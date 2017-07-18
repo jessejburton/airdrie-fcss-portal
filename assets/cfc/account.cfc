@@ -148,7 +148,7 @@
 		</cfquery>
 
 		<cfif LOCAL.qCheck.recordcount GT 0>
-			<cfthrow message="<strong>Sorry!</strong> an account with this email address already exists.">
+			<cfreturn getErrorResponse("<strong>Sorry!</strong> an account with this email address already exists.")>
 		<cfelse>
 			<cfquery result="LOCAL.qAccount">
 				INSERT INTO Account_tbl
@@ -202,7 +202,9 @@
 				<p style="color: ##474747; font-style: italic;">Having trouble with the link? Please contact City of Airdrie Social Planning at 403.948.8800 or <a href="mailto:social.planning@airdrie.ca">social.planning@airdrie.ca</a></p>
 			</cfmail>
 
-			<cfreturn LOCAL.Account>
+			<cfset LOCAL.response = getSuccessResponse("Account Added")>
+			<cfset LOCAL.response.ACCOUNT = LOCAL.Account>
+			<cfreturn LOCAL.response>
 		</cfif>
 	</cffunction>
 
