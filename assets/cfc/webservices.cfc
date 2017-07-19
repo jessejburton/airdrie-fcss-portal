@@ -1088,6 +1088,7 @@
 	<cffunction name="setDocumentType" access="remote" returnformat="JSON" returntype="struct"
 		hint="Update the type of document to label it as a specific required document">
 		<cfargument name="DocumentID" type="numeric" required="true">
+		<cfargument name="ProgramID" type="numeric" required="false">
 		<cfargument name="DocumentType" type="string" required="true">
 		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
 
@@ -1106,6 +1107,14 @@
 			<cfset ARGUMENTS.AgencyID = REQUEST.AGENCY.AgencyID>
 
 			<cfinvoke component="#APPLICATION.cfcpath#document" method="setDocumentTypeByDocumentID" argumentcollection="#ARGUMENTS#" returnvariable="LOCAL.document" />
+
+			<cfif isDefined('ARGUMENTS.ProgramID')>
+				<cfquery>
+					UPDATE 	Document_tbl 
+					SET 	ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">
+					WHERE 	DocumentID = <cfqueryparam value="#ARGUMENTS.DocumentID#" cfsqltype="cf_sql_integer">
+				</cfquery>
+			</cfif>
 
 			<cfset LOCAL.response = getSuccessResponse("<strong>Success!</strong> Document type has been updated.")>
 			<cfset LOCAL.response.DATA = LOCAL.document>

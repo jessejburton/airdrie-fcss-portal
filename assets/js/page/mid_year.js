@@ -16,6 +16,18 @@ $(document).ready(function(){
 // Enable the review panel once the form is valid
 	$("#midyear_submit_to_airdrie").on("click", function(){
 		$(".form-group").addClass("seen");
+
+		// Ensure checkboxes are checked if needed
+		if($("#auth1").length > 0){
+			if(!$("#auth1").is(":checked") || !$("#auth2").is(":checked")){
+				$(".auth-group").addClass("error");
+				alert("Please make sure to read and check the agreements");
+				return false;
+			} else {
+				$(".auth-group").removeClass("error");
+			}
+		}
+
 		if(validateForm($("#mid_year_form"), submitMidYear)){
 			$('.accordion').accordion('option', 'active', -1); // Open the review panel.
 		};
@@ -86,10 +98,11 @@ $(document).ready(function(){
                     $(d).find(".document-filename").attr("href", $(d).find(".document-filename").attr("href") + response.FILENAME);
                     $(d).data("id", response.DOCUMENTID);
 
-                    // Update Document Type
+                    // Update Document Type and ProgramID
                     var pstr = new Object();
 			        pstr.method = "setDocumentType";
 			        pstr.documentID = response.DOCUMENTID;
+			        pstr.ProgramID = $("#program_id").val();
 			        pstr.documentType = "Program Logic Model";
 			        pstr.CSRF = $.cookie("CSRF");
 

@@ -9,7 +9,7 @@
 		SELECT 	Filename
 		FROM 	Document_tbl
 		WHERE 	DocumentTypeID = (SELECT DocumentTypeID FROM DocumentType_tbl WHERE DocumentType = 'Program Logic Model')
-		AND 	AgencyID = <cfqueryparam value="#PROGRAM.AgencyID#" cfsqltype="cf_sql_integer">
+		AND 	ProgramID = <cfqueryparam value="#PROGRAM.ProgramID#" cfsqltype="cf_sql_integer">
 	</cfquery>	
 <cfelse>
 	<cflocation url="index.cfm" addtoken="false">
@@ -33,6 +33,8 @@
 
 <!--- BEGIN FORM --->	
 		<cfif showForm>
+			<h1>For Program Activities from January 1 to June 30</h1>
+			<h2>All Information Provided is Public</h2>
 			<form id="mid_year_form">
 				<!--- Hidden Form Fields --->
 				<input type="hidden" id="program_id" value="<cfoutput>#EncodeForHTML(PROGRAM.ProgramID)#</cfoutput>" />
@@ -84,7 +86,7 @@
 							<label for="is_surplus_no">
 								<input type="radio" id="is_surplus_no" name="is_surplus" class="required" #IIF(PROGRAM.isSurplus IS false, DE('checked'), DE(''))# value="0" /> No
 							</label><br />
-							<span class="label-sub">Please notify Social Planning Unit by September 1, #Year(Now())#. All surplus funds must be returned to Airdrie FCSS.
+							<span class="label-sub">If yes, please notify Social Planning by September 1, #Year(Now())#. All surplus funds must be returned to Airdrie FCSS.
 </span><br />
 						</p>	
 
@@ -216,15 +218,25 @@
 									</div>
 								</div>
 								<div class="document template">	
-									<a href="<cfoutput>#APPLICATION.documentpath#</cfoutput>/" class="document-filename inline" target="_blank"></a>		
+									<a href="<cfoutput>#APPLICATION.documentpath#</cfoutput>/" class="document-filename link" target="_blank"></a>		
 								</div>
 							<cfelse>
-								<cfoutput><a href="#APPLICATION.documentpath#/#qPLM.Filename#" class="document-filename inline" target="_blank">#qPLM.Filename#</a>	</cfoutput>
+								<cfoutput><a href="#APPLICATION.documentpath#/#qPLM.Filename#" class="document-filename link" target="_blank">#qPLM.Filename#</a>	</cfoutput>
 							</cfif>
 						</div>
 
 
 						<div class="form_buttons clearfix">
+							<hr />
+							<h3>Agreements</h3>
+							<p class="auth-group">
+								<label for="auth1"><input type="checkbox" id="auth1" class="required" />
+								I have the authority to submit this report on behalf of my non-profit organization, and I confirm that the information contained herein is true and correct to the best of my knowledge, information, and belief.
+							</p>
+							<p class="auth-group">
+								<label for="auth2"><input type="checkbox" id="auth2" class="required" />
+								I acknowledge and understand that the information contained herein will be made public.
+							</p>
 							<button type="button" id="midyear_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button> 
 							<!---<a href="javascript:;" class="pull-right small-text link inline" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> Printable Version</a>--->
 						</div>
