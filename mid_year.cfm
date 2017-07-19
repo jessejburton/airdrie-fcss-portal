@@ -34,7 +34,7 @@
 <!--- BEGIN FORM --->	
 		<cfif showForm>
 			<h1>For Program Activities from January 1 to June 30</h1>
-			<h2>All Information Provided is Public</h2>
+			<h4>All Information Provided is Public</h4>
 			<form id="mid_year_form">
 				<!--- Hidden Form Fields --->
 				<input type="hidden" id="program_id" value="<cfoutput>#EncodeForHTML(PROGRAM.ProgramID)#</cfoutput>" />
