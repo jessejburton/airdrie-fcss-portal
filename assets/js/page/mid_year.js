@@ -49,15 +49,11 @@ $(document).ready(function(){
 
 	// UPLOAD DOCUMENT
 	$(document).on("change", ".upload-logic", function(e) {
+		$("#program_logic_model").find(".autoreply").remove();
         var sender = this;
-        var n = $(sender).parents("#upload_logic_model_form").clone(false);
-        $("#logic_upload_select").append(n);
-        $(sender).hide();
-        var status = $(".progress.template").clone(false);
-        $(status).removeClass("template").appendTo("#current_documents");
-        var bar = $(status).find(".bar");
-        var percent = $(status).find(".percent");
-        var display = $(status).find(".display-progress");
+        //var n = $(sender).parents("#upload_logic_model_form").clone(false);
+        //$("#logic_upload_select").append(n);
+        //$(sender).hide();
         var n = $(sender).val().lastIndexOf('\\');
         var file = $(sender).val().substring(n + 1);
 
@@ -70,6 +66,12 @@ $(document).ready(function(){
             showAutoreply({"TYPE":"error","MESSAGE":"Document must be one of the following types: " + valid.toString()}, $("#program_logic_model"));
             return false;            
         }
+
+        var status = $(".progress.template").clone(false);
+        $(status).removeClass("template").appendTo("#current_documents");
+        var bar = $(status).find(".bar");
+        var percent = $(status).find(".percent");
+        var display = $(status).find(".display-progress");        
 
         $("#no_documents").remove();
 
