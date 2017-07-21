@@ -86,9 +86,9 @@ $(document).on("click", ".add-row", function(){
 // Total the expenditures
 $(document).on("keyup", ".expenditure-add-value", function(){
 	var total = 0;
-	var row = $(this).closest("tr");
+	var row = $(this).closest(".expenditure-item");
 
-	$(".expenditure-add-value").each(function(){
+	row.find(".expenditure-add-value").each(function(){
 		if($(this).val().length > 0 && !isNaN($(this).val())){
 			total = total + parseFloat($(this).val());
 		}
