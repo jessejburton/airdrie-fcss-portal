@@ -18,8 +18,8 @@
 		<tr>
 			<cfoutput>
 				<th width="40%">Source</th>
-				<th width="30%">#YEAR(NOW())# Program Budget</th>
-				<th width="30%">#YEAR(NOW()) + 1# Revenue Amount</th>								
+				<th width="30%">#YEAR(NOW())# #IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('Budget'), DE('Program Budget'))#</th>
+				<th width="30%">#IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('YTD Actual'), DE(YEAR(NOW()) + 1 & ' Revenue Amount'))#</th>								
 			</cfoutput>	
 		</tr>
 	</thead>
@@ -83,7 +83,7 @@
 			<td><a href="javascript:;" class="add-row"><i class="fa fa-plus"></i> add another</a></td>
 			<td><span class="row-error-message"></span></td>
 			<td colspan="2">
-				<strong class="pull-left">Total Revenues</strong>
+				<strong class="pull-left"><cfoutput>#IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('2017 YTD Total Actual'), DE('Total Revenues'))#</cfoutput></strong>
 				<span id="expenditure_total" class="col-total pull-right faded">$ 0.00</span>
 				<input type="hidden" id="revenue_total_val" class="table-total">
 			</td>
@@ -104,10 +104,10 @@
 		<tr>
 			<cfoutput>
 				<th width="20%">Source</th>
-				<th width="20%">#YEAR(NOW())# Program Budget
-				<th width="20%">#YEAR(NOW()) + 1# To be funded by Other Source</th>
-				<th width="20%">#YEAR(NOW()) + 1# To be funded by Airdrie</th>				
-				<th width="20%">Total</th>	
+				<th width="20%">#YEAR(NOW())# #IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('Budget'), DE('Program Budget'))#
+				<th width="20%">#IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('YTD Other Sources Expenses Actual'), DE(YEAR(NOW()) + 1 & ' To be funded by Other Source'))#</th>
+				<th width="20%">#IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('YTD Airdrie FCSS Expenses Actual'), DE(YEAR(NOW()) + 1 & ' To be funded by Airdrie'))#</th>				
+				<th width="20%">#IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('2017 YTD Total Actual'), DE('Actual'))#</th>	
 			</cfoutput>
 		</tr>
 	</thead>
@@ -179,7 +179,7 @@
 			<td><a href="javascript:;" class="add-row"><i class="fa fa-plus"></i> add another</a></td>
 			<td colspan="2"><span class="row-error-message"></span></td>
 			<td>
-				<strong class="pull-right">Total Expenditures</strong>
+				<strong class="pull-right"><cfoutput>#IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('2017 YTD Total Expenditures'), DE('Total Expenditures'))#</cfoutput></strong>
 			</td>
 			<td>				
 				<span class="col-total pull-right faded">$ 0.00</span>
@@ -206,7 +206,7 @@
 	<p>Please enter the titles and amount breakdown for the positions relating to the staffing item in your expenditures. Total should add up to the line item you entered above, currently <strong>$ <span id="staffing_total"></span></strong>.
 	<table class="table" id="staff_table">
 		<thead>
-			<tr><th>Title</th><th>Amount</th></tr>
+			<tr><th>Title</th><th><cfoutput>#IIF(BUDGETTYPE IS 'Mid-Year Budget', DE('YTD Expenses Actual'), DE('Amount'))#</cfoutput></th></tr>
 		</thead>
 		<tbody>
 			<cfoutput>
