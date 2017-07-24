@@ -97,6 +97,7 @@
 	    	SELECT 	SurveyID, Name
 	    	FROM	Survey_tbl
 	    	WHERE 	isActive = 1
+	    	ORDER BY Name
 	    </cfquery>
 	    
 	    <cfreturn LOCAL.qSurveys>
