@@ -6,7 +6,7 @@
 <cfif StructKeyExists(URL, 'ID')>
 	<cfinvoke component="#APPLICATION.cfcpath#program" method="getProgramByID" programID="#URL.ID#" returnvariable="PROGRAM" />
 	<cfquery name="qPLM">
-		SELECT 	Filename
+		SELECT 	Filename, DocumentID
 		FROM 	Document_tbl
 		WHERE 	DocumentTypeID = (SELECT DocumentTypeID FROM DocumentType_tbl WHERE DocumentType = 'Program Logic Model')
 		AND 	ProgramID = <cfqueryparam value="#PROGRAM.ProgramID#" cfsqltype="cf_sql_integer">
@@ -198,15 +198,11 @@
 						<div id="program_logic_model">
 							<h4>Program Logic Model</h4>
 							<!---<a href="">download template</a> TODO - Add the template to download --->
-							<cfif qPLM.recordcount IS 0>
+							<div id="plm_container" #iif(qPLM.recordcount IS 1, DE('style="display: none;"'), DE(''))#>
 								<div id="logic_upload_select">
 									<form enctype="multipart/form-data" action="shared\document_upload.cfm" method="post" id="upload_logic_model_form">
 										<p><input class="upload-logic" name="upload_document" type="file" /></p>
 									</form>
-								</div>
-
-								<div id="current_documents">
-									<p id="no_documents">Please upload your program logic model.</p>
 								</div>
 								<!--- TEMPLATES --->
 								<!--- Upload Progress Template --->
@@ -218,11 +214,22 @@
 									</div>
 								</div>
 								<div class="document template">	
+									<a href="javascript:;" class="remove-document inline" title="Remove this document."><i class="fa fa-times-circle"></i></a>
 									<a href="<cfoutput>#APPLICATION.documentpath#</cfoutput>/" class="document-filename link" target="_blank"></a>		
 								</div>
-							<cfelse>
-								<cfoutput><a href="#APPLICATION.documentpath#/#qPLM.Filename#" class="document-filename link" target="_blank">#qPLM.Filename#</a>	</cfoutput>
-							</cfif>
+							</div>
+							
+							<div id="current_documents">
+								<p id="no_documents" #iif(qPLM.recordcount IS 1, DE('style="display: none;"'), DE(''))#>Please upload your program logic model.</p>
+								<cfif qPLM.recordcount IS 1>
+									<cfoutput>									
+										<div class="document">
+											<a href="javascript:;" class="remove-document inline" data-id="#EncodeForHTMLAttribute(qPLM.DocumentID)#" title="Remove this document."><i class="fa fa-times-circle"></i></a>
+											<a href="#APPLICATION.documentpath#/#EncodeForHTMLAttribute(qPLM.Filename)#" class="document-filename link" target="_blank">#EncodeForHtml(qPLM.Filename)#</a>	
+										</div>																			
+									</cfoutput>							
+								</cfif>
+							</div>
 						</div>
 
 

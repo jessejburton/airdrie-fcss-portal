@@ -47,6 +47,32 @@ $(document).ready(function(){
 		$("#evaluation_activities_other").show();
 	}
 
+	// REMOVE DOCUMENT
+	$(document).on("click", ".remove-document", function(){
+		if(confirm("Are you sure you would like to remove this document?")){
+			var pstr = new Object();
+				pstr.method = "removeDocument";
+				pstr.documentID = $(this).data("id");
+				pstr.CSRF = $.cookie("CSRF");
+
+            $.ajax({
+                url: "assets/cfc/webservices.cfc",
+                data: pstr,
+                success: function(response){
+                    if(response.SUCCESS){         
+	                    $("#logic_upload_select").show();
+	                    $(".document:not(.template)").remove();   
+	                    $("#no_documents").show();           
+                        $("#plm_container").show();
+                        $("#upload_logic_model_form").trigger("reset");
+                    } else {
+                        showAutoreply(response, $("#program_logic_model"));
+                    }
+                }
+            });
+		};
+	});
+
 	// UPLOAD DOCUMENT
 	$(document).on("change", ".upload-logic", function(e) {
 		$("#program_logic_model").find(".autoreply").remove();
@@ -73,7 +99,7 @@ $(document).ready(function(){
         var percent = $(status).find(".percent");
         var display = $(status).find(".display-progress");        
 
-        $("#no_documents").remove();
+        $("#no_documents").hide();
 
         $("#upload_logic_model_form").ajaxSubmit({
             beforeSend: function() {
@@ -98,7 +124,7 @@ $(document).ready(function(){
                     $(status).replaceWith(d);
                     $(d).find(".document-filename").html(response.FILENAME);
                     $(d).find(".document-filename").attr("href", $(d).find(".document-filename").attr("href") + response.FILENAME);
-                    $(d).data("id", response.DOCUMENTID);
+                    $(d).find(".remove-document").data("id", response.DOCUMENTID);
 
                     // Update Document Type and ProgramID
                     var pstr = new Object();
@@ -113,7 +139,9 @@ $(document).ready(function(){
 			            data: pstr,
 			            success: function(response){
 			                if(!response.SUCCESS){
-			                    showAutoreply(response, $("#program_logic_model"));
+			                    showAutoreply(response, $("#program_logic_model"));			    
+			                } else {
+			                	$("#logic_upload_select").hide();
 			                }
 			            }
 			        });
