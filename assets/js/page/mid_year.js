@@ -168,10 +168,10 @@ function saveMidYear(){
 	var pstr = new Object();
 	pstr.Method = "saveMidYear";
 	pstr.ProgramID = $("#program_id").val();
-	pstr.isOnlyFunder = $("input[name=is_only_funder]:checked").val();
+	pstr.isOnlyFunder = (typeof $("input[name=is_only_funder]:checked").val() !== 'undefined') ? $("input[name=is_only_funder]:checked").val() : 0;
 	pstr.sustainFunding = $("#sustain_funding").val();
-	pstr.isSurplus = $("input[name=is_surplus]:checked").val();
-	pstr.isDeficit = $("input[name=is_deficit]:checked").val();
+	pstr.isSurplus = (typeof $("input[name=is_surplus]:checked").val() !== 'undefined') ? $("input[name=is_surplus]:checked").val() : 0;
+	pstr.isDeficit = (typeof $("input[name=is_deficit]:checked").val() !== 'undefined') ? $("input[name=is_deficit]:checked").val() : 0;
 	pstr.howDeal = $("#how_deal").val();
 	pstr.programActivities = $("#program_activities").val();
 	pstr.notYetStarted = $("#not_yet_started").val();
@@ -181,7 +181,7 @@ function saveMidYear(){
 	pstr.evaluationChallenges = $("#evaluation_challenges").val();
 	pstr.requireResearchAssistance = $("#require_research_assistance").val();
 	pstr.CSRF = $.cookie("CSRF");
-
+alert(pstr.isOnlyFunder);
 	// Get evaluation activities 
 	pstr.evaluationActivities = "";
 	$("input[name=evaluation_activities").each(function(){
