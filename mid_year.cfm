@@ -21,7 +21,7 @@
 <!--- MAIN CONTENT --->
 	<section id="main_content">
 		<div class="wrapper clearfix">
-			<h1>Midyear Progress Report</h1>
+			<h1><cfoutput>#EncodeForHTML(PROGRAM.ProgramName)#</cfoutput> - Midyear Progress Report</h1>
 
 <!--- Decide whether or not to show the form --->
 <cfif ListFindNoCase(PROGRAM.StatusList, 'MIDYEAR - Submitted') IS 1>
