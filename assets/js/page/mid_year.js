@@ -181,7 +181,6 @@ function saveMidYear(){
 	pstr.evaluationChallenges = $("#evaluation_challenges").val();
 	pstr.requireResearchAssistance = $("#require_research_assistance").val();
 	pstr.CSRF = $.cookie("CSRF");
-alert(pstr.isOnlyFunder);
 	// Get evaluation activities 
 	pstr.evaluationActivities = "";
 	$("input[name=evaluation_activities").each(function(){
