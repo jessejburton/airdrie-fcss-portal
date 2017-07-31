@@ -43,11 +43,19 @@
 							</cfquery>
 							
 							<cfif LEN(TRIM(LOCAL.qContent.data)) GT 0> 	<!--- Only display if it has content --->
+								<!--- Get the data type --->
+								<cfset LOCAL.datatype = qContent.GetMetaData().GetColumnTypeName(JavaCast( 'int', 1 ))>
+								<cfif LOCAL.datatype IS 'bit'>
+									<cfset LOCAL.output = YesNoFormat(LOCAL.qContent.data)>
+								<cfelse>
+									<cfset LOCAL.output = LOCAL.qContent.data>
+								</cfif>
+
 								<cfif LOCAL.qPackage.isSectionHeading>
-									<h1 class="section-heading">#LOCAL.qContent.data#</h1>
+									<h1 class="section-heading">#EncodeForHTML(LOCAL.output)#</h1>
 								<cfelse>
 									<h1>#EncodeForHTML(LOCAL.qPackage.SectionTitle)#</h1>
-									<p>#EncodeForHtml(LOCAL.qContent.data)#</p>
+									<p>#EncodeForHtml(LOCAL.output)#</p>
 								</cfif>
 							</cfif>
 						</cfif>

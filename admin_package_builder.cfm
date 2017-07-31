@@ -103,8 +103,25 @@
 							<li data-column="LongTermGoals" data-tableview="Program_vw"><span>Long Term Goals</span></li>
 							<li data-column="Status" data-tableview="Program_vw"><span>Current Status</span></li>
 							<li data-template="status_list.cfm"><span>Status List</span></li>
+								<!--- Mid-Year Details --->
+							<li class="heading">Mid Year Details</li>
+							<li data-column="isOnlyFunder" data-tableview="Program_vw"><span>Is Airdrie the only funder?</span></li>
+							<li data-column="sustainFunding" data-tableview="Program_vw"><span>How will you sustain? Will you need more funds?</span></li>
+							<li data-column="isSurplus" data-tableview="Program_vw"><span>Do you anticipate a surplus?</span></li>
+							<li data-column="isDeficit" data-tableview="Program_vw"><span>Do you anticipate a deficit?</span></li>
+							<li data-column="howDeal" data-tableview="Program_vw"><span>How you will manage this deficit?</span></li>
+							<li data-template="midyear_budget_summary.cfm"><span>Mid-Year Budget Summary</span></li>
+							<li data-column="programActivities" data-tableview="Program_vw"><span>What program activities have taken place?</span></li>
+							<li data-column="notYetStarted" data-tableview="Program_vw"><span>June 30 activities that have NOT yet started</span></li>
+							<li data-column="programChallenges" data-tableview="Program_vw"><span>Challenges implementing your program?</span></li>
+							<li data-column="requireReportAssistance" data-tableview="Program_vw"><span>Do you require report assistance from Airdrie FCSS?</span></li>
+							<li data-column="evaluationActivities" data-tableview="Program_vw"><span>Implemented evaluation activities</span></li>	
+							<li data-column="noActivities" data-tableview="Program_vw"><span>Explanation of No Activities</span></li>
+							<li data-column="evaluationChallenges" data-tableview="Program_vw"><span>Challenges implementing evaluation activities</span></li>
+							<li data-column="requireResearchAssistance" data-tableview="Program_vw"><span>Do you require Airdrie FCSS Researcher assistance?</span></li>				
+							<li data-template="plm.cfm"><span>Program Logic Model</span></li>		
 						</ul>
-					</div>
+					</div>				
 
 					<div id="package_elements">
 						<h1>Current Package</h1>					

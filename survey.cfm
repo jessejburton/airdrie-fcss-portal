@@ -49,7 +49,8 @@
 						<p>
 							<label for="participant_name">Name</label><br />
 							<input type="text" class="input-half" id="participant_name" placeholder="Enter the participants name." />
-							<a class="link smaller-text" id="generate" href="javascript:;">&nbsp; <i class="fa fa-check"></i> Generate Unique ID</a>
+							<a class="link smaller-text" id="generate" href="javascript:;">&nbsp; <i class="fa fa-check"></i> Generate Unique ID</a><br />
+							<span style="font-size: .9em; font-style: italic;">* only use "Generate Unique ID" to randomly assign a name, otherwise simply enter a name and hit continue.</span>
 							<a class="link smaller-text hidden" id="new" href="javascript:;">&nbsp; <i class="fa fa-plus"></i> New Client</a>
 						</p>
 
