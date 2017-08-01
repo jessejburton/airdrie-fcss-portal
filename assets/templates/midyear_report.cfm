@@ -16,24 +16,30 @@
 
 	<h1>Sustainability</h1>
 	<cfoutput>
-		<p><strong>Is Airdrie FCSS the only funder for this program?</strong><br />#EncodeForHTML(YesNoFormat(PROGRAM.isOnlyFunder))#</p>
-		<cfif PROGRAM.isOnlyFunder>
-			<p>
-				<strong>How do you intend to sustain your program in the longer-term? Will you be seeking other sources of funding?</strong>
-				<br />#EncodeForHTML(PROGRAM.sustainFunding)#
-			</p>
+		<cfif LEN(PROGRAM.isOnlyFunder) GT 0>
+			<p><strong>Is Airdrie FCSS the only funder for this program?</strong><br />#EncodeForHTML(YesNoFormat(PROGRAM.isOnlyFunder))#</p>
+			<cfif PROGRAM.isOnlyFunder>
+				<p>
+					<strong>How do you intend to sustain your program in the longer-term? Will you be seeking other sources of funding?</strong>
+					<br />#EncodeForHTML(PROGRAM.sustainFunding)#
+				</p>
+			</cfif>
 		</cfif>
 	</cfoutput>
 
 	<h1>Surplus</h1>
 	<cfoutput>
-		<p><strong>Do you anticipate a surplus at the end of the year?</strong><br />#EncodeForHTML(YesNoFormat(PROGRAM.isSurplus))#</p>
-		<cfif PROGRAM.isSurplus>
-			<p><em>Please notify Social Planning by September 1, 2017. All surplus funds must be returned to Airdrie FCSS.</em></p>
+		<cfif LEN(PROGRAM.isSurplus) GT 0>
+			<p><strong>Do you anticipate a surplus at the end of the year?</strong><br />#EncodeForHTML(YesNoFormat(PROGRAM.isSurplus))#</p>
+			<cfif PROGRAM.isSurplus>
+				<p><em>Please notify Social Planning by September 1, 2017. All surplus funds must be returned to Airdrie FCSS.</em></p>
+			</cfif>
 		</cfif>
-		<p><strong>Do you anticipate a deficit at the end of the year?</strong><br />#EncodeForHTML(YesNoFormat(PROGRAM.isDeficit))#</p>
-		<cfif PROGRAM.isDeficit>
-			<p><strong>Please describe how you will manage this deficit.</strong><br />#EncodeForHTML(PROGRAM.howDeal)#</p>
+		<cfif LEN(PROGRAM.isDeficit) GT 0>
+			<p><strong>Do you anticipate a deficit at the end of the year?</strong><br />#EncodeForHTML(YesNoFormat(PROGRAM.isDeficit))#</p>
+			<cfif PROGRAM.isDeficit>
+				<p><strong>Please describe how you will manage this deficit.</strong><br />#EncodeForHTML(PROGRAM.howDeal)#</p>
+			</cfif>
 		</cfif>
 	</cfoutput>
 
