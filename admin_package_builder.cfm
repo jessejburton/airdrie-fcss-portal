@@ -119,7 +119,7 @@
 							<li data-column="noActivities" data-tableview="Program_vw"><span>Explanation of No Activities</span></li>
 							<li data-column="evaluationChallenges" data-tableview="Program_vw"><span>Challenges implementing evaluation activities</span></li>
 							<li data-column="requireResearchAssistance" data-tableview="Program_vw"><span>Do you require Airdrie FCSS Researcher assistance?</span></li>				
-							<li data-template="plm.cfm"><span>Program Logic Model</span></li>		
+							<li data-template="midyear_report.cfm"><span>Mid Year Report</span></li>	
 						</ul>
 					</div>				
 
