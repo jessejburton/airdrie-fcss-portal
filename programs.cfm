@@ -37,7 +37,7 @@
 
 									<a href="application_form.cfm?ID=#program.ProgramID#" class="btn btn-primary">
 										<i class="fa fa-check-circle"></i> <span>#ButtonText#</span>
-									</a>							
+									</a>					
 								</div>
 							<cfelse>
 								<div>
@@ -55,6 +55,11 @@
 									<p>
 										<a href="admin_create_package.cfm?ProgramID=#URLEncodedFormat(program.ProgramID)#" class="link" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Program Details</a>
 									</p>
+									<cfif ListFind(program.StatusList, "MIDYEAR - Submitted") GT 0>
+										<p>
+											<a href="admin_create_package.cfm?ProgramID=<cfoutput>#URLEncodedFormat(PROGRAM.ProgramID)#</cfoutput>&PackageName=Mid-Year%20Report" class="link" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Mid-Year Report</a>									
+										</p>
+									</cfif>
 								</div>
 							</cfif>
 							<p class="spaced"><strong>Current Status: </strong> #PROGRAM.CurrentStatus#</p>

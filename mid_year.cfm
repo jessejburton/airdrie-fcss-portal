@@ -27,7 +27,7 @@
 <cfif ListFindNoCase(PROGRAM.StatusList, 'MIDYEAR - Submitted') IS 1>
 	<cfset showForm = false>
 	<div class="autoreply autoreply-info autoreply-visible">
-		<p><strong>Submitted!</strong> You have already completed and sent in your mid-year report for this program.
+		<p><strong>Submitted!</strong> You have already completed and sent in your mid-year report for this program. <a href="admin_create_package.cfm?ProgramID=<cfoutput>#URLEncodedFormat(PROGRAM.ProgramID)#</cfoutput>&PackageName=Mid-Year%20Report" class="link" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Mid-Year Report</a></p>
 	</div>
 </cfif>
 
@@ -244,7 +244,9 @@
 								<label for="auth2"><input type="checkbox" id="auth2" class="required" />
 								I acknowledge and understand that the information contained herein will be made public.
 							</p>
-							<button type="button" id="midyear_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button> 
+
+							<button type="button" id="midyear_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
+							<a href="admin_create_package.cfm?ProgramID=<cfoutput>#URLEncodedFormat(PROGRAM.ProgramID)#</cfoutput>&PackageName=Mid-Year%20Report" class="link pull-right small-text inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Mid-Year Report</a> 
 							<!---<a href="javascript:;" class="pull-right small-text link inline" style="margin-top: 15px;"><i class="fa fa-file-pdf-o"></i> Printable Version</a>--->
 						</div>
 					</div>	
@@ -253,9 +255,9 @@
 				</div>
 			</cfoutput>				
 
-			<p>
+			<p>				
 				<a href="javascript:;" class="save btn btn-primary inline"><i class="fa fa-save"></i> Save</a>
-				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>
+				<a href="programs.cfm" class="link inline"><i class="fa fa-chevron-circle-left"></i> Back to Programs</a>				
 				<em class="pull-right small-text" id="last_saved">Last Saved: <cfoutput>#EncodeForHTML(PROGRAM.FormattedDateUpdated)#</cfoutput></em>
 			</p>
 		</cfif>
