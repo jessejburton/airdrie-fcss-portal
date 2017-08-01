@@ -49,7 +49,7 @@ function getAgencyDetails(agencyID){
 					var doc = response.DATA.DOCUMENTS[d];
 					var l = document.createElement("li");
 					var a = document.createElement("a");
-					$(a).attr("href", $("#document_path") + "/" + doc.FILENAME);
+					$(a).attr("href", $("#document_path").val() + "/" + doc.FILENAME);
 					$(a).attr("target", "_blank").addClass("link");
 					$(a).html(doc.FILENAME + " (" + doc.DOCUMENTTYPE + ")");
 					$(l).append(a);
