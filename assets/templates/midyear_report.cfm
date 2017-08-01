@@ -10,8 +10,8 @@
 	<h1>Mid-Year Report</h1>
 
 	<cfoutput>
-		<p><strong>Agency:</strong> #Agency.Name#</p>
-		<p><strong>Program Name</strong> #PROGRAM.ProgramName#</p>
+		<h1 class="section-heading">#Agency.Name#</h1>
+		<h1 class="section-heading">#PROGRAM.ProgramName#</h1>
 	</cfoutput>
 
 	<h1>Sustainability</h1>

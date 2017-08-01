@@ -17,9 +17,19 @@
 
 	<cfif StructKeyExists(URL, "ProgramID")>
 	<!--- If Program ID is passed in, make sure the user has access and then just display all details for that program --->
-		<cfinvoke component="#APPLICATION.cfcpath#package" method="getPackageContent" ProgramID="#URL.ProgramID#" returnvariable="DATA" />
+		<cfif StructKeyExists(URL, "PackageName")>
+			<cfquery name="qPackage">
+				SELECT 	PackageID 
+				FROM 	Package_tbl 
+				WHERE 	PackageName = <cfqueryparam value="#URL.PackageName#" cfsqltype="cf_sql_varchar" />
+			</cfquery>
+			<cfinvoke component="#APPLICATION.cfcpath#package" method="getPackageContent" ProgramID="#URL.ProgramID#" PackageID="#qPackage.PackageID#" returnvariable="DATA" />
+			<cfset PackageName = URL.PackageName>
+		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#package" method="getPackageContent" ProgramID="#URL.ProgramID#" returnvariable="DATA" />
+			<cfset PackageName = "Program">
+		</cfif>
 
-		<cfset PackageName = "Program">
 		<cfset ArrayAppend(output, DATA)>
 	<cfelse>
 	<!--- Otherwise use the form data that is passed in to decide which package and what programs / agencies to include --->
