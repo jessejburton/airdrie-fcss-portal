@@ -201,6 +201,7 @@
 			SELECT	SurveyID, Name, Description, Citation
 			FROM 	Survey_tbl
 			WHERE isActive = 1
+			AND (AgencyID = 0 OR AgencyID = <cfqueryparam value="#REQUEST.AGENCY.AgencyID#" cfsqltype="cf_sql_integer">)
 			AND IndicatorID IN (SELECT IndicatorID FROM ProgramIndicator_tbl WHERE ProgramID = <cfqueryparam value="#ARGUMENTS.ProgramID#" cfsqltype="cf_sql_integer">)
 		</cfquery>
 

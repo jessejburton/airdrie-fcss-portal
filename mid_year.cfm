@@ -47,8 +47,6 @@
 				</p>
 				
 			<cfoutput>
-				<cfset BUDGETTYPE = "Mid-Year Budget">				
-				
 				<div class="accordion clearfix">					
 					<h3>Sustainability</h3>
 					<div class="form-group seen">
@@ -115,6 +113,7 @@
 					<h3>Mid Year Financials</h3>
 					<div class="form-group">
 						<em>* Provide information for funded portion of the Program only</em>
+						<cfset BUDGETTYPE = "Mid-Year Budget">	
 						<cfinclude template="shared/budget.cfm">
 
 						<!--- Panel Buttons --->
