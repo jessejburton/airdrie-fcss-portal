@@ -110,6 +110,33 @@
 		</cfif>			
 	</cffunction>		
 
+<!--- CHECK ACCOUNT PASSWORD --->
+	<cffunction name="checkAccountPassword" returntype="struct" returnformat="JSON" access="remote"
+		hint="Used for when a user needs to re-enter their password. Checks based on currently logged in user">
+		<cfargument name="pword" type="string" required="true">
+		<cfargument name="csrf" type="string" required="true" hint="Must match a valid CSRF cookie token">
+
+		<cfif ARGUMENTS.csrf EQ COOKIE.csrf>
+			<cfquery name="LOCAL.qCheckAccount">
+				SELECT 	AccountID, Password, GUID
+				FROM	Account_tbl
+				WHERE	Email = <cfqueryparam value="#REQUEST.USER.Email#" cfsqltype="cf_sql_varchar">
+				AND 	isActive = 1
+				AND 	DateVerified IS NOT NULL
+			</cfquery>
+
+			<!--- Validate the password --->
+			<cfif LOCAL.qCheckAccount.recordcount IS 1 AND validatePassword(ARGUMENTS.pword, LOCAL.qCheckAccount.Password)>
+				<cfreturn getSuccessResponse("")>
+			<cfelse>
+				<cfreturn getErrorResponse("Password is incorrect.")>
+			</cfif>
+		<cfelse>
+			<cfinvoke component="#APPLICATION.cfcpath#core" method="writeLog" Details="Invalid CSRF Token" />
+			<cfthrow message="An error has occurred, please try again later." />
+		</cfif>			
+	</cffunction>
+
 <!--- WEB FUNCTIONS RELATED TO PACKAGES --->
 	<cffunction name="savePackage" access="remote" returnformat="JSON" returntype="Struct"
 		hint="Saves a package to be used for export.">
@@ -375,6 +402,10 @@
 					WHERE SurveyID <> <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer"> 
 				</cfif>
 			</cfquery>
+
+			<cfif LOCAL.qCheck.recordcount NEQ 0>
+				<cfreturn getErrorResponse("A survey with this name already exists.")>
+			</cfif>
 
 			<!--- Handle the surveys --->
 			<cfif isDefined('ARGUMENTS.SurveyID') AND ARGUMENTS.SurveyID NEQ 0>	

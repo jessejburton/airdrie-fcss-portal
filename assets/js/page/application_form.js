@@ -48,7 +48,7 @@ $(document).ready(function(){
 	// Enable the review panel once the form is valid
 	$("#application_review").on("click", function(){
 		$(".form-group").addClass("seen");
-		if(validateForm($("#application_form"), reviewApplication)){
+		if(validateForm($("#application_form"), reviewApplication)){		
 			$('.accordion').accordion('option', 'active', -1); // Open the review panel.
 		};
 	});	
@@ -75,6 +75,10 @@ $(document).ready(function(){
 		$(".form-group").addClass("seen");
 		validateForm($("#application_form"), markApplicationSubmitted);
 	});
+
+	$( ".accordion" ).on( "accordionactivate", function( event, ui ) { 
+		if(_REVIEW_STATE) reviewApplication(); 
+	} );
 	
 });
 
@@ -121,6 +125,10 @@ function saveApplication(silent){
 			updateBoardMembers(true);
 			saveBudget();
 		}
+
+		// Update the printable link
+		$("#print_link").attr("href", "admin_create_package.cfm?programID=" + $("#program_id").val());		
+		$("#print_link").removeClass("hidden");		
 	};
 }
 

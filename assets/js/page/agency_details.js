@@ -124,7 +124,7 @@ $(document).ready(function(){
 			
 			// Update Account
 			$.ajax({
-				url: "assets/cfc/webservices.cfc",
+				url: "assets/cfc/webservicesnoauth.cfc",
 				data: pstr,
 				success: function(response){
 					$("#account_tab").find(".input-error").removeClass("input-error");

@@ -12,24 +12,23 @@ $(document).on("click", ".program-approve", function(){
 	
 	$("#message").html($("#enterpassword").clone(false).removeClass("hidden"));
 	$("#message").find("#confirm_approve_program").on("click", function(){
-		// TODO - check password first
-	    
 		var pstr = new Object();
-			pstr.programID = program.data("programid");
-			pstr.Method = "markApplicationApproved";
-			pstr.CSRF = $.cookie("CSRF");
+				pstr.method = "checkAccountPassword";
+				pstr.pword = $("#message #your_password").val();
+				pstr.CSRF = $.cookie("CSRF");
 
-		$.ajax({
-			url: "assets/cfc/webservices.cfc",
-			data: pstr,
-			success: function(response){
-				if(response.SUCCESS){
-					hideMessage();
-					program.remove();
+			$.ajax({
+				url: "assets/cfc/webservices.cfc",
+				data: pstr,
+				async: true,
+				success: function(response){
+					if(response.SUCCESS){
+						markApproved(program);
+					} else {
+						showAutoreply(response, $("#message"));
+					}
 				}
-				showAutoreply(response, ".wrapper")
-			}
-		});
+			});
 	});
 	showMessage();
 });
@@ -80,6 +79,25 @@ $(document).on("keydown", ".allocate-fund-amount", function(e){
 	 	program.find(".program-fund").trigger("click");
 	 }
 });
+
+function markApproved(program){
+	var pstr = new Object();
+		pstr.programID = program.data("programid");
+		pstr.Method = "markApplicationApproved";
+		pstr.CSRF = $.cookie("CSRF");
+
+	$.ajax({
+		url: "assets/cfc/webservices.cfc",
+		data: pstr,
+		success: function(response){
+			if(response.SUCCESS){
+				hideMessage();
+				program.remove();
+			}
+			showAutoreply(response, ".wrapper")
+		}
+	});
+}
 
 
 function fundProgram(program){

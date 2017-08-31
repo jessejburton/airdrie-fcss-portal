@@ -85,6 +85,24 @@ function saveSurvey(){
 		pstr.AgencyID = $("#Agency").val();
 		pstr.CSRF = $.cookie("CSRF");
 
+		if(pstr.Name.length == 0){
+			var response = new Object();
+			response.MESSAGE = "Please enter a name for this survey";
+			response.SUCCESS = false;
+			response.TYPE = "error";
+			showAutoreply(response, ".wrapper");
+			return false;
+		}		
+
+		if(pstr.IndicatorID.length == 0){
+			var response = new Object();
+			response.MESSAGE = "Please selct an indicator";
+			response.SUCCESS = false;
+			response.TYPE = "error";
+			showAutoreply(response, ".wrapper");
+			return false;
+		}
+
 		pstr.Questions = [];
 
 		$(".question").each(function(){

@@ -52,7 +52,7 @@
 				<p>
 					<label for="indicatorID">What indicator is this survey for?</label><br />
 					<cfset currentMeasure = "">
-					<select id="indicatorID" class="input-half">
+					<select id="indicatorID" class="input-half required">
 						<option value="">--- Select an indicator ---</option>
 						<cfoutput query="qIndicators">
 							<option value="#qIndicators.IndicatorID#">#qIndicators.Indicator#</option>

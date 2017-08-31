@@ -385,7 +385,7 @@
 								<button type="button" id="application_submit_to_airdrie" class="btn btn-primary pull-right submit-button">Send to City of Airdrie</button>
 							</cfif>
 							<button type="button" id="application_save_for_review" class="btn btn-secondary pull-right submit-button">Save for Agency Review</button>  
-							<a href="admin_create_package.cfm?programID=#encodeForHTMLAttribute(ProgramID)#" class="pull-right small-text link inline" style="margin-top: 15px;" target="_blank"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
+							<a href="admin_create_package.cfm?programID=#encodeForHTMLAttribute(ProgramID)#" class="hidden pull-right small-text link inline" style="margin-top: 15px;" target="_blank" id="print_link"><i class="fa fa-file-pdf-o"></i> Printable Version</a>
 						</div>
 					</div>	
 				</div>

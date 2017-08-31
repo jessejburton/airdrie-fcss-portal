@@ -219,5 +219,45 @@
 		</cfoutput>
 
 		<cfreturn LOCAL.response>
-	</cffunction>		
+	</cffunction>	
+
+	<cffunction name="getSurveyData" access="remote" returnformat="JSON" output="true"
+		hint="Returns an array of the data that was collected for a survey.">
+		<cfargument name="SurveyID" type="numeric" required="true">
+
+		<cfset LOCAL.response = ArrayNew(1)>
+
+		<cfquery name="LOCAL.qSurvey">
+			SELECT 	Name, isPostOnly
+			FROM 	Survey_tbl 
+			WHERE 	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfquery name="LOCAL.qQuestions">
+			SELECT	Question, QuestionID
+			FROM	SurveyQuestion_tbl 
+			WHERE	SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+			ORDER BY isOrder
+		</cfquery>
+
+		<cfquery name="LOCAL.qClients">
+			SELECT 	ClientID, Name, Age, Gender, Residence, Income, NumPeople, DateAdded 
+			FROM 	SurveyClient_tbl
+			WHERE SurveyID = <cfqueryparam value="#ARGUMENTS.SurveyID#" cfsqltype="cf_sql_integer">
+		</cfquery>
+
+		<cfsavecontent variable="output">
+			ClientID, Name, Age, Gender, Residence, Income, Number of People, Date Collected<cfoutput query="LOCAL.qQuestions">, #LOCAL.qQuestions.Question#</cfoutput>?
+
+			<cfoutput query="LOCAL.qClients">
+				#ClientID#,#Name#,#Age#,#Gender#,#Residence#,#ReplaceNoCase(Income, ",", "", "all")#,#NumPeople#,#DateFormat(DateAdded, "MM-DD-YYYY")#,1,1
+			</cfoutput>
+		</cfsavecontent>
+
+		<cfheader name="content-disposition" value="attachment; filename=fcss_survey_output.csv">
+		<cfcontent type="text/csv">
+		<cfoutput>#Replace(output, "??", "?", "all")#</cfoutput>
+
+
+	</cffunction>	
 </cfcomponent>
